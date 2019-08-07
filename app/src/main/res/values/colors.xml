@@ -5,6 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="defaultBtn">#19B4E5</color>
     <color name="btnTxtColor">#FFFFFF</color>
-    <color name="mainBack">#FCFCFC</color>
+    <color name="mainBack">#F7F7F7</color>
     <color name="txtFocus">#4CC9EB</color>
 </resources>

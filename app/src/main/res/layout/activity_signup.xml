@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SignupActivity">
+
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        />
 
 
     <TextView
@@ -25,7 +43,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/lost_focus_text_style"/>
+        android:background="@drawable/lost_focus_text_style"
+        android:textCursorDrawable="@color/txtFocus"/>
 
     <TextView
         android:id="@+id/lastNameLabel"
@@ -46,7 +65,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/lost_focus_text_style"/>
+        android:background="@drawable/lost_focus_text_style"
+        android:textCursorDrawable="@color/txtFocus"/>
 
     <TextView
         android:id="@+id/emailLabel"
@@ -67,7 +87,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/lost_focus_text_style"/>
+        android:background="@drawable/lost_focus_text_style"
+        android:textCursorDrawable="@color/txtFocus"/>
 
     <TextView
         android:id="@+id/passwordLabel"
@@ -88,22 +109,43 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/lost_focus_text_style"/>
+        android:background="@drawable/lost_focus_text_style"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:textCursorDrawable="@color/txtFocus"/>
+
+
+    <TextView
+        android:id="@+id/errorLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/password"
+        android:text=""
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:textColor="#E60505"
+        android:textAllCaps="false"
+        android:textSize="13dp"/>
 
     <Button
         android:id="@+id/signupBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_below="@id/password"
+        android:layout_below="@id/errorLabel"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:text="Create Account"
         android:textAllCaps="false"
         android:textColor="@color/btnTxtColor"
         android:background="@drawable/default_btn_style"
-        android:textSize="16dp"/>
+        android:textSize="16dp"
+        android:onClick="signUpBtnClick"
+        />
 
     <TextView
         android:id="@+id/loginLabelBtn"

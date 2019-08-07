@@ -1,20 +1,109 @@
 package com.planner.budgetplanner;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class SignupActivity extends AppCompatActivity {
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+public class SignupActivity extends AppCompatActivity implements View.OnFocusChangeListener {
+
+    private EditText email;
+    private EditText pass;
+    private EditText firstName;
+    private EditText lastName;
+    private TextView errorLabel;
+
+    private FirebaseAuth firebaseAuth;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        firebaseAuth=FirebaseAuth.getInstance();
+
+        progressBar=findViewById(R.id.loading);
+
+        email = findViewById(R.id.email);
+        email.setOnFocusChangeListener(this);
+
+        pass = findViewById(R.id.password);
+        pass.setOnFocusChangeListener(this);
+
+        firstName = findViewById(R.id.firstName);
+        firstName.setOnFocusChangeListener(this);
+
+        lastName = findViewById(R.id.lastName);
+        lastName.setOnFocusChangeListener(this);
+
+        errorLabel=findViewById(R.id.errorLabel);
     }
 
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            v.setBackgroundResource(R.drawable.focus_text_style);
+        } else {
+            v.setBackgroundResource(R.drawable.lost_focus_text_style);
+        }
+    }
+
+
     public void loginBtnClick(View view) {
-        Intent intent=new Intent(this,LoginScreen.class);
+        Intent intent = new Intent(this, LoginScreen.class);
         startActivity(intent);
     }
+
+    public void signUpBtnClick(View view) {
+        errorLabel.setText("");
+        if(!MyUtility.isValidEmail(email.getText()))
+        {
+            errorLabel.setText("email address can't be emty or not valid format");
+            return;
+        }
+        if(TextUtils.isEmpty(pass.getText()))
+        {
+            errorLabel.setText("password can't be emty");
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),pass.getText().toString()).
+                addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(SignupActivity.this,"Account create successful",Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(SignupActivity.this,"Account creating error",Toast.LENGTH_LONG).show();
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    }
+                });
+    }
+
+
+
+
 }

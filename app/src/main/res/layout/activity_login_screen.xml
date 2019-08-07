@@ -83,6 +83,20 @@
 
         />
 
+    <TextView
+        android:id="@+id/errorLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAllCaps="false"
+        android:layout_centerInParent="true"
+        android:textSize="13dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_below="@+id/forgotBtn"
+        android:textColor="#E60505"
+        />
 
     <Button
         android:id="@+id/login"
@@ -90,25 +104,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="24dp"
 
-        android:layout_below="@id/forgotBtn"
+        android:layout_below="@id/errorLabel"
         android:enabled="true"
         android:textSize="15dp"
         android:textAllCaps="false"
         android:text="@string/action_sign_in"
         android:textColor="@color/btnTxtColor"
         android:background="@drawable/default_btn_style"
+        android:onClick="loginBtnClick"
        />
 
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="64dp"
         android:visibility="gone"
@@ -121,38 +136,42 @@
     <LinearLayout
         android:id="@+id/socialmediagroup"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_below="@id/login"
         android:layout_marginTop="35dp"
         android:orientation="horizontal"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp">
 
-        <ImageButton
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
-            android:background="@drawable/googlebtn"/>
+            android:background="@drawable/gbtn"
 
-        <ImageButton
+            />
+
+        <Button
             android:id="@+id/fbBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/fbnewbtn"
+            android:background="@drawable/fbtn"
+
             android:layout_marginLeft="5dp"
             />
 
     </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/socialmediagroup"
         android:layout_marginTop="30dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_centerInParent="true"
         android:text="OR SIGN UP NOW"
         android:textAlignment="center"
         android:textColor="@color/defaultBtn"

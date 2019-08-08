@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class MyUtility {
+
+
+    public static UserProfile currentUser;
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }

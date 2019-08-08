@@ -14,9 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
@@ -28,6 +36,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
 
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
+    FirebaseFirestore db;
 
 
     @Override
@@ -35,9 +44,10 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        progressBar=findViewById(R.id.loading);
+        progressBar = findViewById(R.id.loading);
 
         email = findViewById(R.id.email);
         email.setOnFocusChangeListener(this);
@@ -51,7 +61,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
         lastName = findViewById(R.id.lastName);
         lastName.setOnFocusChangeListener(this);
 
-        errorLabel=findViewById(R.id.errorLabel);
+        errorLabel = findViewById(R.id.errorLabel);
     }
 
     public void onFocusChange(View v, boolean hasFocus) {
@@ -70,13 +80,19 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
 
     public void signUpBtnClick(View view) {
         errorLabel.setText("");
-        if(!MyUtility.isValidEmail(email.getText()))
-        {
+        if (TextUtils.isEmpty(firstName.getText())) {
+            errorLabel.setText("first name can't be empty");
+            return;
+        }
+        if (TextUtils.isEmpty(lastName.getText())) {
+            errorLabel.setText("last name can't be empty");
+            return;
+        }
+        if (!MyUtility.isValidEmail(email.getText())) {
             errorLabel.setText("email address can't be emty or not valid format");
             return;
         }
-        if(TextUtils.isEmpty(pass.getText()))
-        {
+        if (TextUtils.isEmpty(pass.getText())) {
             errorLabel.setText("password can't be emty");
             return;
         }
@@ -85,25 +101,42 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),pass.getText().toString()).
+        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString()).
                 addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(SignupActivity.this,"Account create successful",Toast.LENGTH_LONG).show();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignupActivity.this, "Account create successful", Toast.LENGTH_LONG).show();
+                            Map<String, String> user = new HashMap<>();
+                            user.put("first_name", String.valueOf(firstName.getText()));
+                            user.put("last_name", String.valueOf(lastName.getText()));
+                            user.put("email", String.valueOf(email.getText()));
+
+                            FirebaseUser fUser=firebaseAuth.getCurrentUser();
+                            db.collection("users").document(fUser.getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void v) {
+                                    Toast.makeText(SignupActivity.this, "Successfully added into database ", Toast.LENGTH_LONG).show();
+
+                                    startActivity(new Intent(SignupActivity.this,MainActivity.class));
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(SignupActivity.this, "Error uploading", Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                }
+                            });
+                        } else {
+                            Toast.makeText(SignupActivity.this, "Account creating error", Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
-                        else
-                        {
-                            Toast.makeText(SignupActivity.this,"Account creating error",Toast.LENGTH_LONG).show();
-                        }
-                        progressBar.setVisibility(View.INVISIBLE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                     }
                 });
     }
-
-
-
-
 }

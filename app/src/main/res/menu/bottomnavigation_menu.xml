@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addExpenseMenu"
+        android:title="Add expense"
+        android:icon="@drawable/icons8_home_50px"
+       />
+    <item
+        android:id="@+id/addIncomeMenu"
+        android:title="Add income"
+        android:icon="@drawable/icons8_home_50px"/>
+    <item
+        android:id="@+id/addCategoryMenu"
+        android:title="Add Category"
+        android:icon="@drawable/icons8_home_50px"/>
+    <item
+        android:id="@+id/chartsMenu"
+        android:title="Charts"
+        android:icon="@drawable/icons8_home_50px"/>
+</menu>

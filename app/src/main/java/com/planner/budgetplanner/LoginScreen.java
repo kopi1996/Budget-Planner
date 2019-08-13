@@ -173,6 +173,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnFocusChange
     }
 
     public void loginWithGoogle(View view) {
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account==null)
         {

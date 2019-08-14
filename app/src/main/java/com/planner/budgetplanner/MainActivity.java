@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity
 
         TextView email = navigationView.getHeaderView(0).findViewById(R.id.navEmail);
         email.setText(MyUtility.currentUser.getEmail());
+
+        findViewById(R.id.overviewCard).setBackgroundResource(R.drawable.my_cardview);
     }
 
     @Override

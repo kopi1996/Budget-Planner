@@ -13,8 +13,8 @@
         android:id="@+id/overviewCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="5dp"
         android:layout_margin="5dp"
+        app:cardElevation="5dp"
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -62,14 +62,14 @@
                     android:layout_height="120dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_toEndOf="@id/progressLayout"
                     android:layout_toRightOf="@id/progressLayout"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@id/progressLayout">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_marginTop="25dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical">
 
@@ -78,8 +78,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textSize="10sp"
-                            android:text="Net disposable income: " />
+                            android:text="Net disposable income: "
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/netDisAmountTxt"
@@ -92,9 +92,9 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginBottom="25dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical">
 
@@ -103,8 +103,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textSize="10sp"
-                            android:text="Total expenditure: " />
+                            android:text="Total expenditure: "
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/totalAmountTxt"
@@ -123,21 +123,22 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/overviewDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/topLayout"
+                android:layout_marginTop="10dp"
                 android:divider="@drawable/my_divider"
                 android:dividerPadding="15dp"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:paddingTop="10dp"
                 android:showDividers="beginning">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -155,9 +156,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:text="2514rs"
                             android:textAlignment="center"
-                            android:layout_marginTop="5dp"
                             android:textSize="17dp" />
 
                     </LinearLayout>
@@ -178,9 +179,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="874rs"
-
                             android:layout_marginTop="5dp"
+
+                            android:text="874rs"
                             android:textAlignment="center"
                             android:textSize="17dp" />
 
@@ -202,9 +203,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="254rs"
-
                             android:layout_marginTop="5dp"
+
+                            android:text="254rs"
                             android:textAlignment="center"
                             android:textSize="17dp" />
 
@@ -254,9 +255,95 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_marginTop="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/overviewDetailLayout"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/netDisposableBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/main_btn"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Net Disposable Income"
+                        android:layout_marginLeft="30dp"
+                        android:textSize="20sp"
+                        android:translationZ="90dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/dispoIncBtnTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="100"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dp"
+                        android:textSize="20sp"
+                        android:translationZ="90dp"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/totalExpBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/main_btn"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Total Expenditure"
+                        android:layout_marginLeft="30dp"
+                        android:textSize="20sp"
+                        android:translationZ="90dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/expendBtnTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="100"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dp"
+                        android:textSize="20sp"
+                        android:translationZ="90dp"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
         </RelativeLayout>
 
+
+
     </android.support.v7.widget.CardView>
+
+
 
     <android.support.design.widget.BottomNavigationView
         android:layout_width="match_parent"

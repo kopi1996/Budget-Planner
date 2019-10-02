@@ -1,12 +1,11 @@
 package com.planner.budgetplanner;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -14,45 +13,34 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
+public class LoginScreen extends AppCompatActivity implements View.OnFocusChangeListener, GoogleApiClient.OnConnectionFailedListener {
 
-public class LoginScreen extends AppCompatActivity implements View.OnFocusChangeListener {
+    private static final String TAG = "LoginScreen";
 
     private EditText email;
-    private FirebaseAuth mAuth;
     private EditText pass;
     private TextView errorLabel;
     private ProgressBar progressBar;
 
-    private FirebaseFirestore db;
-    private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
-        mAuth = FirebaseAuth.getInstance();
-        db=FirebaseFirestore.getInstance();
 
         errorLabel=findViewById(R.id.errorLabel);
 
@@ -63,12 +51,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnFocusChange
 
         pass = findViewById(R.id.password);
         pass.setOnFocusChangeListener(this);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -88,13 +70,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnFocusChange
 
     public void loginBtnClick(View view) {
         errorLabel.setText("");
-        if(!MyUtility.isValidEmail(email.getText()))
-        {
+        if (!MyUtility.isValidEmail(email.getText())) {
             errorLabel.setText("email address can't be emty or not valid format");
             return;
         }
-        if(TextUtils.isEmpty(pass.getText()))
-        {
+        if (TextUtils.isEmpty(pass.getText())) {
             errorLabel.setText("password can't be emty");
             return;
         }
@@ -102,120 +82,74 @@ public class LoginScreen extends AppCompatActivity implements View.OnFocusChange
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        mAuth.signInWithEmailAndPassword(email.getText().toString(), pass.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginScreen.this, "Account Login successful", Toast.LENGTH_LONG).show();
-                            DocumentReference docRef = db.collection("users").document(mAuth.getUid());
-                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            String fName=document.get("first_name").toString();
-                                            String lName=document.get("last_name").toString();
-                                            String emailString=document.get("email").toString();
+        FirebaseManager.loginWithId(this, email.getText().toString(), pass.getText().toString(), new FirebaseManager.IUserInfo() {
+            @Override
+            public void onSuccess(User user) {
+                Toast.makeText(LoginScreen.this, "Account Login successful", Toast.LENGTH_LONG).show();
+                MyUtility.currentUser = user;
+                progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                                            MyUtility.currentUser=new UserProfile(fName,lName,emailString);
-                                        }
-                                    }
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                startActivity(new Intent(LoginScreen.this, MainActivity.class));
+            }
 
-                                    startActivity(new Intent(LoginScreen.this,MainActivity.class));
-                                }
-                            });
-                        } else {
-                            Toast.makeText(LoginScreen.this, "Account Login error", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.INVISIBLE);
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        }
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(LoginScreen.this, "Account Login error", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        });
 
-                    }
-                });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+            GoogleSignInAccount acc=result.getSignInAccount();
+            FirebaseManager.loginWithGoogle(acc, new OnSuccessListener<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    Log.i(TAG, "onSuccess user id: "+user.getId());
+                    MyUtility.currentUser=user;
+                    progressBar.setVisibility(View.INVISIBLE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    startActivity(new Intent(LoginScreen.this,MainActivity.class));
+                }
+            },null);
         }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Map<String, Object> user = new HashMap<>();
-            user.put("first_name", account.getGivenName());
-            user.put("last_name", account.getFamilyName());
-            user.put("email", account.getEmail());
-
-            uploadDataIntoFireStore(user,account.getId());
-
-        } catch (ApiException e) {
-            Toast.makeText(LoginScreen.this,"e: "+e.getMessage(),Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void gotoMainActivity(String fName,String lName,String email)
-    {
-        MyUtility.currentUser=new UserProfile(fName,lName,email);
-        startActivity(new Intent(this,MainActivity.class));
     }
 
     public void loginWithGoogle(View view) {
         progressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account==null)
-        {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
-        else
-        {
-            Map<String, Object> user = new HashMap<>();
-            user.put("first_name", account.getGivenName());
-            user.put("last_name", account.getFamilyName());
-            user.put("email", account.getEmail());
 
-            uploadDataIntoFireStore(user,account.getId());
-        }
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void uploadDataIntoFireStore(final Map<String,Object> data, String key)
-    {
-        db.collection("users").document(key).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void v) {
-                Toast.makeText(LoginScreen.this, "Successfully added into database ", Toast.LENGTH_LONG).show();
-
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                MyUtility.currentUser=new UserProfile(data.get("first_name").toString(),data.get("last_name").toString(),data.get("email").toString());
-                startActivity(new Intent(LoginScreen.this,MainActivity.class));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginScreen.this, "Error uploading", Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
-        });
-    }
 
     public void loginWithFB(View view) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

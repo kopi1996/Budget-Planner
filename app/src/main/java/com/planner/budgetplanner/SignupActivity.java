@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -20,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -107,12 +105,17 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Account create successful", Toast.LENGTH_LONG).show();
+                            String fName=String.valueOf(firstName.getText());
+                            String lName=String.valueOf(lastName.getText());
+                            String emailTxt= String.valueOf(email.getText().toString());
                             Map<String, String> user = new HashMap<>();
-                            user.put("first_name", String.valueOf(firstName.getText()));
-                            user.put("last_name", String.valueOf(lastName.getText()));
-                            user.put("email", String.valueOf(email.getText()));
-
+                            user.put("first_name",fName);
+                            user.put("last_name", lName);
+                            user.put("email",emailTxt);
                             FirebaseUser fUser=firebaseAuth.getCurrentUser();
+                            MyUtility.currentUser=new User(fUser.getUid(),fName,lName,emailTxt);
+
+
                             db.collection("users").document(fUser.getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void v) {

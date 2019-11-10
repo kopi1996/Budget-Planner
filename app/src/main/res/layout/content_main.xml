@@ -12,9 +12,9 @@
     <android.support.v7.widget.CardView
         android:id="@+id/overviewCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        app:cardElevation="5dp"
+
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -256,141 +256,140 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="40dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/overviewDetailLayout"
+                android:layout_marginTop="40dp"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:id="@+id/netDisposableBtn"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    >
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="75dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/main_btn"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="Net Disposable Income"
-                        android:layout_marginLeft="30dp"
-                        android:textSize="20sp"
-                        android:translationZ="90dp"
-                        />
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/dispoIncBtnTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="100"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="30dp"
-                        android:textSize="20sp"
-                        android:translationZ="90dp"
-                        />
+                        <Button
+                            android:id="@+id/netDisposableBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="75dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/main_btn"/>
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="Net Disposable Income"
+                            android:textSize="15sp"
+                            android:translationZ="90dp"
+                            />
 
-                <RelativeLayout
+                        <ImageView
+                            android:id="@+id/dispGoTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:translationZ="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/dispoIncBtnTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignRight="@+id/dispGoTxt"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30dp"
+                            android:text="100"
+                            android:textAlignment="center"
+                            android:textSize="20sp"
+                            android:translationZ="90dp"
+                            />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="10dp">
-
-                    <Button
-                        android:id="@+id/totalExpBtn"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    >
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="75dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/main_btn"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="Total Expenditure"
-                        android:layout_marginLeft="30dp"
-                        android:textSize="20sp"
-                        android:translationZ="90dp"
-                        />
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/expendBtnTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="100"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="30dp"
-                        android:textSize="20sp"
-                        android:translationZ="90dp"
-                        />
+                        <Button
+                            android:id="@+id/totalExpBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="75dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/main_btn"/>
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="Total Expenditure"
+                            android:textSize="15sp"
+                            android:translationZ="90dp"
+                            />
+
+                        <ImageView
+                            android:id="@+id/expGoTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:translationZ="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/expBtnTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignRight="@+id/expGoTxt"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30dp"
+                            android:text="100"
+                            android:textAlignment="center"
+                            android:textSize="20sp"
+                            android:translationZ="90dp"
+                            />
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
         </RelativeLayout>
 
 
+        <include
+            layout="@layout/my_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            />
 
     </android.support.v7.widget.CardView>
 
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_alignParentBottom="true"-->
-
-        <!--&gt;-->
-
-        <!--<Button-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_weight="1"/>-->
-
-        <!--<Button-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="40dp"-->
-
-            <!--android:layout_weight="1"/>-->
-
-        <!--<Button-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="40dp"-->
-
-            <!--android:layout_weight="1"/>-->
-
-        <!--<Button-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="40dp"-->
-
-            <!--android:layout_weight="1"/>-->
-
-    <!--</LinearLayout>-->
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_nav_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bottom_bar_drawable"
-        app:itemHorizontalTranslationEnabled="false"
-        app:labelVisibilityMode="labeled"
-        android:layout_alignParentBottom="true"
-        app:itemIconTint="@drawable/bottom_nav_bar_item_color"
-        app:itemTextColor="@drawable/bottom_nav_bar_item_color"
-
-        app:menu="@menu/bottomnavigation_menu" />
 
 </RelativeLayout>
 

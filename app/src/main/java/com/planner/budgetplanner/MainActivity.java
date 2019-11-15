@@ -1,5 +1,6 @@
 package com.planner.budgetplanner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -46,6 +47,19 @@ public class MainActivity extends AppCompatActivity
         email.setText(MyUtility.currentUser.getEmail());
 
         findViewById(R.id.overviewCard).setBackgroundResource(R.drawable.my_cardview);
+
+        findViewById(R.id.netDisposableBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkBtn();
+            }
+        });
+    }
+
+    private void checkBtn()
+    {
+        Intent intent = new Intent(this, CategoryAdd.class);
+        startActivity(intent);
     }
 
     @Override

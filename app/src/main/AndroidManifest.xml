@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CategoryAdd"></activity>
+        <activity android:name=".IncomeAdd"></activity>
+        <activity android:name=".income_add" />
+        <activity android:name=".CategoryAdd" />
         <activity
             android:name=".LoginScreen"
             android:theme="@style/AppTheme.NoActionBar">

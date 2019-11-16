@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignupActivity extends AppCompatActivity implements View.OnFocusChangeListener {
+public class SignupActivity extends AppCompatActivity {
 
     private EditText email;
     private EditText pass;
@@ -48,26 +48,11 @@ public class SignupActivity extends AppCompatActivity implements View.OnFocusCha
         progressBar = findViewById(R.id.loading);
 
         email = findViewById(R.id.email);
-        email.setOnFocusChangeListener(this);
-
         pass = findViewById(R.id.password);
-        pass.setOnFocusChangeListener(this);
 
         firstName = findViewById(R.id.firstName);
-        firstName.setOnFocusChangeListener(this);
-
         lastName = findViewById(R.id.lastName);
-        lastName.setOnFocusChangeListener(this);
-
         errorLabel = findViewById(R.id.errorLabel);
-    }
-
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus) {
-            v.setBackgroundResource(R.drawable.focus_text_style);
-        } else {
-            v.setBackgroundResource(R.drawable.lost_focus_text_style);
-        }
     }
 
 

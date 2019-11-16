@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/incomeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IncomeAdd"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/descBox"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/descId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="Title"
+                android:textCursorDrawable="@color/txtFocus"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/amountBox"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/descBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/amountId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="Estimated Budget"
+                android:textCursorDrawable="@color/txtFocus"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/datePickerBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+        </Button>
+
+    </LinearLayout>
+
+</LinearLayout>

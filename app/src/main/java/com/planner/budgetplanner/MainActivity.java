@@ -54,11 +54,23 @@ public class MainActivity extends AppCompatActivity
                 checkBtn();
             }
         });
+        findViewById(R.id.totalExpBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkBtn2();
+            }
+        });
     }
 
     private void checkBtn()
     {
         Intent intent = new Intent(this, CategoryAdd.class);
+        startActivity(intent);
+    }
+
+    private void checkBtn2()
+    {
+        Intent intent=new Intent(this,IncomeAdd.class);
         startActivity(intent);
     }
 

@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-public class LoginScreen extends AppCompatActivity implements View.OnFocusChangeListener, GoogleApiClient.OnConnectionFailedListener {
+public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "LoginScreen";
 
@@ -45,27 +45,16 @@ public class LoginScreen extends AppCompatActivity implements View.OnFocusChange
         errorLabel=findViewById(R.id.errorLabel);
 
         email = findViewById(R.id.username);
-        email.setOnFocusChangeListener(this);
 
         progressBar=findViewById(R.id.loading);
 
         pass = findViewById(R.id.password);
-        pass.setOnFocusChangeListener(this);
     }
 
 
     public void signUpBtnClick(View view) {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus) {
-            v.setBackgroundResource(R.drawable.focus_text_style);
-        } else {
-            v.setBackgroundResource(R.drawable.lost_focus_text_style);
-        }
     }
 
     public void loginBtnClick(View view) {

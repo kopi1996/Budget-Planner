@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     private void checkBtn2()
     {
-        Intent intent=new Intent(this,IncomeAdd.class);
+        Intent intent=new Intent(this,ExpenseAdd.class);
         startActivity(intent);
     }
 

@@ -3,6 +3,7 @@ package com.planner.budgetplanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 public class CategoryAdd extends AppCompatActivity implements View.OnFocusChangeListener {
@@ -25,6 +26,17 @@ public class CategoryAdd extends AppCompatActivity implements View.OnFocusChange
         } else {
             v.setBackgroundResource(R.drawable.lost_focus_text_style);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

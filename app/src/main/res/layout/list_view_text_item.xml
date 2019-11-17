@@ -6,9 +6,10 @@
     <TextView
         android:id="@+id/listItemTxt"
         android:layout_width="match_parent"
-
-        android:layout_height="50dp"
-        android:minHeight="0dp"
-        android:minWidth="0dp"/>
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:paddingLeft="10dp"
+        android:paddingVertical="15dp"
+        />
 
 </LinearLayout>

@@ -69,48 +69,15 @@ public class IncomeAdd extends AppCompatActivity {
 
     private void displayHintDialog()
     {
-        int width = 0;
-        int height = 0;
-        Point size = new Point();
-        WindowManager w = getWindowManager();
+        final String countryList[] = {"India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand"};
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)    {
-            w.getDefaultDisplay().getSize(size);
-            width = size.x;
-            height = size.y;
-        }else{
-            Display d = w.getDefaultDisplay();
-            width = d.getWidth();
-            height = d.getHeight();
-        }
-
-
-        int dialogHeight=(int) ((height/100.0)*75);
-
-        final Dialog dialog=new Dialog(this);
-        dialog.setContentView(R.layout.list_view_window);
-
-
-        final WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
-        lWindowParams.copyFrom(dialog.getWindow().getAttributes());
-        lWindowParams.height = dialogHeight;
-
-        dialog.getWindow().setAttributes(lWindowParams);
-
-
-
-        String countryList[] = {"India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand"};
-        final ListView myListView=dialog.findViewById(R.id.listViewDialog);
-        ArrayAdapter<String> adapter= new ArrayAdapter<>(this, R.layout.list_view_text_item, R.id.listItemTxt, countryList);
-        myListView.setAdapter(adapter);
-        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Dialog dialog = MyUtility.displayHintDialog(this, countryList, new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(IncomeAdd.this,myListView.getItemAtPosition(position).toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(IncomeAdd.this, countryList[position], Toast.LENGTH_LONG).show();
             }
-        });
+        },true);
 
-        dialog.show();
     }
 
     private void displayDatePicker()

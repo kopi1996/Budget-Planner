@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class ExpenseAdd extends AppCompatActivity {
+
+    EditText pickCateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class ExpenseAdd extends AppCompatActivity {
         });
 
 
-        final EditText pickCatBtn = findViewById(R.id.pickCateBtn);
+        pickCateBtn = findViewById(R.id.pickCateBtn);
 
 //        EditText amountTxt=findViewById(R.id.amountId);
 //        amountTxt.setSelected(false);
@@ -45,10 +48,10 @@ public class ExpenseAdd extends AppCompatActivity {
 //        }
 
 
-        pickCatBtn.setOnClickListener(new View.OnClickListener() {
+        pickCateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickCatBtn.setText("Some");
+                displayHintDialog();
             }
         });
 
@@ -95,5 +98,17 @@ public class ExpenseAdd extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.category_menu,menu);
 
         return true;
+    }
+
+    private void displayHintDialog()
+    {
+        final String countryList[] = {"India1", "China1", "australia1", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand"};
+
+        final Dialog dialog = MyUtility.displayHintDialog(this, countryList, new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pickCateBtn.setText(countryList[position]);
+            }
+        },true);
     }
 }

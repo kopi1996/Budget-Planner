@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpenseAdd"></activity>
+        <activity android:name=".CategoryView"></activity>
+        <activity android:name=".ExpenseAdd" />
         <activity android:name=".IncomeAdd" />
         <activity android:name=".CategoryAdd" />
         <activity

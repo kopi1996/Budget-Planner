@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-//        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_nav_bar);
-//        bottomNavigationView.getMenu().getItem(3).setChecked(true);
+
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -51,7 +50,8 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.netDisposableBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkBtn();
+               Intent intent=new Intent(MainActivity.this,CategoryView.class);
+               startActivity(intent);
             }
         });
         findViewById(R.id.totalExpBtn).setOnClickListener(new View.OnClickListener() {
@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity
                 checkBtn2();
             }
         });
+
+        addBottomBarEvent();
     }
 
     private void checkBtn()
@@ -74,6 +76,34 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void addBottomBarEvent()
+    {
+        View viewById = findViewById(R.id.my_bottom_nav);
+        viewById.findViewById(R.id.expenseAddBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,ExpenseAdd.class);
+                startActivity(intent);
+            }
+        });
+
+        viewById.findViewById(R.id.incomeAddBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,IncomeAdd.class);
+                startActivity(intent);
+            }
+        });
+
+        viewById.findViewById(R.id.cateAddBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,CategoryAdd.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -86,7 +116,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }

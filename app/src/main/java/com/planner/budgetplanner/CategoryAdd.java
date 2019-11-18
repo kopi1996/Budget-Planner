@@ -1,12 +1,15 @@
 package com.planner.budgetplanner;
 
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
-public class CategoryAdd extends AppCompatActivity implements View.OnFocusChangeListener {
+public class CategoryAdd extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,17 +19,14 @@ public class CategoryAdd extends AppCompatActivity implements View.OnFocusChange
         getSupportActionBar().setTitle("Add Category");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-       // findViewById(R.id.descId).setOnFocusChangeListener(this);
-       // findViewById(R.id.amountId).setOnFocusChangeListener(this);
+        findViewById(R.id.cateHintBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayHintCateTitle();
+            }
+        });
     }
 
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus) {
-            v.setBackgroundResource(R.drawable.focus_text_style);
-        } else {
-            v.setBackgroundResource(R.drawable.lost_focus_text_style);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -37,6 +37,17 @@ public class CategoryAdd extends AppCompatActivity implements View.OnFocusChange
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void displayHintCateTitle()
+    {
+        final String[] elements = {"ele1", "2", "3"};
+        Dialog dialog = MyUtility.displayHintDialog(this, elements, new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(CategoryAdd.this, elements[position], Toast.LENGTH_LONG).show();
+            }
+        },true);
     }
 
     @Override

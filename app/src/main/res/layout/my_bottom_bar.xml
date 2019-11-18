@@ -18,6 +18,7 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/expenseAddBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
@@ -43,6 +44,7 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/incomeAddBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
@@ -52,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add expense"
+                android:text="Add Income"
                 android:textSize="10sp"
                 />
         </LinearLayout>
@@ -68,6 +70,7 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/cateAddBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
@@ -77,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add expense"
+                android:text="Add Category"
                 android:textSize="10sp"
                 />
         </LinearLayout>
@@ -93,6 +96,7 @@
             android:orientation="vertical"
             >
             <Button
+                android:id="@+id/chartBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
@@ -102,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add expense"
+                android:text="Chart"
                 android:textSize="10sp"
                 />
         </LinearLayout>

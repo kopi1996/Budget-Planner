@@ -7,38 +7,10 @@
     tools:context=".CategoryView"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/searchViewLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/searhCateViewList"
-        android:layout_marginTop="15dp"
-        android:nestedScrollingEnabled="false"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:visibility="visible"
-        android:scrollbars="vertical">
-
-    </android.support.v7.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/catEmptyMsgTxt"
-        android:text="No results"
-        android:visibility="invisible"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-
+    <include layout="@layout/search_pannel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    </RelativeLayout>
 
 
     <LinearLayout

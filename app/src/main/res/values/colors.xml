@@ -8,4 +8,5 @@
     <color name="mainBack">#F7F7F7</color>
     <color name="txtFocus">#4CC9EB</color>
     <color name="appBarColor">#3FCC43</color>
+    <color name="swipebackground">#cf0b4e</color>
 </resources>

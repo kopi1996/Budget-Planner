@@ -2,29 +2,31 @@ package com.planner.budgetplanner;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Model.Category;
+import com.planner.budgetplanner.Other.SwipeUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryView extends AppCompatActivity {
 
@@ -32,8 +34,8 @@ public class CategoryView extends AppCompatActivity {
     ArrayList<Category> list;
     RecyclerView recyclerView;
     RecyclerView searcRecylerView;
-    private boolean isSearchEnabled;
     SearchView searchView;
+    private boolean isSearchEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class CategoryView extends AppCompatActivity {
         setContentView(R.layout.activity_category_view);
 
         recyclerView = findViewById(R.id.cateViewList);
-        searcRecylerView=findViewById(R.id.searhCateViewList);
+        searcRecylerView = findViewById(R.id.searhCateViewList);
         getSupportActionBar().setTitle("Expenditures");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -79,6 +81,8 @@ public class CategoryView extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
+        //enableSwipeToDeleteAndUndo();
+        setSwipeForRecyclerView();
 
         Spinner spinner = findViewById(R.id.catFilter);
         String[] paths = {"item 1", "item 2", "item 3"};
@@ -110,6 +114,66 @@ public class CategoryView extends AppCompatActivity {
         }
     }
 
+    private void setSwipeForRecyclerView() {
+
+        SwipeUtil swipeHelper = new SwipeUtil(0, ItemTouchHelper.LEFT, this) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                adapter = (CategoryAdapter)recyclerView.getAdapter();
+                //myAdapter.pendingRemoval(swipedPosition);
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+//                myAdapter = (MyAdapter) mRecyclerView.getAdapter();
+//                if (myAdapter.isPendingRemoval(position)) {
+//                    return 0;
+//                }
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+        };
+
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(swipeHelper);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        //set swipe label
+        swipeHelper.setLeftSwipeLable("Archive");
+        //set swipe background-Color
+        swipeHelper.setLeftcolorCode(ContextCompat.getColor(this, R.color.swipebackground));
+    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallBack swipeToDeleteCallback = new SwipeToDeleteCallBack(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final Category item = adapter.getData().get(position);
+
+                adapter.removeItem(position);
+
+
+                Snackbar snackbar = Snackbar
+                        .make(findViewById(R.id.cateViewLayout), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.restoreItem(item, position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -118,13 +182,13 @@ public class CategoryView extends AppCompatActivity {
         int searchCloseButtonId = searchView.getContext().getResources()
                 .getIdentifier("android:id/search_close_btn", null, null);
         final ImageView searchClose = searchView.findViewById(searchCloseButtonId);
-        searchClose.setColorFilter(Color.argb(150,255,255,255));
+        searchClose.setColorFilter(Color.argb(150, 255, 255, 255));
 
 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                isSearchEnabled=true;
+            public void onClick(View v) {
+                isSearchEnabled = true;
                 searcRecylerView.setAdapter(adapter);
                 findViewById(R.id.cateViewLayout).setVisibility(View.INVISIBLE);
                 findViewById(R.id.searchViewLayout).setVisibility(View.VISIBLE);
@@ -134,11 +198,10 @@ public class CategoryView extends AppCompatActivity {
         });
 
 
-
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                isSearchEnabled=false;
+                isSearchEnabled = false;
                 findViewById(R.id.cateViewLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.searchViewLayout).setVisibility(View.INVISIBLE);
                 return false;
@@ -158,17 +221,14 @@ public class CategoryView extends AppCompatActivity {
 
                 if (newText.isEmpty()) {
                     searchClose.setAlpha(150);
-                }
-                else
-                {
+                } else {
                     searchClose.setAlpha(255);
                 }
                 ArrayList<Category> newList = categoryFilter(CategoryView.this.list, newText);
                 if (newList.isEmpty()) {
                     findViewById(R.id.catEmptyMsgTxt).setVisibility(View.VISIBLE);
                     searcRecylerView.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     adapter = new CategoryAdapter(newList, new CategoryAdapter.IItemListner() {
                         @Override
                         public void onItemClick(View view, int pos) {
@@ -185,12 +245,10 @@ public class CategoryView extends AppCompatActivity {
         return true;
     }
 
-    private ArrayList<Category> categoryFilter(ArrayList<Category> oldList,String title)
-    {
-        ArrayList<Category> newList=new ArrayList<>();
-        for (Category c:oldList)
-        {
-            if(c.getTitle().contains(title))
+    private ArrayList<Category> categoryFilter(ArrayList<Category> oldList, String title) {
+        ArrayList<Category> newList = new ArrayList<>();
+        for (Category c : oldList) {
+            if (c.getTitle().contains(title))
                 newList.add(c);
         }
 

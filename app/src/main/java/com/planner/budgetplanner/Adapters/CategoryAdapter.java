@@ -46,6 +46,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         return list.size();
     }
 
+    public void removeItem(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Category item, int position) {
+        list.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public ArrayList<Category> getData() {
+        return list;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

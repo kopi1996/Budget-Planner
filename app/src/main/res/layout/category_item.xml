@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/cateItem"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="5dp">
 
     <TextView
+        android:id="@+id/cateTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Some"
@@ -28,6 +31,7 @@
                 android:textSize="10sp"/>
 
             <TextView
+                android:id="@+id/cateSpentTxt"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,10 +47,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Budget Spent"
+                android:text="Actual Budget"
                 android:textSize="10sp"/>
 
             <TextView
+                android:id="@+id/cateBudgetTxt"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,10 +67,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Budget Spent"
+                android:text="Remaining"
                 android:textSize="10sp"/>
 
             <TextView
+                android:id="@+id/cateRemainTxt"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,16 +88,16 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/bottomProgressBar"
+        android:id="@+id/cateProgressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_centerVertical="true"
+        android:progressDrawable="@drawable/normal_progress_bar"
         android:indeterminate="false"
         android:max="100"
         android:progress="35"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="35dp"
-        android:progressDrawable="@drawable/horizontal_progress_bar" />
+        android:layout_marginRight="35dp" />
 
 </LinearLayout>

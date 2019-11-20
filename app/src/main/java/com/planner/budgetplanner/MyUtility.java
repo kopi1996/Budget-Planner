@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Display;
@@ -14,6 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
+import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.Model.BudgetObject;
+
+import java.util.ArrayList;
 
 public class MyUtility {
 
@@ -36,7 +44,7 @@ public class MyUtility {
         return dialog;
     }
 
-    public static Dialog displayHintDialog(final Activity activity, String[] arr, final AdapterView.OnItemClickListener listener, final boolean dismissBox) {
+    public static Dialog displayHintDialog(final Activity activity, ArrayList<BudgetObject> list, final MyItemAdapter.IItemListner listener, final boolean dismissBox) {
         int width = 0;
         int height = 0;
         Point size = new Point();
@@ -66,18 +74,19 @@ public class MyUtility {
         dialog.getWindow().setAttributes(lWindowParams);
 
 
-        final ListView myListView = dialog.findViewById(R.id.listViewDialog);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, R.layout.list_view_text_item, R.id.listItemTxt, arr);
-        myListView.setAdapter(adapter);
-        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final RecyclerView myListView = dialog.findViewById(R.id.listViewDialog);
+        myListView.setHasFixedSize(true);
+        myListView.setNestedScrollingEnabled(false);
+        myListView.setItemAnimator(new DefaultItemAnimator());
+        BudgetObjectAdapter adapter=new BudgetObjectAdapter(list, new MyItemAdapter.IItemListner() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onItemClick(parent, view, position, id);
-                if (dismissBox) {
+            public void onClick(View v, int pos) {
+                if(dismissBox)
                     dialog.dismiss();
-                }
+                listener.onClick(v,pos);
             }
         });
+        myListView.setAdapter(adapter);
 
         dialog.show();
 

@@ -9,6 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.Model.BudgetObject;
+
+import java.util.ArrayList;
+
 public class CategoryAdd extends AppCompatActivity {
 
     @Override
@@ -41,13 +46,26 @@ public class CategoryAdd extends AppCompatActivity {
 
     private void displayHintCateTitle()
     {
-        final String[] elements = {"ele1", "2", "3"};
-        Dialog dialog = MyUtility.displayHintDialog(this, elements, new AdapterView.OnItemClickListener() {
+        final ArrayList<BudgetObject> elements=new ArrayList<>();
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+        Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(CategoryAdd.this, elements[position], Toast.LENGTH_LONG).show();
+            public void onClick(View v, int pos) {
+                Toast.makeText(CategoryAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();
             }
-        },true);
+        } ,true);
     }
 
     @Override

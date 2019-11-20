@@ -14,6 +14,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.Model.BudgetObject;
+
+import java.util.ArrayList;
+
 public class ExpenseAdd extends AppCompatActivity {
 
     EditText pickCateBtn;
@@ -27,7 +32,7 @@ public class ExpenseAdd extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        final Button pickerBtn=findViewById(R.id.datePickerBtn);
+        final Button pickerBtn = findViewById(R.id.datePickerBtn);
         pickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,10 +62,9 @@ public class ExpenseAdd extends AppCompatActivity {
 
     }
 
-    private void displayDatePicker()
-    {
-        final Dialog dialog=MyUtility.displayDatePickerWindow(this);
-        final DatePicker picker=dialog.findViewById(R.id.datePicker);
+    private void displayDatePicker() {
+        final Dialog dialog = MyUtility.displayDatePickerWindow(this);
+        final DatePicker picker = dialog.findViewById(R.id.datePicker);
         final View okBtn = dialog.findViewById(R.id.okBtn);
         final View cancelBtn = dialog.findViewById(R.id.cancelBtn);
 
@@ -95,20 +99,31 @@ public class ExpenseAdd extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.category_menu,menu);
+        getMenuInflater().inflate(R.menu.category_menu, menu);
 
         return true;
     }
 
-    private void displayHintDialog()
-    {
-        final String countryList[] = {"India1", "China1", "australia1", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand"};
+    private void displayHintDialog() {
+        final ArrayList<BudgetObject> elements=new ArrayList<>();
+        elements.add(new BudgetObject("1",""));
 
-        final Dialog dialog = MyUtility.displayHintDialog(this, countryList, new AdapterView.OnItemClickListener() {
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+        Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pickCateBtn.setText(countryList[position]);
+            public void onClick(View v, int pos) {
+                Toast.makeText(ExpenseAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();
             }
-        },true);
+        } ,true);
     }
 }

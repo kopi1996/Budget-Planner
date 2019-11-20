@@ -1,23 +1,14 @@
 package com.planner.budgetplanner.Model;
 
-public class Category {
+public class Category extends BudgetObject {
 
-    private String title;
     private double spent;
     private double budget;
 
-    public Category(String title, double spent, double budget) {
-        this.title = title;
+    public Category(String title,  String description,double spent, double budget) {
+        super(title,description);
         this.spent = spent;
         this.budget = budget;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public double getSpent() {

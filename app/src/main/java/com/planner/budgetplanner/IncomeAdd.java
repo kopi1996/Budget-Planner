@@ -26,6 +26,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.Model.BudgetObject;
+
+import java.util.ArrayList;
+
 public class IncomeAdd extends AppCompatActivity {
 
     private static final String TAG = "IncomeAdd";
@@ -69,15 +74,26 @@ public class IncomeAdd extends AppCompatActivity {
 
     private void displayHintDialog()
     {
-        final String countryList[] = {"India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand","India", "China", "australia", "Portugle", "America", "NewZealand"};
+        final ArrayList<BudgetObject> elements=new ArrayList<>();
+        elements.add(new BudgetObject("1",""));
 
-        Dialog dialog = MyUtility.displayHintDialog(this, countryList, new AdapterView.OnItemClickListener() {
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+
+        elements.add(new BudgetObject("1",""));
+        Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(IncomeAdd.this, countryList[position], Toast.LENGTH_LONG).show();
+            public void onClick(View v, int pos) {
+                Toast.makeText(IncomeAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();
             }
-        },true);
-
+        } ,true);
     }
 
     private void displayDatePicker()

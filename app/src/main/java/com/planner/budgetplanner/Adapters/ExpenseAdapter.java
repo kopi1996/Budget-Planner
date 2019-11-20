@@ -56,9 +56,4 @@ public class ExpenseAdapter extends MyItemAdapter<Expense> {
             dateTimeTxt.setText(expense.getDate()+" "+expense.getTime());
         }
     }
-
-    public interface IItemListner
-    {
-        void onClick(View v,int pos);
-    }
 }

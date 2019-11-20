@@ -61,17 +61,20 @@ public class CategoryView extends AppCompatActivity {
         searcRecylerView.setItemAnimator(new DefaultItemAnimator());
 
         list = new ArrayList<>();
-        list.add(new Category("1", 100, 200));
-        list.add(new Category("2", 15, 35));
-        list.add(new Category("3", 40, 30));
-        list.add(new Category("4", 50, 50));
-        list.add(new Category("5", 0, 2000000));
-        list.add(new Category("6", 0, 0));
-        list.add(new Category("7", 0, 0));
-        list.add(new Category("8", 0, 0));
-        list.add(new Category("9", 0, 0));
-        list.add(new Category("10", 0, 0));
-        list.add(new Category("11", 0, 0));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("1","", 100, 200));
+        list.add(new Category("2","", 15, 35));
+        list.add(new Category("2","", 15, 35));
 
         adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
 

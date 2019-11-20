@@ -3,6 +3,7 @@ package com.planner.budgetplanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -24,7 +25,10 @@ public class IncomeView extends AppCompatActivity {
 
         recyclerView=findViewById(R.id.incomeViewList);
         recyclerView.setHasFixedSize(true);
+
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         ArrayList<Income> list=new ArrayList<>();
         list.add(new Income("soem","abc",25,"","sdsdd"));

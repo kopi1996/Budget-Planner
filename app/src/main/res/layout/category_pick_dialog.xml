@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/catPickDialNoItemTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="35dp"
+        android:paddingHorizontal="10dp"
+        android:text="No Item found"
+        android:textColor="@color/txtFocus"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/catePickDiaViewList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:nestedScrollingEnabled="false"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+
+    <LinearLayout
+        android:id="@+id/bottCateDia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_below="@+id/catePickDiaViewList"
+        android:paddingRight="10dp"
+        android:paddingVertical="15dp">
+
+        <TextView
+            android:id="@+id/catPickDiaCancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANCEL"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:textSize="15sp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/txtFocus"/>
+
+        <TextView
+            android:id="@+id/catPickDiaAddBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADD CATEGORY"
+            android:paddingHorizontal="7dp"
+            android:paddingVertical="2dp"
+            android:textSize="15sp"
+            android:textColor="@color/txtFocus"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

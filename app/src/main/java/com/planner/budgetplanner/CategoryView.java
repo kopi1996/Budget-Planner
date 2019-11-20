@@ -87,8 +87,7 @@ public class CategoryView extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
         adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout),recyclerView);
-        //enableSwipeToDeleteAndUndo();
-        //setSwipeForRecyclerView();
+
 
         Spinner spinner = findViewById(R.id.catFilter);
         String[] paths = {"item 1", "item 2", "item 3"};

@@ -1,19 +1,26 @@
 package com.planner.budgetplanner;
 
 import android.app.Dialog;
+import android.graphics.Point;
 import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
 
@@ -107,48 +114,97 @@ public class ExpenseAdd extends AppCompatActivity {
     private void displayHintDialog() {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
         elements.add(new BudgetObject("1",""));
+        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
+//        elements.add(new BudgetObject("1",""));
 
-        elements.add(new BudgetObject("1",""));
+        int width = 0;
+        int height = 0;
+        Point size = new Point();
+        WindowManager w = this.getWindowManager();
 
-        elements.add(new BudgetObject("1",""));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            w.getDefaultDisplay().getSize(size);
+            width = size.x;
+            height = size.y;
+        } else {
+            Display d = w.getDefaultDisplay();
+            width = d.getWidth();
+            height = d.getHeight();
+        }
 
-        elements.add(new BudgetObject("1",""));
 
-        elements.add(new BudgetObject("1",""));
+        int dialogHeight = (int) ((height / 100.0) * 75);
 
-        elements.add(new BudgetObject("1",""));
+        final Dialog dialog = new Dialog(this,R.style.MyDialogTheme);
+        dialog.setContentView(R.layout.category_pick_dialog);
 
-        elements.add(new BudgetObject("1",""));
-        elements.add(new BudgetObject("1",""));
+        final WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
+        lWindowParams.copyFrom(dialog.getWindow().getAttributes());
+        lWindowParams.height = dialogHeight;
 
-        elements.add(new BudgetObject("1",""));
+        //dialog.getWindow().setAttributes(lWindowParams);
 
-        elements.add(new BudgetObject("1",""));
+        final RecyclerView myListView = dialog.findViewById(R.id.catePickDiaViewList);
+        //myListView.setHasFixedSize(true);
+        myListView.setNestedScrollingEnabled(false);
+        myListView.setItemAnimator(new DefaultItemAnimator());
 
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-        Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
+        BudgetObjectAdapter adapter=new BudgetObjectAdapter(elements, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
-                Toast.makeText(ExpenseAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
             }
-        } ,true);
+        });
+
+        dialog.findViewById(R.id.catPickDiaCancelBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.catPickDiaAddBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog1=new Dialog(ExpenseAdd.this);
+                dialog1.setContentView(R.layout.category_add_dialog_box);
+                dialog1.show();
+                dialog1.findViewById(R.id.catDialogHelpBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog1.findViewById(R.id.catDialogHelpBox).setVisibility(View.VISIBLE);
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+
+        myListView.setAdapter(adapter);
+        ViewGroup.LayoutParams layoutParams = myListView.getLayoutParams();
+
+        int minListViewHeight = (int) ((dialogHeight));
+        if(adapter.getItemCount()>9)
+            layoutParams.height=minListViewHeight;
+        myListView.setLayoutParams(layoutParams);
+        dialog.show();
+
     }
 }

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,9 +64,8 @@ public class MyUtility {
 
         int dialogHeight = (int) ((height / 100.0) * 75);
 
-        final Dialog dialog = new Dialog(activity);
+        final Dialog dialog = new Dialog(activity,R.style.MyDialogTheme);
         dialog.setContentView(R.layout.list_view_window);
-
 
         final WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
         lWindowParams.copyFrom(dialog.getWindow().getAttributes());

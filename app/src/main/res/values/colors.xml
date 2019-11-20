@@ -9,4 +9,5 @@
     <color name="txtFocus">#4CC9EB</color>
     <color name="appBarColor">#3FCC43</color>
     <color name="swipebackground">#cf0b4e</color>
+    <color name="dimmTxtColor">#C0C0C0</color>
 </resources>

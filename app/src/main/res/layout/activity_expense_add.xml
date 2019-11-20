@@ -36,17 +36,17 @@
         android:layout_marginTop="15dp">
 
         <EditText
-            android:id="@+id/descTxt"
+            android:id="@+id/expAddTitleTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="Title"
             android:textCursorDrawable="@color/txtFocus" />
     </android.support.design.widget.TextInputLayout>
 
 
     <LinearLayout
         android:id="@+id/amountBox"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/descBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,6 +75,22 @@
         </Button>
 
     </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:theme="@style/TextLabel">
+
+        <EditText
+            android:id="@+id/incomeDes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:hint="Description (Optional)"
+            android:textCursorDrawable="@color/txtFocus"
+            />
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:id="@+id/helpBox"

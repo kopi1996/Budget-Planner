@@ -17,14 +17,11 @@ import com.planner.budgetplanner.R;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class CategoryAdapter extends MyItemAdapter<Category> {
 
-    private ArrayList<Category> list;
-    private final IItemListner listner;
 
-    public CategoryAdapter(ArrayList<Category> list,IItemListner listner) {
-        this.list = list;
-        this.listner=listner;
+    public CategoryAdapter(ArrayList<Category> list, MyItemAdapter.IItemListner listner) {
+        super(list, listner);
     }
 
     @NonNull
@@ -37,30 +34,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int i) {
-        holder.bindData(list.get(i));
+    public void onBindViewHolder(@NonNull MyItemAdapter.ViewHolder viewHolder, int i) {
+        super.onBindViewHolder(viewHolder, i);
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    public void removeItem(int position) {
-        list.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void restoreItem(Category item, int position) {
-        list.add(position, item);
-        notifyItemInserted(position);
-    }
-
-    public ArrayList<Category> getData() {
-        return list;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends MyItemAdapter.ViewHolder {
 
         private TextView titleTxt;
         private TextView spentTxt;
@@ -70,7 +48,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             titleTxt = itemView.findViewById(R.id.cateTitle);
             spentTxt = itemView.findViewById(R.id.cateSpentTxt);
             budgetTxt = itemView.findViewById(R.id.cateBudgetTxt);
@@ -78,13 +55,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             progressBar = itemView.findViewById(R.id.cateProgressBar);
         }
 
-
         @Override
-        public void onClick(View v) {
-            listner.onItemClick(v, getAdapterPosition());
-        }
-
-        public void bindData(Category category) {
+        public void bindData(Object o) {
+            Category category = (Category) o;
             titleTxt.setText(category.getTitle());
             spentTxt.setText(category.getSpent() + "rs");
             budgetTxt.setText(category.getBudget() + "rs");
@@ -94,11 +67,5 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
             progressBar.setProgress(per);
         }
-    }
-
-
-    public interface IItemListner
-    {
-        void onItemClick(View view,int pos);
     }
 }

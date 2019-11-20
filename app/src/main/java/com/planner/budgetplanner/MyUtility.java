@@ -19,17 +19,17 @@ public class MyUtility {
 
 
     public static User currentUser;
+
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
-    public static String getPickerDate(DatePicker picker)
-    {
-        return picker.getDayOfMonth()+"/"+(picker.getMonth()+1)+"/"+picker.getYear();
+
+    public static String getPickerDate(DatePicker picker) {
+        return picker.getDayOfMonth() + "/" + (picker.getMonth() + 1) + "/" + picker.getYear();
     }
 
-    public static Dialog displayDatePickerWindow(Activity activity)
-    {
-        final Dialog dialog=new Dialog(activity);
+    public static Dialog displayDatePickerWindow(Activity activity) {
+        final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.calender_window);
         dialog.show();
 
@@ -72,7 +72,7 @@ public class MyUtility {
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onItemClick(parent,view,position,id);
+                listener.onItemClick(parent, view, position, id);
                 if (dismissBox) {
                     dialog.dismiss();
                 }
@@ -83,4 +83,6 @@ public class MyUtility {
 
         return dialog;
     }
+
+
 }

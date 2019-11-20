@@ -7,7 +7,6 @@
     tools:context=".CategoryView"
     android:orientation="vertical">
 
-
     <include layout="@layout/search_pannel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -36,9 +35,9 @@
 
                 <Spinner
                     android:id="@+id/catFilter"
-                    android:background="#F1F1F1"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp" />
+                    android:layout_height="wrap_content"
+                    style="@style/spinner_style"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,7 +61,6 @@
 
                     android:orientation="horizontal">
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="You Spent:"/>
@@ -113,6 +111,7 @@
             android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             android:layout_marginHorizontal="15dp"
             android:scrollbars="vertical">
 

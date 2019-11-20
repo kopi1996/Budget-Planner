@@ -50,14 +50,15 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.netDisposableBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent=new Intent(MainActivity.this,CategoryView.class);
+               Intent intent=new Intent(MainActivity.this,IncomeView.class);
                startActivity(intent);
             }
         });
         findViewById(R.id.totalExpBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkBtn2();
+                Intent intent=new Intent(MainActivity.this,CategoryView.class);
+                startActivity(intent);
             }
         });
 

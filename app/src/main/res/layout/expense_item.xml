@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cateItem"
+    android:orientation="horizontal"
+    android:paddingHorizontal="7dp"
+    android:paddingVertical="5dp">
+
+    <TextView
+        android:id="@+id/expItemProf"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/profile_letter_bg"
+        android:text="T"
+        android:textStyle="bold"
+        android:textColor="#ADADAD"
+        android:gravity="center"
+        android:textSize="25sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
+
+        <TextView
+            android:id="@+id/expItemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="abcd"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/expItemAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="cd"
+                android:gravity="center_vertical"
+                android:textSize="13sp"
+                />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/expItemDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="cdadsd"
+                android:gravity="center_vertical"
+                android:textColor="@color/dimmTxtColor"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</LinearLayout>

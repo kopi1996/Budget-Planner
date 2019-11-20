@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
+import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Other.SwipeUtil;
 
@@ -72,17 +73,19 @@ public class CategoryView extends AppCompatActivity {
         list.add(new Category("10", 0, 0));
         list.add(new Category("11", 0, 0));
 
-        adapter = new CategoryAdapter(list, new CategoryAdapter.IItemListner() {
+        adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
+
             @Override
-            public void onItemClick(View view, int pos) {
+            public void onClick(View v, int pos) {
                 startActivity(new Intent(CategoryView.this, ExpenseView.class));
                 Toast.makeText(CategoryView.this, list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
             }
         });
 
         recyclerView.setAdapter(adapter);
+        adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout),recyclerView);
         //enableSwipeToDeleteAndUndo();
-        setSwipeForRecyclerView();
+        //setSwipeForRecyclerView();
 
         Spinner spinner = findViewById(R.id.catFilter);
         String[] paths = {"item 1", "item 2", "item 3"};
@@ -147,7 +150,6 @@ public class CategoryView extends AppCompatActivity {
         SwipeToDeleteCallBack swipeToDeleteCallback = new SwipeToDeleteCallBack(this) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
 
                 final int position = viewHolder.getAdapterPosition();
                 final Category item = adapter.getData().get(position);
@@ -229,9 +231,10 @@ public class CategoryView extends AppCompatActivity {
                     findViewById(R.id.catEmptyMsgTxt).setVisibility(View.VISIBLE);
                     searcRecylerView.setVisibility(View.INVISIBLE);
                 } else {
-                    adapter = new CategoryAdapter(newList, new CategoryAdapter.IItemListner() {
+                    adapter = new CategoryAdapter(newList, new MyItemAdapter.IItemListner() {
+
                         @Override
-                        public void onItemClick(View view, int pos) {
+                        public void onClick(View v, int pos) {
                             startActivity(new Intent(CategoryView.this, ExpenseView.class));
                             Toast.makeText(CategoryView.this, CategoryView.this.list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
                         }

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:background="@drawable/list_txt_item_selector"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:paddingVertical="15dp"
         />
 

@@ -152,9 +152,9 @@ public class ExpenseAdd extends AppCompatActivity {
 
         int dialogHeight = (int) ((height / 100.0) * 75);
 
-        final Dialog dialog = new Dialog(this,R.style.MyDialogTheme);
+        final Dialog dialog = new Dialog(this,R.style.DialogTitleTheme);
         dialog.setContentView(R.layout.category_pick_dialog);
-
+        dialog.setTitle("Pick Category");
         final WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
         lWindowParams.copyFrom(dialog.getWindow().getAttributes());
         lWindowParams.height = dialogHeight;
@@ -162,7 +162,7 @@ public class ExpenseAdd extends AppCompatActivity {
         //dialog.getWindow().setAttributes(lWindowParams);
 
         final RecyclerView myListView = dialog.findViewById(R.id.catePickDiaViewList);
-        //myListView.setHasFixedSize(true);
+        myListView.setHasFixedSize(true);
         myListView.setNestedScrollingEnabled(false);
         myListView.setItemAnimator(new DefaultItemAnimator());
 
@@ -183,8 +183,9 @@ public class ExpenseAdd extends AppCompatActivity {
         dialog.findViewById(R.id.catPickDiaAddBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog1=new Dialog(ExpenseAdd.this);
+                final Dialog dialog1=new Dialog(ExpenseAdd.this,R.style.DialogTitleTheme);
                 dialog1.setContentView(R.layout.category_add_dialog_box);
+                dialog1.setTitle("Add Category");
                 dialog1.show();
                 dialog1.findViewById(R.id.catDialogHelpBtn).setOnClickListener(new View.OnClickListener() {
                     @Override

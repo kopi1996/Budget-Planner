@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item>
+                <layer-list>
+                    <item>
+                        <color android:color="#00000000"/>
+                    </item>
+                    <item android:left="5dp">
+                        <bitmap android:gravity="center_horizontal|center" android:src="@drawable/calendar_icon">
+                            <padding android:left="2dp" />
+                        </bitmap>
+                    </item>
+<!--                    <item android:right="5dp">-->
+<!--                        <bitmap android:gravity="center_horizontal|right" android:src="@drawable/arrow_icon">-->
+<!--                            <padding android:right="2dp" />-->
+<!--                        </bitmap>-->
+<!--                    </item>-->
+                </layer-list>
+            </item>
+</selector>

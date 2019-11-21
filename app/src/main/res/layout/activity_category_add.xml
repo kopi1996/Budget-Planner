@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CategoryAdd"
-    android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     >
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <LinearLayout
         android:id="@+id/descBox"
         android:layout_marginTop="15dp"
@@ -27,10 +33,11 @@
                 android:id="@+id/descId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
                 android:hint="Title"
-                android:textCursorDrawable="@color/txtFocus"
-                />
+                android:textCursorDrawable="@color/txtFocus" />
         </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -58,7 +65,7 @@
                 android:id="@+id/amountId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:inputType="numberDecimal"
                 android:hint="Estimated Budget"
                 android:textCursorDrawable="@color/txtFocus"
                 />
@@ -137,5 +144,6 @@
             android:layout_height="wrap_content"
             />
     </LinearLayout>
-
-</LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

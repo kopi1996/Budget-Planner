@@ -37,9 +37,12 @@
                     android:id="@+id/catFilter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="10dp"
+                    android:entries="@array/filter_array"
                     style="@style/spinner_style"/>
 
                 <LinearLayout
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -56,6 +59,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -90,6 +94,7 @@
                 </LinearLayout>
 
                 <ProgressBar
+
                     android:id="@+id/catFullViewProBar"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
@@ -99,7 +104,7 @@
                     android:indeterminate="false"
                     android:max="100"
                     android:progress="35"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="10dp"/>
 
             </LinearLayout>
 

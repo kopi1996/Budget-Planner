@@ -1,141 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/incomeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncomeAdd"
-    android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    >
+    tools:context=".IncomeAdd">
 
-    <LinearLayout
-        android:id="@+id/descBox"
-        android:layout_marginTop="15dp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel"
-            android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/descId"
+            <LinearLayout
+                android:id="@+id/descBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-                android:hint="Title"
-                android:textCursorDrawable="@color/txtFocus" />
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:theme="@style/TextLabel">
 
-        <Button
-            android:id="@+id/hintBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""/>
-    </LinearLayout>
+                    <EditText
+                        android:id="@+id/descId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:hint="Title"
+                        android:textCursorDrawable="@color/txtFocus" />
+                </android.support.design.widget.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/amountBox"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/hintBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="" />
+            </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel"
-            android:layout_weight="1">
-
-            <EditText
-                android:id="@+id/amountId"
+            <LinearLayout
+                android:id="@+id/amountBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-                android:hint="Estimated Budget"
-                android:textCursorDrawable="@color/txtFocus"
-                />
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:theme="@style/TextLabel">
 
-        <Button
-            android:id="@+id/datePickerBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-        </Button>
+                    <EditText
+                        android:id="@+id/amountId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:hint="Estimated Budget"
+                        android:textCursorDrawable="@color/txtFocus" />
+                </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/datePickerBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"></Button>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:theme="@style/TextLabel">
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/incomeAddDes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:theme="@style/TextLabel">
 
-            android:hint="Description (Optional)"
-            android:textCursorDrawable="@color/txtFocus"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/incomeAddDes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-    <LinearLayout
-        android:id="@+id/helpBox"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                    android:hint="Description (Optional)"
+                    android:textCursorDrawable="@color/txtFocus" />
+            </android.support.design.widget.TextInputLayout>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            <LinearLayout
+                android:id="@+id/helpBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Need Help?"/>
-    </LinearLayout>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_below="@+id/helpBox"
-        android:layout_marginTop="25dp"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Need Help?" />
+            </LinearLayout>
 
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/helpBox"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ssssssssssssssssssssssssssssssss" />
 
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ssssssssssssssssssssssssssssssss" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ssssssssssssssssssssssssssssssss" />
 
-</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ssssssssssssssssssssssssssssssss" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

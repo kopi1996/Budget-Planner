@@ -2,7 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,138 +18,138 @@
         android:paddingBottom="15dp">
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cateDialogTitlePar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:theme="@style/TextLabel">
-
-        <EditText
-            android:id="@+id/catDialogTitle"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cateDialogTitlePar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:hint="Title"
-            android:textCursorDrawable="@color/txtFocus" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="15dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:theme="@style/TextLabel">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cateDialogDescPar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:theme="@style/TextLabel">
+            <EditText
+                android:id="@+id/catDialogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textCursorDrawable="@color/txtFocus" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/catDialogDes"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cateDialogDescPar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description (Optional)"
-            android:textCursorDrawable="@color/txtFocus" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="15dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:theme="@style/TextLabel">
+
+            <EditText
+                android:id="@+id/catDialogDes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description (Optional)"
+                android:textCursorDrawable="@color/txtFocus" />
+        </android.support.design.widget.TextInputLayout>
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/cateDialogAmountPar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:theme="@style/TextLabel">
-
-        <EditText
-            android:id="@+id/catDialogAmount"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cateDialogAmountPar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Estimated Budget"
-            android:maxLines="1"
-            android:inputType="number"
-            android:textCursorDrawable="@color/txtFocus" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="15dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:theme="@style/TextLabel">
 
-    <LinearLayout
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+            <EditText
+                android:id="@+id/catDialogAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Estimated Budget"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textCursorDrawable="@color/txtFocus" />
+        </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/catDialCancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="CANCEL"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:textColor="@color/txtFocus"
-            android:layout_marginRight="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="end"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/catDialOkBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@color/txtFocus"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:text="OK" />
+            <TextView
+                android:id="@+id/catDialCancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="CANCEL"
+                android:textColor="@color/txtFocus" />
 
+            <TextView
+                android:id="@+id/catDialOkBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="OK"
+                android:textColor="@color/txtFocus" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/catDialogHelpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Need Help?" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/catDialogHelpBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ssssssssssssssssssssssssssssssss" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ssssssssssssssssssssssssssssssss" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ssssssssssssssssssssssssssssssss" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ssssssssssssssssssssssssssssssss" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/catDialogHelpBtn"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Need Help?"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/catDialogHelpBox"
-        android:layout_marginTop="25dp"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:text="ssssssssssssssssssssssssssssssss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-    </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

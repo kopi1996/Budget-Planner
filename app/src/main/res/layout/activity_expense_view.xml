@@ -33,12 +33,30 @@
                 android:orientation="vertical"
                 android:layout_marginVertical="10dp">
 
-                <Spinner
-                    android:id="@+id/expFilter"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/spinner_style"
-                    android:spinnerMode="dropdown"/>
+                    android:orientation="horizontal">
+
+                <include layout="@layout/filter_dropdown_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_weight="4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Edit"
+                        android:textSize="15sp"
+                        android:layout_gravity="center"
+                        android:gravity="end"
+                        android:textColor="@color/txtFocus"
+                        android:layout_marginLeft="10dp"
+                        android:paddingVertical="5dp"
+                        android:background="@drawable/transparentbtn"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

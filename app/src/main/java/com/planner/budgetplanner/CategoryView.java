@@ -89,12 +89,12 @@ public class CategoryView extends AppCompatActivity {
         adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout),recyclerView);
 
 
-        Spinner spinner = findViewById(R.id.catFilter);
-        String[] paths = {"item 1", "item 2", "item 3"};
-        ArrayAdapter<String> spinnerAdapet = new ArrayAdapter<String>(CategoryView.this,
-                android.R.layout.simple_spinner_item, paths);
-        spinnerAdapet.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapet);
+//        Spinner spinner = findViewById(R.id.catFilter);
+//        String[] paths = {"item 1", "item 2", "item 3"};
+//        ArrayAdapter<String> spinnerAdapet = new ArrayAdapter<String>(CategoryView.this,
+//                android.R.layout.simple_spinner_item, paths);
+//        spinnerAdapet.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        spinner.setAdapter(spinnerAdapet);
     }
 
     @Override

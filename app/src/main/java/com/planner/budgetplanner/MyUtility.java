@@ -16,11 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Category;
 
 import java.util.ArrayList;
 
@@ -64,7 +66,7 @@ public class MyUtility {
 
         int dialogHeight = (int) ((height / 100.0) * 75);
 
-        final Dialog dialog = new Dialog(activity,R.style.MyDialogTheme);
+        final Dialog dialog = new Dialog(activity, R.style.MyDialogTheme);
         dialog.setContentView(R.layout.list_view_window);
 
         final WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
@@ -78,12 +80,12 @@ public class MyUtility {
         myListView.setHasFixedSize(true);
         myListView.setNestedScrollingEnabled(false);
         myListView.setItemAnimator(new DefaultItemAnimator());
-        BudgetObjectAdapter adapter=new BudgetObjectAdapter(list, new MyItemAdapter.IItemListner() {
+        BudgetObjectAdapter adapter = new BudgetObjectAdapter(list, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
-                if(dismissBox)
+                if (dismissBox)
                     dialog.dismiss();
-                listener.onClick(v,pos);
+                listener.onClick(v, pos);
             }
         });
         myListView.setAdapter(adapter);
@@ -93,5 +95,23 @@ public class MyUtility {
         return dialog;
     }
 
+    public static<T1 extends BudgetObject,T2 extends MyItemAdapter> void setUpSearch(Activity activity, SearchView searchView, RecyclerView recyclerView)
+    {
 
+    }
+
+    public static <T> T getInstanceOfT(Class<T> aClass) throws InstantiationException, IllegalAccessException {
+        return aClass.newInstance();
+    }
+
+    public static<T extends BudgetObject> ArrayList<T> filterWithName(ArrayList<T> oldList,String newTxt)
+    {
+        ArrayList<T> newList = new ArrayList<>();
+        for (T c : oldList) {
+            if (c.getTitle().contains(newTxt))
+                newList.add(c);
+        }
+
+        return newList;
+    }
 }

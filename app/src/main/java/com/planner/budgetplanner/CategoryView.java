@@ -23,20 +23,18 @@ import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Other.SwipeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryView extends AppCompatActivity {
+public class CategoryView extends BudgetObjectView {
 
-    CategoryAdapter adapter;
-    ArrayList<Category> list;
-    RecyclerView recyclerView;
-    RecyclerView searcRecylerView;
-    SearchView searchView;
-    private boolean isSearchEnabled;
+    private CategoryAdapter adapter;
+    private ArrayList<Category> list;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +42,9 @@ public class CategoryView extends AppCompatActivity {
         setContentView(R.layout.activity_category_view);
 
         recyclerView = findViewById(R.id.cateViewList);
-        searcRecylerView = findViewById(R.id.searhCateViewList);
+        homeView=findViewById(R.id.cateViewLayout);
         getSupportActionBar().setTitle("Expenditures");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        searcRecylerView.setLayoutManager(new LinearLayoutManager(this));
-        searcRecylerView.setHasFixedSize(true);
-        searcRecylerView.setNestedScrollingEnabled(false);
-        searcRecylerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        searcRecylerView.setItemAnimator(new DefaultItemAnimator());
 
         list = new ArrayList<>();
         list.add(new Category("1","", 100, 200));
@@ -85,8 +71,31 @@ public class CategoryView extends AppCompatActivity {
             }
         });
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout),recyclerView);
+
+        searchRecyclerView=findViewById(R.id.searhCateViewList);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchRecyclerView.setHasFixedSize(true);
+        searchRecyclerView.setNestedScrollingEnabled(false);
+        searchRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout), searchRecyclerView, new MyItemAdapter.IItemSwipeListner<Category>() {
+            @Override
+            public void onRemove(Category item, int pos) {
+                list.remove(item);
+            }
+
+            @Override
+            public void onRestore(Category item, int pos) {
+                list.add(item);
+            }
+        });
 
 
 //        Spinner spinner = findViewById(R.id.catFilter);
@@ -97,166 +106,94 @@ public class CategoryView extends AppCompatActivity {
 //        spinner.setAdapter(spinnerAdapet);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
-    public void onBackPressed() {
-        if (isSearchEnabled) {
-            searchView.onActionViewCollapsed();
-            searchView.setIconified(true);
-            isSearchEnabled = false;
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private void setSwipeForRecyclerView() {
-
-        SwipeUtil swipeHelper = new SwipeUtil(0, ItemTouchHelper.LEFT, this) {
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-                adapter = (CategoryAdapter)recyclerView.getAdapter();
-                //myAdapter.pendingRemoval(swipedPosition);
-            }
-
-            @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-//                myAdapter = (MyAdapter) mRecyclerView.getAdapter();
-//                if (myAdapter.isPendingRemoval(position)) {
-//                    return 0;
-//                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
-        };
-
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(swipeHelper);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
-        //set swipe label
-        swipeHelper.setLeftSwipeLable("Archive");
-        //set swipe background-Color
-        swipeHelper.setLeftcolorCode(ContextCompat.getColor(this, R.color.swipebackground));
-    }
-
-    private void enableSwipeToDeleteAndUndo() {
-        SwipeToDeleteCallBack swipeToDeleteCallback = new SwipeToDeleteCallBack(this) {
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
-                final int position = viewHolder.getAdapterPosition();
-                final Category item = adapter.getData().get(position);
-
-                adapter.removeItem(position);
-
-
-                Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.cateViewLayout), "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        adapter.restoreItem(item, position);
-                        recyclerView.scrollToPosition(position);
-                    }
-                });
-
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
-
-            }
-        };
-
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+    protected void onCloseSearchView() {
+        super.onCloseSearchView();
+        adapter.setList(list);
+        recyclerView.setAdapter(adapter);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.searchBtn);
-        searchView = (SearchView) item.getActionView();
-        int searchCloseButtonId = searchView.getContext().getResources()
-                .getIdentifier("android:id/search_close_btn", null, null);
-        final ImageView searchClose = searchView.findViewById(searchCloseButtonId);
-        searchClose.setColorFilter(Color.argb(150, 255, 255, 255));
+        super.onCreateOptionsMenu(menu);
 
-
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        setupSearchView(adapter, list, new ISearchListner<Category>() {
             @Override
-            public void onClick(View v) {
-                isSearchEnabled = true;
-                searcRecylerView.setAdapter(adapter);
-                findViewById(R.id.cateViewLayout).setVisibility(View.INVISIBLE);
-                findViewById(R.id.searchViewLayout).setVisibility(View.VISIBLE);
-                searcRecylerView.setVisibility(View.VISIBLE);
-                findViewById(R.id.catEmptyMsgTxt).setVisibility(View.INVISIBLE);
-            }
-        });
-
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                isSearchEnabled = false;
-                findViewById(R.id.cateViewLayout).setVisibility(View.VISIBLE);
-                findViewById(R.id.searchViewLayout).setVisibility(View.INVISIBLE);
-                return false;
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(CategoryView.this, "Search Fiished: " + query, Toast.LENGTH_LONG).show();
-                searchView.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (newText.isEmpty()) {
-                    searchClose.setAlpha(150);
-                } else {
-                    searchClose.setAlpha(255);
-                }
-                ArrayList<Category> newList = categoryFilter(CategoryView.this.list, newText);
-                if (newList.isEmpty()) {
-                    findViewById(R.id.catEmptyMsgTxt).setVisibility(View.VISIBLE);
-                    searcRecylerView.setVisibility(View.INVISIBLE);
-                } else {
-                    adapter = new CategoryAdapter(newList, new MyItemAdapter.IItemListner() {
-
+            public void onResult(ArrayList<Category> result) {
+                adapter.initialize(result,new MyItemAdapter.IItemListner() {
                         @Override
                         public void onClick(View v, int pos) {
                             startActivity(new Intent(CategoryView.this, ExpenseView.class));
                             Toast.makeText(CategoryView.this, CategoryView.this.list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
                         }
                     });
-                    searcRecylerView.setAdapter(adapter);
-                }
-                return false;
+                    searchRecyclerView.setAdapter(adapter);
             }
         });
 
+//        searchView.setOnSearchClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isSearchEnabled = true;
+//                searchRecyclerView.setAdapter(adapter);
+//                findViewById(R.id.cateViewLayout).setVisibility(View.INVISIBLE);
+//                findViewById(R.id.searchViewLayout).setVisibility(View.VISIBLE);
+//                searchRecyclerView.setVisibility(View.VISIBLE);
+//                findViewById(R.id.catEmptyMsgTxt).setVisibility(View.INVISIBLE);
+//            }
+//        });
+//
+//
+//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//            @Override
+//            public boolean onClose() {
+//                isSearchEnabled = false;
+//                findViewById(R.id.cateViewLayout).setVisibility(View.VISIBLE);
+//                findViewById(R.id.searchViewLayout).setVisibility(View.INVISIBLE);
+//                return false;
+//            }
+//        });
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(CategoryView.this, "Search Fiished: " + query, Toast.LENGTH_LONG).show();
+//                searchView.clearFocus();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                if (newText.isEmpty()) {
+//                    searchClose.setAlpha(150);
+//                } else {
+//                    searchClose.setAlpha(255);
+//                }
+//                ArrayList<BudgetObject> tempList=new ArrayList<>();
+//                ArrayList<Category> newList = MyUtility.filterWithName(CategoryView.this.list, newText);
+//                if (newList.isEmpty()) {
+//                    findViewById(R.id.catEmptyMsgTxt).setVisibility(View.VISIBLE);
+//                    searchRecyclerView.setVisibility(View.INVISIBLE);
+//                } else {
+//                    findViewById(R.id.catEmptyMsgTxt).setVisibility(View.INVISIBLE);
+//                    searchRecyclerView.setVisibility(View.VISIBLE);
+//                    adapter = new CategoryAdapter(newList, new MyItemAdapter.IItemListner() {
+//
+//                        @Override
+//                        public void onClick(View v, int pos) {
+//                            startActivity(new Intent(CategoryView.this, ExpenseView.class));
+//                            Toast.makeText(CategoryView.this, CategoryView.this.list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//
+//                    adapter.enableSwipeToDeleteAndUndo(homeView,searchRecyclerView);
+//                    searchRecyclerView.setAdapter(adapter);
+//                }
+//                return false;
+//            }
+//        });
+
         return true;
-    }
-
-    private ArrayList<Category> categoryFilter(ArrayList<Category> oldList, String title) {
-        ArrayList<Category> newList = new ArrayList<>();
-        for (Category c : oldList) {
-            if (c.getTitle().contains(title))
-                newList.add(c);
-        }
-
-        return newList;
     }
 }

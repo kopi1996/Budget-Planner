@@ -22,7 +22,7 @@ import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends AppCompatActivity {
+public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends CustomAppBarActivity {
 
     private static final String TAG = "BudgetObjectView";
     protected SearchView searchView;
@@ -35,16 +35,10 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     protected T1 adapter;
 
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     protected void initialize(String title,View homeView, RecyclerView recyclerView) {
-
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.initialize(title);
+        enableBackBtn();
         this.recyclerView = recyclerView;
         this.homeView = homeView;
         searchRecyclerView = findViewById(R.id.searhCateViewList);
@@ -157,6 +151,17 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public interface ISearchListner<T>

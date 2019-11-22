@@ -10,19 +10,20 @@ import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class CategoryAdd extends AppCompatActivity {
+public class CategoryAdd extends BudgetObjectAdd<Category> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_add);
 
-        getSupportActionBar().setTitle("Add Category");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initialize("Add Category");
 
         findViewById(R.id.cateHintBtn).setOnClickListener(new View.OnClickListener() {
             @Override

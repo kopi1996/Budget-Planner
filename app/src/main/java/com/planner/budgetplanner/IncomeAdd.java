@@ -12,11 +12,12 @@ import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class IncomeAdd extends AppCompatActivity {
+public class IncomeAdd extends BudgetObjectAdd<Income> {
 
     private static final String TAG = "IncomeAdd";
 
@@ -24,8 +25,9 @@ public class IncomeAdd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income_add);
-        getSupportActionBar().setTitle("Add Income");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        initialize("Add Income");
 
         findViewById(R.id.datePickerBtn).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -44,10 +44,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                <include layout="@layout/filter_dropdown_layout"
+                <include
+                    android:id="@+id/expFilter"
+                    layout="@layout/filter_dropdown_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="0.6" />
 
                     <TextView
                         android:layout_weight="4"
@@ -144,5 +146,15 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/expViewFloatBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp" />
+
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

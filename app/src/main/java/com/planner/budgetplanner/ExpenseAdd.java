@@ -20,11 +20,12 @@ import android.widget.EditText;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class ExpenseAdd extends AppCompatActivity {
+public class ExpenseAdd extends BudgetObjectAdd<Expense> {
 
     EditText pickCateBtn;
 
@@ -33,9 +34,7 @@ public class ExpenseAdd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_add);
 
-        getSupportActionBar().setTitle("Add Expense");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        initialize("Add Expense");
 
         final Button pickerBtn = findViewById(R.id.datePickerBtn);
         pickerBtn.setOnClickListener(new View.OnClickListener() {
@@ -91,16 +90,7 @@ public class ExpenseAdd extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

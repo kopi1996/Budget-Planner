@@ -8,6 +8,13 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     >
+
+    <include
+        android:id="@+id/loadingBar"
+        layout="@layout/loading_screen"
+        android:visibility="invisible"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

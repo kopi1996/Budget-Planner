@@ -1,25 +1,17 @@
 package com.planner.budgetplanner;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.planner.budgetplanner.Adapters.ExpenseAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
-import com.planner.budgetplanner.Model.Expense;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 

@@ -53,6 +53,9 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
+    <style name="LoadingProgress" parent="@style/Theme.AppCompat">
+        <item name="colorAccent">#0000A0</item>
+    </style>
 
     <style name="MyDialogTheme" parent="android:Theme.Dialog">
         <item name="windowMinWidthMajor">100%</item>

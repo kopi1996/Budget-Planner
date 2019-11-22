@@ -15,12 +15,10 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.ExpenseAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
-import com.planner.budgetplanner.Model.BudgetObject;
-import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.planner.budgetplanner.Other;
+package com.planner.budgetplanner.Utility;
 
 import android.os.Build;
 

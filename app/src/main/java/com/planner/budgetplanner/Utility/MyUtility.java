@@ -1,4 +1,4 @@
-package com.planner.budgetplanner;
+package com.planner.budgetplanner.Utility;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,6 +23,8 @@ import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Category;
+import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.User;
 
 import java.util.ArrayList;
 
@@ -95,9 +97,17 @@ public class MyUtility {
         return dialog;
     }
 
-    public static<T1 extends BudgetObject,T2 extends MyItemAdapter> void setUpSearch(Activity activity, SearchView searchView, RecyclerView recyclerView)
-    {
 
+    public static void startLoading(Activity activity,ILoadingListner listner)
+    {
+        activity.findViewById(R.id.loadingBar).setVisibility(View.VISIBLE);
+        listner.onLoading(true);
+    }
+
+    public static void stopLoading(Activity activity,ILoadingListner listner)
+    {
+        activity.findViewById(R.id.loadingBar).setVisibility(View.INVISIBLE);
+        listner.onLoading(false);
     }
 
     public static <T> T getInstanceOfT(Class<T> aClass) throws InstantiationException, IllegalAccessException {

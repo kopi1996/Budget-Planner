@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CategoryView"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
+    <include
+        layout="@layout/my_action_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <include layout="@layout/search_pannel"
         android:layout_width="match_parent"
@@ -123,5 +131,6 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

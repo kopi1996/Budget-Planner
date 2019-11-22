@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ public class CategoryView extends BudgetObjectView {
     private ArrayList<Category> list;
     private RecyclerView recyclerView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class CategoryView extends BudgetObjectView {
 
         recyclerView = findViewById(R.id.cateViewList);
         homeView=findViewById(R.id.cateViewLayout);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("Expenditures");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -116,69 +120,6 @@ public class CategoryView extends BudgetObjectView {
                     searchRecyclerView.setAdapter(adapter);
             }
         });
-
-//        searchView.setOnSearchClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                isSearchEnabled = true;
-//                searchRecyclerView.setAdapter(adapter);
-//                findViewById(R.id.cateViewLayout).setVisibility(View.INVISIBLE);
-//                findViewById(R.id.searchViewLayout).setVisibility(View.VISIBLE);
-//                searchRecyclerView.setVisibility(View.VISIBLE);
-//                findViewById(R.id.catEmptyMsgTxt).setVisibility(View.INVISIBLE);
-//            }
-//        });
-//
-//
-//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                isSearchEnabled = false;
-//                findViewById(R.id.cateViewLayout).setVisibility(View.VISIBLE);
-//                findViewById(R.id.searchViewLayout).setVisibility(View.INVISIBLE);
-//                return false;
-//            }
-//        });
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Toast.makeText(CategoryView.this, "Search Fiished: " + query, Toast.LENGTH_LONG).show();
-//                searchView.clearFocus();
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                if (newText.isEmpty()) {
-//                    searchClose.setAlpha(150);
-//                } else {
-//                    searchClose.setAlpha(255);
-//                }
-//                ArrayList<BudgetObject> tempList=new ArrayList<>();
-//                ArrayList<Category> newList = MyUtility.filterWithName(CategoryView.this.list, newText);
-//                if (newList.isEmpty()) {
-//                    findViewById(R.id.catEmptyMsgTxt).setVisibility(View.VISIBLE);
-//                    searchRecyclerView.setVisibility(View.INVISIBLE);
-//                } else {
-//                    findViewById(R.id.catEmptyMsgTxt).setVisibility(View.INVISIBLE);
-//                    searchRecyclerView.setVisibility(View.VISIBLE);
-//                    adapter = new CategoryAdapter(newList, new MyItemAdapter.IItemListner() {
-//
-//                        @Override
-//                        public void onClick(View v, int pos) {
-//                            startActivity(new Intent(CategoryView.this, ExpenseView.class));
-//                            Toast.makeText(CategoryView.this, CategoryView.this.list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//
-//                    adapter.enableSwipeToDeleteAndUndo(homeView,searchRecyclerView);
-//                    searchRecyclerView.setAdapter(adapter);
-//                }
-//                return false;
-//            }
-//        });
 
         return true;
     }

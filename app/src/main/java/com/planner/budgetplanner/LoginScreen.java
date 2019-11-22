@@ -43,7 +43,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
         email = findViewById(R.id.username);
 
-        progressBar=findViewById(R.id.loadingBar);
+        progressBar=findViewById(R.id.loadingHoriBar);
 
         pass = findViewById(R.id.password);
     }

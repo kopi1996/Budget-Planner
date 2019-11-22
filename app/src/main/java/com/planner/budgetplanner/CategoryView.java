@@ -17,24 +17,13 @@ import com.planner.budgetplanner.Model.Category;
 
 import java.util.ArrayList;
 
-public class CategoryView extends BudgetObjectView {
-
-    private CategoryAdapter adapter;
-    private ArrayList<Category> list;
-    private RecyclerView recyclerView;
-
+public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
-
-        recyclerView = findViewById(R.id.cateViewList);
-        homeView=findViewById(R.id.cateViewLayout);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Expenditures");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         list = new ArrayList<>();
         list.add(new Category("1","", 100, 200));
@@ -53,7 +42,6 @@ public class CategoryView extends BudgetObjectView {
         list.add(new Category("2","", 15, 35));
 
         adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
-
             @Override
             public void onClick(View v, int pos) {
                 startActivity(new Intent(CategoryView.this, ExpenseView.class));
@@ -61,47 +49,14 @@ public class CategoryView extends BudgetObjectView {
             }
         });
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout),recyclerView);
-
-        searchRecyclerView=findViewById(R.id.searhCateViewList);
-        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        searchRecyclerView.setHasFixedSize(true);
-        searchRecyclerView.setNestedScrollingEnabled(false);
-        searchRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter.enableSwipeToDeleteAndUndo(findViewById(R.id.cateViewLayout), searchRecyclerView, new MyItemAdapter.IItemSwipeListner<Category>() {
-            @Override
-            public void onRemove(Category item, int pos) {
-                list.remove(item);
-            }
-
-            @Override
-            public void onRestore(Category item, int pos) {
-                list.add(item);
-            }
-        });
-
-
-//        Spinner spinner = findViewById(R.id.catFilter);
-//        String[] paths = {"item 1", "item 2", "item 3"};
-//        ArrayAdapter<String> spinnerAdapet = new ArrayAdapter<String>(CategoryView.this,
-//                android.R.layout.simple_spinner_item, paths);
-//        spinnerAdapet.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-//        spinner.setAdapter(spinnerAdapet);
+        initialize("Expenditure",findViewById(R.id.cateViewLayout),(RecyclerView) findViewById(R.id.cateViewList));
     }
 
 
     @Override
     protected void onCloseSearchView() {
         super.onCloseSearchView();
-        adapter.setList(list);
-        recyclerView.setAdapter(adapter);
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

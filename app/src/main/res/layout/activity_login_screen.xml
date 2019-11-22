@@ -15,7 +15,7 @@
     >
 
     <include
-        android:id="@+id/loadingBar"
+        android:id="@+id/loadingHoriBar"
         layout="@layout/loading_screen"
         android:visibility="invisible"
         />

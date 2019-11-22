@@ -10,19 +10,12 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
-import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.User;
 
@@ -100,13 +93,13 @@ public class MyUtility {
 
     public static void startLoading(Activity activity,ILoadingListner listner)
     {
-        activity.findViewById(R.id.loadingBar).setVisibility(View.VISIBLE);
+        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.VISIBLE);
         listner.onLoading(true);
     }
 
     public static void stopLoading(Activity activity,ILoadingListner listner)
     {
-        activity.findViewById(R.id.loadingBar).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
         listner.onLoading(false);
     }
 

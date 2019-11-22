@@ -2,10 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
+    <include
+        android:id="@+id/loadingHoriBar"
+        layout="@layout/loading_screen"
+        android:visibility="visible"
+        android:layout_height="4dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"/>
+
     <ScrollView
+        android:layout_below="@+id/loadingHoriBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >

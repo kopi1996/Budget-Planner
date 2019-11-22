@@ -1,8 +1,14 @@
 package com.planner.budgetplanner;
 
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,19 +17,63 @@ import android.widget.SearchView;
 
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class BudgetObjectView extends AppCompatActivity {
+public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends AppCompatActivity {
 
     private static final String TAG = "BudgetObjectView";
     protected SearchView searchView;
     protected RecyclerView searchRecyclerView;
+    protected RecyclerView recyclerView;
     protected ImageView searchClose;
     protected boolean isSearchEnabled;
     protected View homeView;
+    protected ArrayList<T2> list;
+    protected T1 adapter;
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    protected void initialize(String title,View homeView, RecyclerView recyclerView) {
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.recyclerView = recyclerView;
+        this.homeView = homeView;
+        searchRecyclerView = findViewById(R.id.searhCateViewList);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchRecyclerView.setHasFixedSize(true);
+        searchRecyclerView.setNestedScrollingEnabled(false);
+        searchRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        adapter.enableSwipeToDeleteAndUndo(homeView, recyclerView);
+
+        adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, new MyItemAdapter.IItemSwipeListner<T2>() {
+            @Override
+            public void onRemove(T2 item, int pos) {
+                list.remove(item);
+            }
+
+            @Override
+            public void onRestore(T2 item, int pos) {
+                list.add(item);
+            }
+        });
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -42,6 +92,8 @@ public class BudgetObjectView extends AppCompatActivity {
         isSearchEnabled = false;
         homeView.setVisibility(View.VISIBLE);
         findViewById(R.id.searchViewLayout).setVisibility(View.INVISIBLE);
+        adapter.setList(list);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -55,7 +107,7 @@ public class BudgetObjectView extends AppCompatActivity {
         }
     }
 
-    protected <T extends MyItemAdapter<T2>, T2 extends BudgetObject> void setupSearchView(final T adapter, final ArrayList<T2> list, final ISearchListner<T2> searchListner) {
+    protected void setupSearchView(final T1 adapter, final ArrayList<T2> list, final ISearchListner<T2> searchListner) {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

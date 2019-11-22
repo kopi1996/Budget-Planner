@@ -2,7 +2,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/AppTheme.AppBarOverlay"
-    app:liftOnScroll="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
@@ -15,7 +14,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/appBarColor"
             app:title="@string/app_name"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <include

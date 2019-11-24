@@ -6,16 +6,17 @@ import java.util.Date;
 public class Income extends BudgetObject {
 
     private double amount;
-    private String date;
-    private String time;
 
+    public Income(String id,String title, String description, double amount) {
+        super(id,title, description);
+        this.amount = amount;
+    }
 
-    public Income(String title, String description, double amount, String date, String time) {
-        super(title,description);
+    public Income(String id,String title, String description, double amount, String date, String time) {
+        super(id,title,description,date,time);
         this.title = title;
         this.description = description;
         this.amount = amount;
-        this.date = date;
         this.time = time;
     }
 

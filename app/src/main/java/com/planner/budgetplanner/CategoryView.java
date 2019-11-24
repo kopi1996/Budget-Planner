@@ -26,20 +26,20 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         setContentView(R.layout.activity_category_view);
 
         list = new ArrayList<>();
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("1","", 100, 200));
-        list.add(new Category("2","", 15, 35));
-        list.add(new Category("2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","1","", 100, 200));
+        list.add(new Category("","2","", 15, 35));
+        list.add(new Category("","2","", 15, 35));
 
         adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
             @Override

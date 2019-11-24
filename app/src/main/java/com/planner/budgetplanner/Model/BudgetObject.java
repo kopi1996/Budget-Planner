@@ -1,13 +1,40 @@
 package com.planner.budgetplanner.Model;
 
-public class BudgetObject {
+public class BudgetObject extends DatabaseObject {
 
     protected String title;
     protected String description;
+    protected String date;
+    protected String time;
 
-    public BudgetObject(String title, String description) {
+    public BudgetObject(String id, String title, String description, String date, String time) {
+        super(id);
         this.title = title;
         this.description = description;
+        this.date = date;
+        this.time = time;
+    }
+
+    public BudgetObject(String id,String title, String description) {
+        super(id);
+        this.title = title;
+        this.description = description;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getTitle() {

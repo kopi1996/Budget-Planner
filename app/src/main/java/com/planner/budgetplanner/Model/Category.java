@@ -5,8 +5,14 @@ public class Category extends BudgetObject {
     private double spent;
     private double budget;
 
-    public Category(String title,  String description,double spent, double budget) {
-        super(title,description);
+    public Category(String id,String title,  String description,double spent, double budget,String date,String time) {
+        super(id,title, description, date,time);
+        this.spent = spent;
+        this.budget = budget;
+    }
+
+    public Category(String id,String title, String description, double spent, double budget) {
+        super(id,title, description);
         this.spent = spent;
         this.budget = budget;
     }

@@ -14,12 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -30,6 +34,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     private EditText pass;
     private TextView errorLabel;
     private ProgressBar progressBar;
+    private GoogleSignInClient mGoogleSignInClient;
 
     private static final int RC_SIGN_IN = 9001;
 
@@ -39,13 +44,20 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         setContentView(R.layout.activity_login_screen);
 
 
-        errorLabel=findViewById(R.id.errorLabel);
+        errorLabel = findViewById(R.id.errorLabel);
 
         email = findViewById(R.id.username);
 
-        progressBar=findViewById(R.id.loadingHoriBar);
+        progressBar = findViewById(R.id.loadingHoriBar);
 
         pass = findViewById(R.id.password);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -94,19 +106,17 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try
+            {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.i(TAG, "onActivityResult account: "+account);
+                handleGoogleLogin(account);
 
-            GoogleSignInAccount acc=result.getSignInAccount();
-            FirebaseManager.loginWithGoogle(acc, new OnSuccessListener<User>() {
-                @Override
-                public void onSuccess(User user) {
-                    Log.i(TAG, "onSuccess user id: "+user.getId());
-                    MyUtility.currentUser=user;
-                    progressBar.setVisibility(View.INVISIBLE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    startActivity(new Intent(LoginScreen.this,MainActivity.class));
-                }
-            },null);
+            } catch (ApiException e) {
+                Log.i(TAG, "onActivityResult error: "+e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -115,20 +125,30 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Log.i(TAG, "loginWithGoogle: "+account);
+        if (account == null) {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();//Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        }
+        else
+        {
+            handleGoogleLogin(account);
+        }
     }
 
+    private void handleGoogleLogin(GoogleSignInAccount account)
+    {
+                FirebaseManager.loginWithGoogle(account, new OnSuccessListener<User>() {
+                    @Override
+                    public void onSuccess(User user) {
+                        MyUtility.currentUser=user;
+                        progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        startActivity(new Intent(LoginScreen.this,MainActivity.class));
+                    }
+                },null);
+    }
 
     public void loginWithFB(View view) {
 

@@ -4,17 +4,20 @@ public class Expense extends BudgetObject {
 
     private Category category;
     private double amount;
-    private String date;
-    private String time;
 
 
-    public Expense(Category category, String title, double amount, String description, String date, String time) {
-        super(title,description);
+    public Expense(String id,Category category, String title, double amount, String description, String date, String time) {
+        super(id,title,description,date,time);
 
         this.category = category;
         this.amount = amount;
-        this.date = date;
         this.time = time;
+    }
+
+    public Expense(String id,String title, String description, Category category, double amount) {
+        super(id,title, description);
+        this.category = category;
+        this.amount = amount;
     }
 
     public Category getCategory() {

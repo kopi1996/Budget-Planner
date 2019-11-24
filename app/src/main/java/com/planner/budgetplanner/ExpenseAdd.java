@@ -101,8 +101,8 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
 
     private void displayHintDialog() {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
-        elements.add(new BudgetObject("1",""));
-        elements.add(new BudgetObject("1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
 //        elements.add(new BudgetObject("1",""));
 //        elements.add(new BudgetObject("1",""));
 //        elements.add(new BudgetObject("1",""));

@@ -62,44 +62,24 @@ public class IncomeAdd extends BudgetObjectAdd<Income> {
     private void displayHintDialog()
     {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
-        elements.add(new BudgetObject("1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
 
-        elements.add(new BudgetObject("1",""));
 
-        elements.add(new BudgetObject("1",""));
 
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
         Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {

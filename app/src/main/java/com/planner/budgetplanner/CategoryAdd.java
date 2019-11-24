@@ -48,45 +48,22 @@ public class CategoryAdd extends BudgetObjectAdd<Category> {
     private void displayHintCateTitle()
     {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
-        elements.add(new BudgetObject("1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
+        elements.add(new BudgetObject("","1",""));
 
-        elements.add(new BudgetObject("1",""));
 
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-
-        elements.add(new BudgetObject("1",""));
-        Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
+       Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 Toast.makeText(CategoryAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();

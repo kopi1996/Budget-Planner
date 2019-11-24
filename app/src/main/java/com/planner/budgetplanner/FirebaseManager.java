@@ -24,7 +24,6 @@ public class FirebaseManager {
 
     public static final String TAG="FirebaseManager";
 
-
     private static FirebaseFirestore getDBInstance()
     {
         return FirebaseFirestore.getInstance();
@@ -95,8 +94,10 @@ public class FirebaseManager {
 
 
     public static void loginWithGoogle(final GoogleSignInAccount acct, final OnSuccessListener<User> onFinished, final OnFailureListener onFailureListener) {
-        Log.i(TAG, "loginWithGoogle: "+acct.getIdToken());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
+        Log.i(TAG, "loginWithGoogle id token: "+acct.getIdToken());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
 
         getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -112,7 +113,6 @@ public class FirebaseManager {
                                         addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener() {
                                             @Override
                                             public void onSuccess(Object o) {
-
                                                 if (onFinished != null)
                                                     onFinished.onSuccess(user);
                                             }

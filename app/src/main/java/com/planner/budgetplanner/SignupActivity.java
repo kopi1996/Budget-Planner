@@ -91,15 +91,15 @@ public class SignupActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Account create successful", Toast.LENGTH_LONG).show();
-                            String fName=String.valueOf(firstName.getText());
-                            String lName=String.valueOf(lastName.getText());
-                            String emailTxt= String.valueOf(email.getText().toString());
+                            String fName = String.valueOf(firstName.getText());
+                            String lName = String.valueOf(lastName.getText());
+                            String emailTxt = String.valueOf(email.getText().toString());
                             Map<String, String> user = new HashMap<>();
-                            user.put("first_name",fName);
+                            user.put("first_name", fName);
                             user.put("last_name", lName);
-                            user.put("email",emailTxt);
-                            FirebaseUser fUser=firebaseAuth.getCurrentUser();
-                            MyUtility.currentUser=new User(fUser.getUid(),fName,lName,emailTxt);
+                            user.put("email", emailTxt);
+                            FirebaseUser fUser = firebaseAuth.getCurrentUser();
+                            MyUtility.currentUser = new User(fUser.getUid(), fName + " " + lName, emailTxt, FirebaseManager.LoginType.Email);
 
 
                             db.collection("users").document(fUser.getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -107,7 +107,7 @@ public class SignupActivity extends AppCompatActivity {
                                 public void onSuccess(Void v) {
                                     Toast.makeText(SignupActivity.this, "Successfully added into database ", Toast.LENGTH_LONG).show();
 
-                                    startActivity(new Intent(SignupActivity.this,MainActivity.class));
+                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     progressBar.setVisibility(View.INVISIBLE);
                                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 }

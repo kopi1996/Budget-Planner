@@ -1,43 +1,38 @@
 package com.planner.budgetplanner;
 
-public class User {
+import com.planner.budgetplanner.Model.DatabaseObject;
 
+public class User extends DatabaseObject {
 
-    private String id;
-    private String f_name;
-    private String l_name;
+    private String name;
     private String email;
+    private FirebaseManager.LoginType type;
 
-    public User(String id, String f_name, String l_name, String email) {
-        this.id = id;
-        this.f_name = f_name;
-        this.l_name = l_name;
+    public User(String id, String name, String email, FirebaseManager.LoginType type) {
+        super(id);
+        this.name = name;
         this.email = email;
+        this.type=type;
     }
 
+    public FirebaseManager.LoginType getType() {
+        return type;
+    }
 
+    public void setType(FirebaseManager.LoginType type) {
+        this.type = type;
+    }
 
     public User() {
-    }
-
-    public String getF_name() {
-        return f_name;
-    }
-
-    public void setF_name(String f_name) {
-        this.f_name = f_name;
-    }
-
-    public String getL_name() {
-        return l_name;
-    }
-
-    public void setL_name(String l_name) {
-        this.l_name = l_name;
+        super("");
     }
 
     public String getName() {
-        return f_name+" "+l_name;
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -47,13 +42,4 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
 }

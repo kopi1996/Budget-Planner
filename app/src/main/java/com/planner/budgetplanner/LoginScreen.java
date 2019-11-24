@@ -13,11 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,7 +33,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.planner.budgetplanner.Utility.MyUtility;
 
-public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+import java.util.Arrays;
+
+public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private static final String TAG = "LoginScreen";
 
@@ -57,7 +61,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         findViewById(R.id.fbBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbLoginButton.callOnClick();
+                loginWithFb();
             }
         });
         initializeGoogle();
@@ -73,31 +77,32 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    private void initializeFb()
-    {
+    private void initializeFb() {
         callbackManager = CallbackManager.Factory.create();
+
         fbLoginButton = findViewById(R.id.fbOrginLogBtn);
         fbLoginButton.setPermissions("email", "public_profile");
         Log.i(TAG, "initializeFb: ");
+
         fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.i(TAG, "facebook:onSuccess:" + loginResult.getAccessToken());
-                handleFbLogin(loginResult.getAccessToken().getToken());
+                handleLogin(loginResult.getAccessToken().getToken(), FirebaseManager.LoginType.Facebook);
             }
 
             @Override
             public void onCancel() {
                 Log.i(TAG, "facebook:onCancel");
-                // ...
+                progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
 
 
             @Override
             public void onError(FacebookException error) {
-                //email.setText("error");
                 Log.i(TAG, "facebook:onError", error);
-                // ...
+                progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         });
     }
@@ -152,7 +157,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
             {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.i(TAG, "onActivityResult account: "+account);
-                handleGoogleLogin(account);
+                handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google);
 
             } catch (ApiException e) {
                 Log.i(TAG, "onActivityResult error: "+e.getMessage());
@@ -167,58 +172,60 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        Log.i(TAG, "loginWithGoogle: "+account);
+        Log.i(TAG, "loginWithGoogle: " + account);
         if (account == null) {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();//Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
+        } else {
+            Log.i(TAG, "loginWithGoogle already token: " + account.getIdToken());
+            handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google);
+        }
+    }
+
+    private void handleLogin(String token, FirebaseManager.LoginType type) {
+        FirebaseManager.loginWithCredential(token, type, new FirebaseManager.IUserLogin() {
+            @Override
+            public void onSuccess(User user) {
+                MyUtility.currentUser = user;
+                progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                startActivity(new Intent(LoginScreen.this, MainActivity.class));
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+    }
+
+    private void loginWithFb()
+    {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        if(isLoggedIn)
+        {
+            //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"));
+
+            handleLogin(accessToken.getToken(), FirebaseManager.LoginType.Facebook);
         }
         else
         {
-            handleGoogleLogin(account);
+            fbLoginButton.callOnClick();
         }
     }
 
-    private void handleFbLogin(String token)
-    {
-         FirebaseManager.LoginData loginData = new FirebaseManager.LoginData("", "", "", "");
-        FirebaseManager.loginWithCredential(token, FirebaseManager.LoginType.Facebook,loginData, new OnSuccessListener<User>() {
-                    @Override
-                    public void onSuccess(User user) {
-                        MyUtility.currentUser=user;
-                        progressBar.setVisibility(View.INVISIBLE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        startActivity(new Intent(LoginScreen.this,MainActivity.class));
-                    }
-                },null);
-    }
-
-    private void handleGoogleLogin(GoogleSignInAccount account)
-    {
-        Log.i(TAG, "handleGoogleLogin: ");
-       // FirebaseManager.LoginData loginData = new FirebaseManager.LoginData(account.getId(), account.getGivenName(), account.getFamilyName(), account.getEmail());
-//        FirebaseManager.loginWithCredential(account.getIdToken(), FirebaseManager.LoginType.Google,loginData, new OnSuccessListener<User>() {
-//                    @Override
-//                    public void onSuccess(User user) {
-//                        MyUtility.currentUser=user;
-//                        progressBar.setVisibility(View.INVISIBLE);
-//                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//                        startActivity(new Intent(LoginScreen.this,MainActivity.class));
-//                    }
-//                },null);
-        FirebaseManager.loginWithGoogl(account, new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                MyUtility.currentUser=user;
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                startActivity(new Intent(LoginScreen.this,MainActivity.class));
-            }
-        },null);
-    }
 
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 }

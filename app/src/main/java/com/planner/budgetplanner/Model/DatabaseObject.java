@@ -1,6 +1,7 @@
 package com.planner.budgetplanner.Model;
 
 public class DatabaseObject {
+
     protected String id;
 
     public DatabaseObject(String id) {

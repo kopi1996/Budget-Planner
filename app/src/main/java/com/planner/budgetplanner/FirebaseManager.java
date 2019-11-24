@@ -13,6 +13,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,9 +54,10 @@ public class FirebaseManager {
 
     public static void addUserIntoDB(String key, User user, OnSuccessListener onFinished, OnFailureListener onFailure){
         Map<String, Object> data = new HashMap<>();
-        data.put("first_name", user.getF_name());
-        data.put("last_name", user.getL_name());
+        data.put("id",user.getId());
+        data.put("name", user.getName());
         data.put("email", user.getEmail());
+        data.put("type", user.getType().toString());
 
         getDBInstance().collection("users").document(key).set(data).addOnSuccessListener(onFinished).addOnFailureListener(onFailure);
     }
@@ -77,7 +79,7 @@ public class FirebaseManager {
                                             String lName = document.get("last_name").toString();
                                             String emailString = document.get("email").toString();
 
-                                            User user = new User(getAuth().getUid(),fName, lName, emailString);
+                                            User user = new User(getAuth().getUid(),fName+" "+lName, emailString,LoginType.Email);
                                             onFinished.onSuccess(user);
                                         }
                                     } else {
@@ -93,48 +95,7 @@ public class FirebaseManager {
                 });
     }
 
-    public static void loginWithGoogl(final GoogleSignInAccount acct, final OnSuccessListener<User> onFinished, final OnFailureListener onFailureListener) {
-        Log.i(TAG, "loginWithGoogl: "+acct.getIdToken());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
-
-        getAuth().signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            final User user=new User(getAuth().getCurrentUser().getUid(),acct.getGivenName(),acct.getFamilyName(),acct.getEmail());
-                            isUserExist(user.getId(), new OnSuccessListener<Boolean>() {
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    if(!result) {
-                                        addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener() {
-                                            @Override
-                                            public void onSuccess(Object o) {
-                                                if (onFinished != null)
-                                                    onFinished.onSuccess(user);
-                                            }
-                                        }, onFailureListener);
-                                    }
-                                    else
-                                    {
-                                        Log.i(TAG, "onSuccess check exist: "+result);
-                                        onFinished.onSuccess(user);
-                                    }
-                                }
-                            },onFailureListener);
-
-
-                        } else {
-                            Log.i(TAG, "onComplete: failure: "+task.getException());
-                            if(onFailureListener!=null)
-                                onFailureListener.onFailure(new NullPointerException());
-                        }
-                    }
-                });
-    }
-
-    public static void loginWithCredential(String token, LoginType type, final LoginData data, final OnSuccessListener<User> onFinished, final OnFailureListener onFailureListener) {
+    public static void loginWithCredential(String token, final LoginType type, final IUserLogin listner) {
         if(type==LoginType.Email)
             return;
 
@@ -145,88 +106,66 @@ public class FirebaseManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.i(TAG, "onComplete: firename: "+getAuth().getCurrentUser().getDisplayName());
-                            final User user=new User(getAuth().getUid(),data.firstName,data.getLastName(),data.getEmail());
+                            FirebaseUser currentUser = getAuth().getCurrentUser();
+                            Log.i(TAG, "onComplete: current user: "+ currentUser.getDisplayName());
+                            final User user=new User(currentUser.getUid(),currentUser.getDisplayName(),currentUser.getEmail(),type);
                             isUserExist(user.getId(), new OnSuccessListener<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                    if(!result) {
+                                    if (!result) {
                                         addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener() {
                                             @Override
                                             public void onSuccess(Object o) {
-                                                if (onFinished != null)
-                                                    onFinished.onSuccess(user);
+                                                if (listner != null)
+                                                    listner.onSuccess(user);
                                             }
-                                        }, onFailureListener);
-                                    }
-                                    else
-                                    {
-                                        Log.i(TAG, "onSuccess check exist: "+result);
-                                        onFinished.onSuccess(user);
+                                        }, new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                listner.onFailure("Something wrong");
+                                            }
+                                        });
+                                    } else {
+                                        Log.i(TAG, "onSuccess check exist: " + result);
+                                        listner.onSuccess(user);
                                     }
                                 }
-                            },onFailureListener);
-
-
+                            }, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    listner.onFailure("Something went wrong");
+                                }
+                            });
                         } else {
                             Log.i(TAG, "onComplete: failure: "+task.getException());
-                            if(onFailureListener!=null)
-                                onFailureListener.onFailure(new NullPointerException());
+                            if(listner!=null)
+                                listner.onFailure("Null");
                         }
                     }
                 });
     }
 
+    public static void logOut(final OnSuccessListener successListener)
+    {
+        final FirebaseAuth.AuthStateListener authStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    successListener.onSuccess(false);
+                } else {
+                    successListener.onSuccess(true);
+                }
+            }
+        };
+        getAuth().removeAuthStateListener(authStateListener);
+        getAuth().addAuthStateListener(authStateListener);
+        getAuth().signOut();
+    }
+
     public enum LoginType
     {
         Email,Facebook,Google
-    }
-
-    public static class LoginData
-    {
-        private String id;
-        private String firstName;
-        private String lastName;
-        private String email;
-
-        public LoginData(String id, String firstName, String lastName, String email) {
-            this.id = id;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
     }
 
     public interface IUserLogin {

@@ -29,6 +29,10 @@
             "package_name": "com.planner.budgetplanner",
             "certificate_hash": "b28d0093882dc0862120504eafd2efa55a625cab"
           }
+        },
+        {
+          "client_id": "310439222563-6r2tvu08lgib6f2r324ubsqpaha70634.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

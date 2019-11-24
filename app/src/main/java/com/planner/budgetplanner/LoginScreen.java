@@ -66,7 +66,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
     private void initializeGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(("310439222563-tsohc49cq23l9jevgr86hf9aimah2lcr.apps.googleusercontent.com"))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -95,7 +95,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
             @Override
             public void onError(FacebookException error) {
-                email.setText("error");
+                //email.setText("error");
                 Log.i(TAG, "facebook:onError", error);
                 // ...
             }
@@ -145,7 +145,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try

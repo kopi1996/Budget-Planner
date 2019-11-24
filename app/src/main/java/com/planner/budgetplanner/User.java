@@ -15,6 +15,12 @@ public class User extends DatabaseObject {
         this.type=type;
     }
 
+    public User(String id, String name, String email) {
+        super(id);
+        this.name = name;
+        this.email = email;
+    }
+
     public FirebaseManager.LoginType getType() {
         return type;
     }

@@ -146,17 +146,17 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.logOutBtn) {
-            final ProgressBar progressBar=findViewById(R.id.loadingHoriBar);
+            final ProgressBar progressBar = findViewById(R.id.loadingHoriBar);
             progressBar.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            FirebaseManager.logOut(new OnSuccessListener() {
+            FirebaseManager.logOut(new FirebaseManager.OnLogoutListner() {
                 @Override
-                public void onSuccess(Object o) {
+                public void onSuccess(boolean o) {
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    startActivity(new Intent(MainActivity.this,LoginScreen.class));
+                    startActivity(new Intent(MainActivity.this, LoginScreen.class));
                 }
             });
         }

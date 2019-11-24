@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="FIRST NAME"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:textCursorDrawable="@color/txtFocus"/>
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="LAST NAME"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:textCursorDrawable="@color/txtFocus"/>

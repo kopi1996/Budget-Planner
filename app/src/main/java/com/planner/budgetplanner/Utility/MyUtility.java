@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
@@ -90,6 +91,10 @@ public class MyUtility {
         return dialog;
     }
 
+    public static User conFirUserToMyUser(FirebaseUser firebaseUser)
+    {
+        return new User(firebaseUser.getUid(),firebaseUser.getDisplayName(),firebaseUser.getEmail());
+    }
 
     public static void startLoading(Activity activity,ILoadingListner listner)
     {

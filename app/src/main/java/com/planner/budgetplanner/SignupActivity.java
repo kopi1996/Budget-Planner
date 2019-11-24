@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
+    private static final String TAG = "SignUpActivity";
     private EditText email;
     private EditText pass;
     private EditText firstName;
@@ -94,10 +96,14 @@ public class SignupActivity extends AppCompatActivity {
                             String fName = String.valueOf(firstName.getText());
                             String lName = String.valueOf(lastName.getText());
                             String emailTxt = String.valueOf(email.getText().toString());
+
+                            Log.i(TAG, "onComplete signup: "+FirebaseManager.getAuth().getCurrentUser().getDisplayName());
+
                             Map<String, String> user = new HashMap<>();
-                            user.put("first_name", fName);
-                            user.put("last_name", lName);
+                            user.put("id",FirebaseManager.getAuth().getCurrentUser().getUid());
+                            user.put("name", fName+" "+lName);
                             user.put("email", emailTxt);
+                            user.put("type", FirebaseManager.LoginType.Email.toString());
                             FirebaseUser fUser = firebaseAuth.getCurrentUser();
                             MyUtility.currentUser = new User(fUser.getUid(), fName + " " + lName, emailTxt, FirebaseManager.LoginType.Email);
 

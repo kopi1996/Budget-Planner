@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,21 +18,34 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FirebaseManager {
 
+    private static final ArrayList<OnLogoutListner> logOutCallbackListners = new ArrayList<>();
+
     public static final String TAG="FirebaseManager";
 
-    private static FirebaseFirestore getDBInstance()
+    public static FirebaseFirestore getDBInstance()
     {
         return FirebaseFirestore.getInstance();
     }
 
-    private static FirebaseAuth getAuth()
+    public static FirebaseAuth getAuth()
     {
         return FirebaseAuth.getInstance();
+    }
+
+    public static void addLogOutListner(OnLogoutListner listner)
+    {
+        logOutCallbackListners.add(listner);
+    }
+
+    public static void removeLogOutListner(OnLogoutListner listner)
+    {
+        logOutCallbackListners.remove(listner);
     }
 
     public static void isUserExist(String key, final OnSuccessListener<Boolean> onSuccessListener, final OnFailureListener onFailureListener) {
@@ -42,11 +54,37 @@ public class FirebaseManager {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
+
                     if (onSuccessListener != null)
                         onSuccessListener.onSuccess(task.getResult().exists());
                 } else {
                     if (onFailureListener != null)
                         onFailureListener.onFailure(new NullPointerException());
+                }
+            }
+        });
+    }
+
+    public static void getUser(final String key, final OnSuccessListener<User> listener)
+    {
+        getDBInstance().collection("users").document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+
+                        String emailString = document.get("email").toString();
+
+                        String fName = document.get("name").toString();
+
+                        User user = new User(key, fName, emailString, LoginType.valueOf(document.get("type").toString()));
+                        if (listener != null)
+                            listener.onSuccess(user);
+                    }
+                } else {
+                    if (listener != null)
+                        listener.onSuccess(null);
                 }
             }
         });
@@ -68,18 +106,16 @@ public class FirebaseManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            DocumentReference docRef = getDBInstance().collection("users").document(getAuth().getUid());
+                            DocumentReference docRef = getDBInstance().collection("users").document(getAuth().getCurrentUser().getUid());
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-                                            String fName = document.get("first_name").toString();
-                                            String lName = document.get("last_name").toString();
+                                            String fName = document.get("name").toString();
                                             String emailString = document.get("email").toString();
-
-                                            User user = new User(getAuth().getUid(),fName+" "+lName, emailString,LoginType.Email);
+                                            User user = new User(getAuth().getUid(),fName, emailString,LoginType.Email);
                                             onFinished.onSuccess(user);
                                         }
                                     } else {
@@ -145,12 +181,15 @@ public class FirebaseManager {
                 });
     }
 
-    public static void logOut(final OnSuccessListener successListener)
+    public static void logOut(final OnLogoutListner successListener)
     {
         final FirebaseAuth.AuthStateListener authStateListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                for (OnLogoutListner listner : logOutCallbackListners) {
+                    listner.onSuccess(user==null);
+                }
                 if (user != null) {
                     successListener.onSuccess(false);
                 } else {
@@ -166,6 +205,11 @@ public class FirebaseManager {
     public enum LoginType
     {
         Email,Facebook,Google
+    }
+
+    public interface OnLogoutListner
+    {
+        void onSuccess(boolean isLogOut);
     }
 
     public interface IUserLogin {

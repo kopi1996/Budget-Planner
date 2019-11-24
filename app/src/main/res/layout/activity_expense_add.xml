@@ -40,6 +40,7 @@
             style="@style/pick_style"
             android:layout_height="wrap_content"
             android:hint="Pick a category ..."
+            android:imeOptions="actionNext"
             android:textCursorDrawable="@color/txtFocus" />
     </android.support.design.widget.TextInputLayout>
 
@@ -55,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
             android:textCursorDrawable="@color/txtFocus" />

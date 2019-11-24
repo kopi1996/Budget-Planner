@@ -24,12 +24,14 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
+
             android:background="@drawable/ic_menu_gallery" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@color/bottomBarTxtCol"
             android:text="Add expense"
             android:textSize="10sp" />
     </LinearLayout>
@@ -59,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
+            android:textColor="@color/bottomBarTxtCol"
             android:text="Add Income"
             android:textSize="10sp" />
     </LinearLayout>
@@ -90,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:maxLines="1"
-
+            android:textColor="@color/bottomBarTxtCol"
             android:text="Add Category"
             android:textSize="10sp" />
     </LinearLayout>
@@ -119,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
+            android:textColor="@color/bottomBarTxtCol"
             android:text="Chart"
             android:textSize="10sp" />
     </LinearLayout>

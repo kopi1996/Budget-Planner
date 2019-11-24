@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#595387</color>
-    <color name="colorPrimaryDark">#798C35</color>
-    <color name="colorAccent">#ec547a</color>
+<!--    #D1E0D3-->
+<!--    #99BFAA-->
+<!--    #6C9E93-->
+    <color name="colorPrimary">#99BFAA</color>
+    <color name="colorPrimaryDark">#3E606F</color>
+    <color name="colorAccent">#193441</color>
     <color name="defaultBtn">#19B4E5</color>
     <color name="btnTxtColor">#FFFFFF</color>
     <color name="mainBack">#F7F7F7</color>
@@ -10,5 +13,6 @@
     <color name="appBarColor">@color/colorAccent</color>
     <color name="swipebackground">#cf0b4e</color>
     <color name="dimmTxtColor">#C0C0C0</color>
+    <color name="bottomBarTxtCol">#F0EFEF</color>
 
 </resources>

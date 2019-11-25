@@ -32,12 +32,6 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
         setContentView(R.layout.activity_expense_view);
 
         list = new ArrayList<>();
-        list.add(new Expense("",null, "abc", 25, "", "sdsdd", "250"));
-        list.add(new Expense("",null, "sbc", 25, "", "sdsdd", "250"));
-        list.add(new Expense("",null, "qbc", 25, "", "sdsdd", "250"));
-        list.add(new Expense("",null, "1bc", 25, "", "sdsdd", "250"));
-        list.add(new Expense("",null, "Abc", 25, "", "sdsdd", "250"));
-        list.add(new Expense("",null, "0bc", 25, "", "sdsdd", "250"));
 
         adapter = new ExpenseAdapter(list, new MyItemAdapter.IItemListner() {
             @Override

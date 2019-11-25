@@ -3,11 +3,13 @@ package com.planner.budgetplanner;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.DatePicker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -16,13 +18,25 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.planner.budgetplanner.Model.Income;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FirebaseManager {
+
+    private static final String USERS_REF="users";
+    private static final String INCOMES_REF="Incomes";
+    private static final String CATEGORIES_REF="Categories";
+    private static final String EXPENSES_REF="Expenses";
+
+
 
     private static final ArrayList<OnLogoutListner> logOutCallbackListners = new ArrayList<>();
 
@@ -68,7 +82,7 @@ public class FirebaseManager {
 
     public static void getUser(final String key, final OnSuccessListener<User> listener)
     {
-        getDBInstance().collection("users").document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        getDBInstance().collection(USERS_REF).document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -98,7 +112,7 @@ public class FirebaseManager {
         data.put("email", user.getEmail());
         data.put("type", user.getType().toString());
 
-        getDBInstance().collection("users").document(key).set(data).addOnSuccessListener(onFinished).addOnFailureListener(onFailure);
+        getDBInstance().collection(USERS_REF).document(key).set(data).addOnSuccessListener(onFinished).addOnFailureListener(onFailure);
     }
 
     public static void loginWithId(Activity activity, String email, String password, final IUserLogin onFinished) {
@@ -204,6 +218,37 @@ public class FirebaseManager {
         getAuth().addAuthStateListener(authStateListener);
         getAuth().signOut();
     }
+
+    // Add Budget Items into database methods
+
+    public static void addIncomeIntoDB(final Income income) {
+
+        getDBInstance().collection(INCOMES_REF).add(income).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull final Task<DocumentReference> incomeAddTask) {
+
+                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("incomesIds").document("lists").update("ids",FieldValue.arrayUnion(incomeAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful())
+                        {
+                            ArrayList<String> data=new ArrayList<>();
+                            data.add(incomeAddTask.getResult().getId());
+                            Map<String,Object> map=new HashMap<>();
+                            map.put("ids",data);
+                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("incomesIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
 
     public enum LoginType
     {

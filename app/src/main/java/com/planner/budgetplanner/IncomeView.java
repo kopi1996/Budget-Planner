@@ -27,20 +27,6 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
         setContentView(R.layout.activity_income_view);
 
         list=new ArrayList<>();
-        list.add(new Income("","soem","abc",25,"","sdsdd"));
-        list.add(new Income("","aas","abc",25,"","sdsdd"));
-        list.add(new Income("","gfdg","abc",25,"","sdsdd"));
-        list.add(new Income("","erew","abc",25,"","sdsdd"));
-        list.add(new Income("","adss","abc",25,"","sdsdd"));
-        list.add(new Income("","zxzx","abc",25,"","sdsdd"));
-        list.add(new Income("","xzcx","abc",25,"","sdsdd"));
-        list.add(new Income("","soem","abc",25,"","sdsdd"));
-        list.add(new Income("","aas","abc",25,"","sdsdd"));
-        list.add(new Income("","gfdg","abc",25,"","sdsdd"));
-        list.add(new Income("","erew","abc",25,"","sdsdd"));
-        list.add(new Income("","adss","abc",25,"","sdsdd"));
-        list.add(new Income("","zxzx","abc",25,"","sdsdd"));
-        list.add(new Income("","xzcx","abc",25,"","sdsdd"));
 
         adapter=new IncomeAdapter(list, new MyItemAdapter.IItemListner() {
             @Override

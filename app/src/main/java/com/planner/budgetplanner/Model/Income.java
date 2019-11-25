@@ -1,7 +1,11 @@
 package com.planner.budgetplanner.Model;
 
+import com.google.firebase.Timestamp;
+
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Income extends BudgetObject {
 
@@ -12,12 +16,12 @@ public class Income extends BudgetObject {
         this.amount = amount;
     }
 
-    public Income(String id,String title, String description, double amount, String date, String time) {
-        super(id,title,description,date,time);
+    public Income(String id, String title, String description, double amount, Timestamp timestamp) {
+        super(id,title,description,timestamp);
+
         this.title = title;
         this.description = description;
         this.amount = amount;
-        this.time = time;
     }
 
     public double getAmount() {
@@ -28,20 +32,11 @@ public class Income extends BudgetObject {
         this.amount = amount;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
+    public Map<String,Object> toJson()
+    {
+        Map<String, Object> map = super.toJson();
+        map.put("amount",amount);
+        return map;
     }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
 }

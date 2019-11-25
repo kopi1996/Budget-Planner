@@ -1,17 +1,18 @@
 package com.planner.budgetplanner.Model;
 
+import com.google.firebase.Timestamp;
+
 public class Expense extends BudgetObject {
 
     private Category category;
     private double amount;
 
 
-    public Expense(String id,Category category, String title, double amount, String description, String date, String time) {
-        super(id,title,description,date,time);
+    public Expense(String id, Category category, String title, double amount, String description, Timestamp timestamp) {
+        super(id,title,description,timestamp);
 
         this.category = category;
         this.amount = amount;
-        this.time = time;
     }
 
     public Expense(String id,String title, String description, Category category, double amount) {
@@ -36,19 +37,4 @@ public class Expense extends BudgetObject {
         this.amount = amount;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }

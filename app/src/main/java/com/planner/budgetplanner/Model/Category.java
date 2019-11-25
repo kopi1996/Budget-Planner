@@ -1,12 +1,14 @@
 package com.planner.budgetplanner.Model;
 
+import com.google.firebase.Timestamp;
+
 public class Category extends BudgetObject {
 
     private double spent;
     private double budget;
 
-    public Category(String id,String title,  String description,double spent, double budget,String date,String time) {
-        super(id,title, description, date,time);
+    public Category(String id, String title, String description, double spent, double budget, Timestamp timestamp) {
+        super(id,title, description, timestamp);
         this.spent = spent;
         this.budget = budget;
     }

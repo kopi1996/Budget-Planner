@@ -53,7 +53,7 @@ public class ExpenseAdapter extends MyItemAdapter<Expense> {
             titleTxt.setText(expense.getTitle());
             profileImg.setText(expense.getTitle().length()>0?expense.getTitle().substring(0,1).toUpperCase():"");
             amountTxt.setText(expense.getAmount()+"rs");
-            dateTimeTxt.setText(expense.getDate()+" "+expense.getTime());
+            dateTimeTxt.setText(expense.getTimestamp().toString());
         }
     }
 }

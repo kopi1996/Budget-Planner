@@ -2,6 +2,7 @@ package com.planner.budgetplanner;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -33,11 +34,22 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.planner.budgetplanner.Interfaces.IInitialize;
+import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
-public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnLogoutListner {
+public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, IInitialize {
 
     private static final String TAG = "LoginScreen";
     private static final String LOGIN_TYPE = "LoginType";
@@ -68,8 +80,13 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
-        Log.i(TAG, "onMyCreate: ");
+        initialize();
+    }
 
+
+
+    public void initialize()
+    {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
 
@@ -262,13 +279,4 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     }
 
 
-
-    @Override
-    public void onSuccess(boolean isLogOut) {
-        if (isLogOut) {
-            editor.putString(LOGIN_TYPE, "null");
-            //FirebaseManager.removeLogOutListner(this);
-            Log.i(TAG, "onSuccess logout: " + isLogOut);
-        }
-    }
 }

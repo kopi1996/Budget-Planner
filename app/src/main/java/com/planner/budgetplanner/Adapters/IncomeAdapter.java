@@ -54,7 +54,7 @@ public class IncomeAdapter extends MyItemAdapter<Income> {
             titleTxt.setText(income.getTitle());
             profTxtImg.setText(income.getTitle().length() > 0 ? income.getTitle().substring(0, 1).toUpperCase() : "");
             amountTxt.setText(income.getAmount() + "rs");
-            dateTxt.setText(income.getDate() + " " + income.getTime());
+            dateTxt.setText(income.getTimestamp().toString());
         }
     }
 }

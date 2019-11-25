@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
@@ -20,7 +21,12 @@ import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.User;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MyUtility {
 
@@ -121,5 +127,24 @@ public class MyUtility {
         }
 
         return newList;
+    }
+
+
+    public static Timestamp convDateToUtcTimeStamp()
+    {
+        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);
+        calendar.set(2019,10,24);
+
+        Timestamp timestamp=new Timestamp(dateToUTC(calendar.getTime()));
+
+        return timestamp;
+    }
+
+    public static Date dateFromUTC(Date date){
+        return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
+    }
+
+    public static Date dateToUTC(Date date){
+        return new Date(date.getTime() - Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }
 }

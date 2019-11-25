@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseManager.addIncomeIntoDB(new Income("id2","res","rr",25));
+
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

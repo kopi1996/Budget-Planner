@@ -45,7 +45,8 @@ public class FirebaseManager {
 
     public static void removeLogOutListner(OnLogoutListner listner)
     {
-        logOutCallbackListners.remove(listner);
+        boolean remove = logOutCallbackListners.remove(listner);
+        Log.i(TAG, "removeLogOutListner: "+remove);
     }
 
     public static void isUserExist(String key, final OnSuccessListener<Boolean> onSuccessListener, final OnFailureListener onFailureListener) {
@@ -187,8 +188,10 @@ public class FirebaseManager {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                Log.i(TAG, "onAuthStateChanged: "+logOutCallbackListners.size());
                 for (OnLogoutListner listner : logOutCallbackListners) {
-                    listner.onSuccess(user==null);
+                    //if (listner != null)
+                        listner.onSuccess(user == null);
                 }
                 if (user != null) {
                     successListener.onSuccess(false);

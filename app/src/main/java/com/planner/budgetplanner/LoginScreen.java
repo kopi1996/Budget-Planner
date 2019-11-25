@@ -51,12 +51,24 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     private LoginButton fbLoginButton;
     private static final int RC_SIGN_IN = 9001;
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
+    private static SharedPreferences.Editor editor;
+    private static FirebaseManager.OnLogoutListner onLogoutListner=new FirebaseManager.OnLogoutListner() {
+        @Override
+        public void onSuccess(boolean isLogOut) {
+            if (isLogOut) {
+                editor.putString(LOGIN_TYPE, "null");
+                //FirebaseManager.removeLogOutListner(this);
+                Log.i(TAG, "onSuccess logout: " + isLogOut);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+
+        Log.i(TAG, "onMyCreate: ");
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -71,20 +83,11 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                 loginWithFb();
             }
         });
-        FirebaseManager.addLogOutListner(this);
+        FirebaseManager.removeLogOutListner(onLogoutListner);
+        FirebaseManager.addLogOutListner(onLogoutListner);
         initializeGoogle();
         initializeFb();
         if (FirebaseManager.getAuth().getCurrentUser() != null) {
-//            String lastLoginType = preferences.getString(LOGIN_TYPE, "null");
-//            FirebaseManager.LoginType type = FirebaseManager.LoginType.Google;
-//            if (lastLoginType.equals(FirebaseManager.LoginType.Facebook.toString())) {
-//                type = FirebaseManager.LoginType.Facebook;
-//            } else if (lastLoginType.equals(FirebaseManager.LoginType.Google.toString())) {
-//                type = FirebaseManager.LoginType.Google;
-//            } else if (lastLoginType.equals(FirebaseManager.LoginType.Email.toString())) {
-//                type = FirebaseManager.LoginType.Email;
-//            }
-//
             progressBar.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -259,11 +262,12 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     }
 
 
+
     @Override
     public void onSuccess(boolean isLogOut) {
         if (isLogOut) {
             editor.putString(LOGIN_TYPE, "null");
-            FirebaseManager.removeLogOutListner(this);
+            //FirebaseManager.removeLogOutListner(this);
             Log.i(TAG, "onSuccess logout: " + isLogOut);
         }
     }

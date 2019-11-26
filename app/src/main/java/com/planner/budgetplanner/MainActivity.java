@@ -16,9 +16,12 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.planner.budgetplanner.Model.Income;
+import com.planner.budgetplanner.AddActivities.CategoryAdd;
+import com.planner.budgetplanner.AddActivities.ExpenseAdd;
+import com.planner.budgetplanner.AddActivities.IncomeAdd;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.ViewDirectories.CategoryView;
+import com.planner.budgetplanner.ViewDirectories.IncomeView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,14 +52,14 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.netDisposableBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent=new Intent(MainActivity.this,IncomeView.class);
+               Intent intent=new Intent(MainActivity.this, IncomeView.class);
                startActivity(intent);
             }
         });
         findViewById(R.id.totalExpBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,CategoryView.class);
+                Intent intent=new Intent(MainActivity.this, CategoryView.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
     private void checkBtn2()
     {
-        Intent intent=new Intent(this,ExpenseAdd.class);
+        Intent intent=new Intent(this, ExpenseAdd.class);
         startActivity(intent);
     }
 
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         viewById.findViewById(R.id.incomeAddBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,IncomeAdd.class);
+                Intent intent=new Intent(MainActivity.this, IncomeAdd.class);
                 startActivity(intent);
             }
         });

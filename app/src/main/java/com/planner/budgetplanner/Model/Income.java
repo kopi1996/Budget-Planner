@@ -24,6 +24,13 @@ public class Income extends BudgetObject {
         this.amount = amount;
     }
 
+    public Income( String title, String description, Timestamp timestamp, double amount) {
+        super("", title, description, timestamp);
+        this.amount = amount;
+    }
+
+
+
     public double getAmount() {
         return amount;
     }

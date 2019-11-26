@@ -13,12 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IncomeView"></activity>
-        <activity android:name=".ExpenseView" />
-        <activity android:name=".CategoryView" />
-        <activity android:name=".ExpenseAdd" />
-        <activity android:name=".IncomeAdd" />
-        <activity android:name=".CategoryAdd" />
+        <activity android:name=".ViewDirectories.IncomeView"></activity>
+        <activity android:name=".ViewDirectories.ExpenseView" />
+        <activity android:name=".ViewDirectories.CategoryView" />
+        <activity android:name=".AddActivities.ExpenseAdd" />
+        <activity android:name=".AddActivities.IncomeAdd" />
+        <activity android:name=".AddActivities.CategoryAdd" />
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 

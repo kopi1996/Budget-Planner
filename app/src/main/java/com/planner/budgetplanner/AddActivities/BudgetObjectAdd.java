@@ -1,9 +1,10 @@
-package com.planner.budgetplanner;
+package com.planner.budgetplanner.AddActivities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.planner.budgetplanner.CustomAppBarActivity;
 import com.planner.budgetplanner.Model.BudgetObject;
 
 public class BudgetObjectAdd<T extends BudgetObject> extends CustomAppBarActivity {

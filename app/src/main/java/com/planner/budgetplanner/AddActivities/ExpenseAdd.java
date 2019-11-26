@@ -1,15 +1,13 @@
-package com.planner.budgetplanner;
+package com.planner.budgetplanner.AddActivities;
 
 import android.app.Dialog;
 import android.graphics.Point;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,13 +19,14 @@ import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Expense;
+import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
 public class ExpenseAdd extends BudgetObjectAdd<Expense> {
 
-    EditText pickCateBtn;
+    private EditText pickCateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
             @Override
             public void onClick(View v) {
                 Button pickerBtn = findViewById(R.id.datePickerBtn);
-                pickerBtn.setText(MyUtility.getPickerDate(picker));
+                //pickerBtn.setText(MyUtility.getPickerDate(picker));
                 dialog.dismiss();
                 okBtn.setOnClickListener(null);
             }

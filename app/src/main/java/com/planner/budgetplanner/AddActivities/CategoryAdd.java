@@ -1,7 +1,6 @@
-package com.planner.budgetplanner;
+package com.planner.budgetplanner.AddActivities;
 
 import android.app.Dialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Category;
+import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class CategoryAdd extends BudgetObjectAdd<Category> {
             public void onClick(View v, int pos) {
                 Toast.makeText(CategoryAdd.this, elements.get(pos).getTitle(), Toast.LENGTH_LONG).show();
             }
-        } ,true);
+        } ,null,true);
     }
 
     @Override

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context=".IncomeAdd">
+    tools:context=".AddActivities.IncomeAdd">
 
     <include layout="@layout/my_action_bar"/>
 
@@ -33,13 +33,17 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/incomeAddTitleTxtPar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:theme="@style/TextLabel">
+                    app:errorTextAppearance="@style/ErrorTextAppearance"
+                    app:hintTextAppearance="@style/HintInputTextAppearance"
+                    >
 
-                    <EditText
-                        android:id="@+id/descId"
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/incomeAddTitleTxt"
+                        android:textAppearance="@style/InputTextAppearance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
@@ -54,6 +58,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -64,22 +70,26 @@
                 android:orientation="horizontal">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/incomeAddAmountTxtPar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:theme="@style/TextLabel">
+                    app:errorTextAppearance="@style/ErrorTextAppearance"
+                    app:hintTextAppearance="@style/HintInputTextAppearance"
+                    >
 
-                    <EditText
-                        android:id="@+id/amountId"
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/incomeAddAmountTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
+                        android:textAppearance="@style/InputTextAppearance"
                         android:hint="Estimated Budget"
                         android:textCursorDrawable="@color/txtFocus" />
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
-                    android:id="@+id/datePickerBtn"
+                    android:id="@+id/incomeAddDatePickBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"></Button>
@@ -92,8 +102,8 @@
                 android:layout_marginTop="15dp"
                 android:theme="@style/TextLabel">
 
-                <EditText
-                    android:id="@+id/incomeAddDes"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/incomeAddDesTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Description (Optional)"

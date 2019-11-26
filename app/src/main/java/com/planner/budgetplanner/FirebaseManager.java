@@ -1,6 +1,7 @@
 package com.planner.budgetplanner;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.DatePicker;
@@ -31,7 +32,7 @@ import java.util.Map;
 
 public class FirebaseManager {
 
-    private static final String USERS_REF="users";
+    private static final String USERS_REF="Users";
     private static final String INCOMES_REF="Incomes";
     private static final String CATEGORIES_REF="Categories";
     private static final String EXPENSES_REF="Expenses";
@@ -80,9 +81,8 @@ public class FirebaseManager {
         });
     }
 
-    public static void getUser(final String key, final OnSuccessListener<User> listener)
-    {
-        getDBInstance().collection(USERS_REF).document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public static void getUser(final String key, final OnSuccessListener<User> listener) {
+        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -105,14 +105,21 @@ public class FirebaseManager {
         });
     }
 
-    public static void addUserIntoDB(String key, User user, OnSuccessListener onFinished, OnFailureListener onFailure){
+    public static void addUserIntoDB(String key, User user, final OnSuccessListener<Boolean> listener) {
         Map<String, Object> data = new HashMap<>();
-        data.put("id",user.getId());
+        data.put("id", user.getId());
         data.put("name", user.getName());
         data.put("email", user.getEmail());
         data.put("type", user.getType().toString());
 
-        getDBInstance().collection(USERS_REF).document(key).set(data).addOnSuccessListener(onFinished).addOnFailureListener(onFailure);
+        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (listener == null)
+                    return;
+                listener.onSuccess(task.isComplete() && task.isSuccessful());
+            }
+        });
     }
 
     public static void loginWithId(Activity activity, String email, String password, final IUserLogin onFinished) {
@@ -164,16 +171,15 @@ public class FirebaseManager {
                                 @Override
                                 public void onSuccess(Boolean result) {
                                     if (!result) {
-                                        addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener() {
+                                        addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener<Boolean>() {
                                             @Override
-                                            public void onSuccess(Object o) {
-                                                if (listner != null)
+                                            public void onSuccess(Boolean isSuccess) {
+                                                if (listner == null)
+                                                    return;
+                                                if(isSuccess)
                                                     listner.onSuccess(user);
-                                            }
-                                        }, new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                listner.onFailure("Something wrong");
+                                                else
+                                                    listner.onFailure("Something went wrong");
                                             }
                                         });
                                     } else {
@@ -221,7 +227,7 @@ public class FirebaseManager {
 
     // Add Budget Items into database methods
 
-    public static void addIncomeIntoDB(final Income income) {
+    public static void addIncomeIntoDB(final Income income, final OnSuccessListener<Income> listener) {
 
         getDBInstance().collection(INCOMES_REF).add(income).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -239,7 +245,13 @@ public class FirebaseManager {
                             getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("incomesIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-
+                                    if (listener==null)
+                                        return;
+                                    income.setId(incomeAddTask.getResult().getId());
+                                    if(task.isComplete()&&task.isSuccessful())
+                                        listener.onSuccess(income);
+                                    else
+                                        listener.onSuccess(null);
                                 }
                             });
                         }

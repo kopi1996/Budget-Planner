@@ -1,12 +1,8 @@
-package com.planner.budgetplanner;
+package com.planner.budgetplanner.ViewDirectories;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +10,7 @@ import android.widget.Toast;
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.Category;
+import com.planner.budgetplanner.R;
 
 import java.util.ArrayList;
 

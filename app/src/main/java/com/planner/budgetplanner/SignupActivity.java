@@ -35,18 +35,13 @@ public class SignupActivity extends AppCompatActivity {
     private EditText lastName;
     private TextView errorLabel;
 
-    private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
-    FirebaseFirestore db;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
         progressBar = findViewById(R.id.loading);
 
@@ -87,7 +82,7 @@ public class SignupActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString()).
+        FirebaseManager.getAuth().createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString()).
                 addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -97,40 +92,26 @@ public class SignupActivity extends AppCompatActivity {
                             String lName = String.valueOf(lastName.getText());
                             String emailTxt = String.valueOf(email.getText().toString());
 
-                            Log.i(TAG, "onComplete signup: "+FirebaseManager.getAuth().getCurrentUser().getDisplayName());
-
                             Map<String, String> user = new HashMap<>();
-                            user.put("id",FirebaseManager.getAuth().getCurrentUser().getUid());
-                            user.put("name", fName+" "+lName);
+                            user.put("id", FirebaseManager.getAuth().getCurrentUser().getUid());
+                            user.put("name", fName + " " + lName);
                             user.put("email", emailTxt);
                             user.put("type", FirebaseManager.LoginType.Email.toString());
-                            FirebaseUser fUser = firebaseAuth.getCurrentUser();
+                            FirebaseUser fUser = FirebaseManager.getAuth().getCurrentUser();
                             MyUtility.currentUser = new User(fUser.getUid(), fName + " " + lName, emailTxt, FirebaseManager.LoginType.Email);
 
-
-                            db.collection("users").document(fUser.getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            FirebaseManager.addUserIntoDB(fUser.getUid(), MyUtility.currentUser, new OnSuccessListener<Boolean>() {
                                 @Override
-                                public void onSuccess(Void v) {
-                                    Toast.makeText(SignupActivity.this, "Successfully added into database ", Toast.LENGTH_LONG).show();
+                                public void onSuccess(Boolean isSuccess) {
 
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SignupActivity.this, "Error uploading", Toast.LENGTH_LONG).show();
+                                    if (isSuccess) {
+                                        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                    }
                                     progressBar.setVisibility(View.INVISIBLE);
                                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 }
                             });
-                        } else {
-                            Toast.makeText(SignupActivity.this, "Account creating error", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.INVISIBLE);
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
-
                     }
                 });
     }

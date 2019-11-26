@@ -2,6 +2,7 @@ package com.planner.budgetplanner.Utility;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,6 +23,9 @@ import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.User;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,8 +41,10 @@ public class MyUtility {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    public static String getPickerDate(DatePicker picker) {
-        return picker.getDayOfMonth() + "/" + (picker.getMonth() + 1) + "/" + picker.getYear();
+    public static Date getPickerDate(DatePicker picker) {
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
+        return calendar.getTime();//picker.getDayOfMonth() + "/" + (picker.getMonth() + 1) + "/" + picker.getYear();
     }
 
     public static Dialog displayDatePickerWindow(Activity activity) {
@@ -49,7 +55,7 @@ public class MyUtility {
         return dialog;
     }
 
-    public static Dialog displayHintDialog(final Activity activity, ArrayList<BudgetObject> list, final MyItemAdapter.IItemListner listener, final boolean dismissBox) {
+    public static Dialog displayHintDialog(final Activity activity, ArrayList<BudgetObject> list, final MyItemAdapter.IItemListner listener, final DialogInterface.OnCancelListener cancelListener, final boolean dismissBox) {
         int width = 0;
         int height = 0;
         Point size = new Point();
@@ -77,7 +83,7 @@ public class MyUtility {
 
         dialog.getWindow().setAttributes(lWindowParams);
 
-
+        dialog.setOnCancelListener(cancelListener);
         final RecyclerView myListView = dialog.findViewById(R.id.listViewDialog);
         myListView.setHasFixedSize(true);
         myListView.setNestedScrollingEnabled(false);
@@ -118,6 +124,10 @@ public class MyUtility {
         return aClass.newInstance();
     }
 
+    public static String convertDateToString(Date date) {
+        return DateFormat.getDateInstance().format(date);
+    }
+
     public static<T extends BudgetObject> ArrayList<T> filterWithName(ArrayList<T> oldList,String newTxt)
     {
         ArrayList<T> newList = new ArrayList<>();
@@ -129,14 +139,24 @@ public class MyUtility {
         return newList;
     }
 
+    public static void enableLoading(Activity activity) {
+        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.VISIBLE);
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
 
-    public static Timestamp convDateToUtcTimeStamp()
+    public static void disableLoading(Activity activity)
     {
-        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);
-        calendar.set(2019,10,24);
+        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
 
-        Timestamp timestamp=new Timestamp(dateToUTC(calendar.getTime()));
-
+    public static Timestamp convDateToUtcTimeStamp(Date date)
+    {
+//        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);
+//        calendar.set(2019,10,24);
+//
+        Timestamp timestamp=new Timestamp(dateToUTC(date));
         return timestamp;
     }
 

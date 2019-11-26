@@ -6,10 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-<!--        <item name="windowActionBar">false</item>-->
-<!--        <item name="windowNoTitle">true</item>-->
-<!--        <item name="actionMenuTextColor">#B12F2F</item>-->
-<!--        <item name="android:actionMenuTextColor">#D31E1E</item>-->
+
+        <item name="colorControlNormal">#111111</item>
+        <item name="colorControlActivated">@color/txtFocus</item>
+        <item name="colorControlHighlight">@color/txtFocus</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -21,8 +21,29 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="HintInputTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/txtFocus</item>
+        <item name="android:textSize">13sp</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    <style name="InputTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/txtFocus</item>
+        <item name="android:textColorHint">#B4B4B4</item>
+        <item name="android:textSize">15sp</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ErrorTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#ffff0000</item>
+        <item name="android:textColorHint">#ffff0000</item>
+        <item name="android:textSize">12sp</item>
+        <item name="colorAccent">#ffff0000</item>
+    </style>
+
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textColorHint">#B4B4B4</item>
         <item name="android:textSize">15sp</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->

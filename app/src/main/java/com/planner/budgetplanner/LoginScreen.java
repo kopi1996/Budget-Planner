@@ -1,5 +1,6 @@
 package com.planner.budgetplanner;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -35,6 +36,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.planner.budgetplanner.Interfaces.IInitialize;
+import com.planner.budgetplanner.Managers.AuthenticationManager;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
@@ -49,7 +51,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, IInitialize {
+public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, IInitialize,FacebookCallback<LoginResult> {
 
     private static final String TAG = "LoginScreen";
     private static final String LOGIN_TYPE = "LoginType";
@@ -58,38 +60,30 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     private EditText pass;
     private TextView errorLabel;
     private ProgressBar progressBar;
-    private GoogleSignInClient mGoogleSignInClient;
-    private CallbackManager callbackManager;
-    private LoginButton fbLoginButton;
     private static final int RC_SIGN_IN = 9001;
-    private SharedPreferences preferences;
-    private static SharedPreferences.Editor editor;
-    private static FirebaseManager.OnLogoutListner onLogoutListner=new FirebaseManager.OnLogoutListner() {
-        @Override
-        public void onSuccess(boolean isLogOut) {
-            if (isLogOut) {
-                editor.putString(LOGIN_TYPE, "null");
-                //FirebaseManager.removeLogOutListner(this);
-                Log.i(TAG, "onSuccess logout: " + isLogOut);
-            }
-        }
-    };
+    private int num;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
-
+        num++;
         initialize();
     }
 
 
-
-    public void initialize()
+    private void goMainActivity()
     {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
+        Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 
+
+
+    public void initialize() {
         errorLabel = findViewById(R.id.errorLabel);
         email = findViewById(R.id.username);
         progressBar = findViewById(R.id.loadingHoriBar);
@@ -100,69 +94,48 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                 loginWithFb();
             }
         });
-        FirebaseManager.removeLogOutListner(onLogoutListner);
-        FirebaseManager.addLogOutListner(onLogoutListner);
-        initializeGoogle();
-        initializeFb();
-        if (FirebaseManager.getAuth().getCurrentUser() != null) {
-            progressBar.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            FirebaseManager.getUser(FirebaseManager.getAuth().getCurrentUser().getUid(), new OnSuccessListener<User>() {
-                @Override
-                public void onSuccess(User user) {
-                    MyUtility.currentUser = user;
-                    progressBar.setVisibility(View.INVISIBLE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    startActivity(new Intent(LoginScreen.this,MainActivity.class));
+
+        AuthenticationManager.initialize(this);
+        AuthenticationManager.initializeGoogle();
+        AuthenticationManager.initializeFb(this);
+        MyUtility.disableLoading(this);
+        AuthenticationManager.handleAutoLogin(new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean success) {
+                MyUtility.disableLoading(LoginScreen.this);
+                if (success) {
+                    goMainActivity();
                 }
-            });
-
-        }
-    }
-
-    private void initializeGoogle() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }
-
-    private void initializeFb() {
-        callbackManager = CallbackManager.Factory.create();
-
-        fbLoginButton = findViewById(R.id.fbOrginLogBtn);
-        fbLoginButton.setPermissions("email", "public_profile");
-        Log.i(TAG, "initializeFb: ");
-
-        fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            public void onSuccess(LoginResult loginResult) {
-                Log.i(TAG, "facebook:onSuccess:" + loginResult.getAccessToken());
-                handleLogin(loginResult.getAccessToken().getToken(), FirebaseManager.LoginType.Facebook);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.i(TAG, "facebook:onCancel");
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
-
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.i(TAG, "facebook:onError", error);
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onMyDestroy: "+hashCode());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i(TAG, "onMyResume : "+toString()+" "+hashCode());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onMyPause: "+toString()+" "+hashCode());
+    }
+
+
     public void signUpBtnClick(View view) {
         Intent intent = new Intent(this, SignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     public void loginBtnClick(View view) {
@@ -175,43 +148,35 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
             errorLabel.setText("password can't be emty");
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        FirebaseManager.loginWithId(this, email.getText().toString(), pass.getText().toString(), new FirebaseManager.IUserLogin() {
+        MyUtility.enableLoading(this);
+        AuthenticationManager.loginWithEmail(email.getText().toString(), pass.getText().toString(), new OnSuccessListener<Boolean>() {
             @Override
-            public void onSuccess(User user) {
-                Toast.makeText(LoginScreen.this, "Account Login successful", Toast.LENGTH_LONG).show();
-                MyUtility.currentUser = user;
-                editor.putString(LOGIN_TYPE, FirebaseManager.LoginType.Email.toString());
-                editor.apply();
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                startActivity(new Intent(LoginScreen.this, MainActivity.class));
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Toast.makeText(LoginScreen.this, "Account Login error", Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            public void onSuccess(Boolean success) {
+                MyUtility.disableLoading(LoginScreen.this);
+                if (success) {
+                   goMainActivity();
+                }
             }
         });
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        AuthenticationManager.getCallbackManager().onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.i(TAG, "onActivityResult account: " + account);
-                handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google);
+                AuthenticationManager.handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google, new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean success) {
+                        MyUtility.disableLoading(LoginScreen.this);
+                        if(!success)
+                            return;
+                        goMainActivity();
+                    }
+                });
 
             } catch (ApiException e) {
                 Log.i(TAG, "onActivityResult error: " + e.getMessage());
@@ -221,55 +186,55 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     }
 
     public void loginWithGoogle(View view) {
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        Log.i(TAG, "loginWithGoogle: " + account);
-        if (account == null) {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();//Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        } else {
-            Log.i(TAG, "loginWithGoogle already token: " + account.getIdToken());
-            handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google);
-        }
-    }
-
-    private void handleLogin(String token, final FirebaseManager.LoginType type) {
-        FirebaseManager.loginWithCredential(token, type, new FirebaseManager.IUserLogin() {
+        MyUtility.enableLoading(this);
+        AuthenticationManager.loginGoogle(new OnSuccessListener<GoogleSignInAccount>() {
             @Override
-            public void onSuccess(User user) {
-                MyUtility.currentUser = user;
-                editor.putString(LOGIN_TYPE, type.toString());
-                editor.apply();
-                progressBar.setVisibility(View.INVISIBLE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                startActivity(new Intent(LoginScreen.this, MainActivity.class));
-            }
-
-            @Override
-            public void onFailure(String error) {
-
+            public void onSuccess(GoogleSignInAccount account) {
+                if (account == null) {
+                    MyUtility.disableLoading(LoginScreen.this);
+                    Intent signInIntent = AuthenticationManager.getmGoogleSignInClient().getSignInIntent();//Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                } else {
+                    AuthenticationManager.handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google, new OnSuccessListener<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean success) {
+                            MyUtility.disableLoading(LoginScreen.this);
+                            if(!success)
+                                return;
+                            goMainActivity();
+                        }
+                    });
+                }
             }
         });
+
     }
 
     private void loginWithFb() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
-
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        if (isLoggedIn) {
-            //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"));
-
-            handleLogin(accessToken.getToken(), FirebaseManager.LoginType.Facebook);
-        } else {
-            fbLoginButton.callOnClick();
-        }
+        MyUtility.enableLoading(this);
+        AuthenticationManager.loginWithFb(new OnSuccessListener<AccessToken>() {
+            @Override
+            public void onSuccess(AccessToken accessToken) {
+                if(accessToken!=null)
+                {
+                    AuthenticationManager.handleLogin(accessToken.getToken(), FirebaseManager.LoginType.Facebook, new OnSuccessListener<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean success) {
+                            MyUtility.disableLoading(LoginScreen.this);
+                            if(success)
+                            {
+                                goMainActivity();
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    MyUtility.disableLoading(LoginScreen.this);
+                    AuthenticationManager.getFbLoginButton().callOnClick();
+                }
+            }
+        });
     }
 
 
@@ -278,5 +243,24 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
     }
 
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        AuthenticationManager.handleLogin(loginResult.getAccessToken().getToken(), FirebaseManager.LoginType.Facebook, new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                MyUtility.disableLoading(LoginScreen.this);
+                goMainActivity();
+            }
+        });
+    }
 
+    @Override
+    public void onCancel() {
+        MyUtility.disableLoading(LoginScreen.this);
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        MyUtility.disableLoading(LoginScreen.this);
+    }
 }

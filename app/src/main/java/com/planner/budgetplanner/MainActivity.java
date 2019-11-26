@@ -2,6 +2,7 @@ package com.planner.budgetplanner;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,15 +17,19 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.AddActivities.CategoryAdd;
 import com.planner.budgetplanner.AddActivities.ExpenseAdd;
 import com.planner.budgetplanner.AddActivities.IncomeAdd;
+import com.planner.budgetplanner.Managers.AuthenticationManager;
 import com.planner.budgetplanner.Utility.MyUtility;
 import com.planner.budgetplanner.ViewDirectories.CategoryView;
 import com.planner.budgetplanner.ViewDirectories.IncomeView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String TAG="MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,25 @@ public class MainActivity extends AppCompatActivity
     {
         Intent intent=new Intent(this, ExpenseAdd.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onMyDestroy: "+hashCode());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i(TAG, "onMyResume : "+toString()+" "+hashCode());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onMyPause: "+toString()+" "+hashCode());
     }
 
     private void addBottomBarEvent()
@@ -151,17 +175,15 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.logOutBtn) {
-            final ProgressBar progressBar = findViewById(R.id.loadingHoriBar);
-            progressBar.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            FirebaseManager.logOut(new FirebaseManager.OnLogoutListner() {
+            MyUtility.enableLoading(this);
+            AuthenticationManager.logOut(new OnSuccessListener<Boolean>() {
                 @Override
-                public void onSuccess(boolean o) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    startActivity(new Intent(MainActivity.this, LoginScreen.class));
+                public void onSuccess(Boolean aBoolean) {
+                    MyUtility.disableLoading(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this, LoginScreen.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 }
             });
         }
@@ -170,4 +192,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

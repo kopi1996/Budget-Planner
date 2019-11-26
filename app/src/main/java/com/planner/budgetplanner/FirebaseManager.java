@@ -37,7 +37,18 @@ public class FirebaseManager {
     private static final String CATEGORIES_REF="Categories";
     private static final String EXPENSES_REF="Expenses";
 
-
+    public static void initializeStateListner(final OnSuccessListener<Boolean> listener)
+    {
+        final FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(listener!=null)
+                    listener.onSuccess(user==null);
+            }
+        };
+        getAuth().addAuthStateListener(authStateListener);
+    }
 
     private static final ArrayList<OnLogoutListner> logOutCallbackListners = new ArrayList<>();
 
@@ -127,14 +138,18 @@ public class FirebaseManager {
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.i(TAG, "onComplete login: "+task.isSuccessful());
                         if (task.isSuccessful()) {
-                            DocumentReference docRef = getDBInstance().collection("users").document(getAuth().getCurrentUser().getUid());
+                            DocumentReference docRef = getDBInstance().collection(USERS_REF).document(getAuth().getCurrentUser().getUid()).collection("profile").document("basic-info");
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
+
                                         DocumentSnapshot document = task.getResult();
+                                        Log.i(TAG, "onComplete login result: "+getAuth().getCurrentUser().getUid());
                                         if (document.exists()) {
+
                                             String fName = document.get("name").toString();
                                             String emailString = document.get("email").toString();
                                             User user = new User(getAuth().getUid(),fName, emailString,LoginType.Email);
@@ -202,26 +217,8 @@ public class FirebaseManager {
                 });
     }
 
-    public static void logOut(final OnLogoutListner successListener)
-    {
-        final FirebaseAuth.AuthStateListener authStateListener=new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                Log.i(TAG, "onAuthStateChanged: "+logOutCallbackListners.size());
-                for (OnLogoutListner listner : logOutCallbackListners) {
-                    //if (listner != null)
-                        listner.onSuccess(user == null);
-                }
-                if (user != null) {
-                    successListener.onSuccess(false);
-                } else {
-                    successListener.onSuccess(true);
-                }
-            }
-        };
-        getAuth().removeAuthStateListener(authStateListener);
-        getAuth().addAuthStateListener(authStateListener);
+    public static void logOut() {
+
         getAuth().signOut();
     }
 

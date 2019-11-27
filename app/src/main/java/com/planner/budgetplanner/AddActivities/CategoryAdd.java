@@ -36,6 +36,8 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
     private TextInputLayout amountTxtPar;
     private TextInputLayout descriptionTxtPar;
 
+    private boolean isSavingProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,12 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         titleTxtPar = findViewById(R.id.catAddTitleTxtPar);
         amountTxtPar = findViewById(R.id.catAddAmountTxtPar);
         descriptionTxtPar = findViewById(R.id.catAddDesTxtPar);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isSavingProgress)
+            super.onBackPressed();
     }
 
     @Override
@@ -100,6 +108,7 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         }
         if (!checkEverythingReady())
             return;
+        isSavingProgress=true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(new Date());
         Category category = new Category(titleTxt.getText().toString(), descriptionTxt.getText().toString(), Double.parseDouble(amountTxt.getText().toString()), timestamp);
@@ -108,6 +117,7 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
             @Override
             public void onSuccess(Category category1) {
                 MyUtility.disableLoading(CategoryAdd.this);
+                isSavingProgress=false;
                 if (category1 != null) {
                     Log.i(TAG, "onSuccess category add: ");
                     finish();

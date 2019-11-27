@@ -37,6 +37,24 @@ public class FirebaseManager {
     private static final String CATEGORIES_REF="Categories";
     private static final String EXPENSES_REF="Expenses";
 
+    public static void initialize()
+    {
+        getDBInstance().disableNetwork()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.i(TAG, "onComplete internet disable: ");
+                    }
+                });
+        getDBInstance().enableNetwork()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.i(TAG, "onComplete internet enable: ");
+                    }
+                });
+    }
+
     public static void initializeStateListner(final OnSuccessListener<Boolean> listener)
     {
         final FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -62,17 +80,6 @@ public class FirebaseManager {
     public static FirebaseAuth getAuth()
     {
         return FirebaseAuth.getInstance();
-    }
-
-    public static void addLogOutListner(OnLogoutListner listner)
-    {
-        logOutCallbackListners.add(listner);
-    }
-
-    public static void removeLogOutListner(OnLogoutListner listner)
-    {
-        boolean remove = logOutCallbackListners.remove(listner);
-        Log.i(TAG, "removeLogOutListner: "+remove);
     }
 
     public static void isUserExist(String key, final OnSuccessListener<Boolean> onSuccessListener, final OnFailureListener onFailureListener) {
@@ -238,14 +245,12 @@ public class FirebaseManager {
         });
     }
 
-    public static void addExpenseIntoDB(final Expense expense,final OnSuccessListener<Expense> listener)
-    {
+    public static void addExpenseIntoDB(final Expense expense,final OnSuccessListener<Expense> listener) {
         expense.setUserId(MyUtility.currentUser.getId());
         getDBInstance().collection(EXPENSES_REF).add(expense.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> expenseAddTask) {
-                if(expenseAddTask.isSuccessful()&&listener!=null)
-                {
+                if (expenseAddTask.isSuccessful() && listener != null) {
                     expense.setId(expenseAddTask.getResult().getId());
                     listener.onSuccess(expense);
                 }
@@ -274,10 +279,12 @@ public class FirebaseManager {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 ArrayList<Category> categories = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                    Log.i(TAG, "onComplete id: " + snapshot.getId());
-                    categories.add(Category.jsonToObject(snapshot));
+                    Category category = Category.jsonToObject(snapshot);
+                    categories.add(category);
                 }
-                listener.onSuccess((Category[]) categories.toArray());
+                Category[] categories1=new Category[categories.size()];
+                categories1= (Category[]) categories.toArray(categories1);
+                listener.onSuccess(categories1);
             }
         });
     }
@@ -288,9 +295,14 @@ public class FirebaseManager {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 ArrayList<Income> incomes = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                    incomes.add(Income.jsonToObject(snapshot));
+                    Income income = Income.jsonToObject(snapshot);
+                    incomes.add(income);
                 }
-                listner.onSuccess((Income[]) incomes.toArray());
+
+                Income[] incomes1 = new Income[incomes.size()];
+                incomes1=incomes.toArray(incomes1);
+
+                listner.onSuccess(incomes1);
             }
         });
     }
@@ -301,10 +313,12 @@ public class FirebaseManager {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 ArrayList<Expense> expenses = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                    Log.i(TAG, "onComplete id: " + snapshot.getId());
-                    expenses.add(Expense.jsonToObject(snapshot));
+                    Expense expense = Expense.jsonToObject(snapshot);
+                    expenses.add(expense);
                 }
-                listener.onSuccess((Expense[]) expenses.toArray());
+                Expense[] expenses1=new Expense[expenses.size()];
+                expenses1=(Expense[]) expenses.toArray(expenses1);
+                listener.onSuccess(expenses1);
             }
         });
     }

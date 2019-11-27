@@ -97,6 +97,8 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
             }
         });
 
+        FirebaseManager.initialize();
+
         AuthenticationManager.initialize(this);
         AuthenticationManager.initializeGoogle();
         AuthenticationManager.initializeFb(this);
@@ -114,6 +116,8 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                         }
                     });
                 }
+                else
+                    MyUtility.disableLoading(LoginScreen.this);
             }
         });
     }

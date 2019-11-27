@@ -53,6 +53,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
 
     private Category pickedCategory;
     private Date pickedDate;
+    private boolean isSavingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
     private void displayDatePicker(final OnSuccessListener<Date> listener) {
         final Dialog dialog = MyUtility.displayDatePickerWindow(this);
         final DatePicker picker = dialog.findViewById(R.id.datePicker);
+        MyUtility.setDateForDatePicker(picker,pickedDate,null);
         final View okBtn = dialog.findViewById(R.id.okBtn);
         final View cancelBtn = dialog.findViewById(R.id.cancelBtn);
 
@@ -146,10 +148,16 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        if(!isSavingProgress)
+            super.onBackPressed();
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 //            case android.R.id.home:
-//                onBackPressed();
+//                    onBackPressed();
 //                return true;
             case R.id.saveBtn:
                 addExpense();
@@ -167,6 +175,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         }
         if(!checkEverythingReady())
             return;
+        isSavingProgress=true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
         Expense expense=new Expense(pickedCategory,titleTxt.getText().toString(),descriptionTxt.getText().toString(),timestamp,Double.parseDouble(amountTxt.getText().toString()));
@@ -174,6 +183,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
             @Override
             public void onSuccess(Expense expense1) {
                 MyUtility.disableLoading(ExpenseAdd.this);
+                isSavingProgress=false;
                 if(expense1!=null)
                 {
                    finish();

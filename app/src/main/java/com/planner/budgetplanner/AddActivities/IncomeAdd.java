@@ -43,7 +43,8 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
     private TextInputEditText descriptionTxt;
     private Button datePickerBtn;
     private Date pickedDate;
-    private ArrayList<View> myViews=new ArrayList<>();
+
+    private boolean isSavingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,6 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
 
         titleTxt.setOnFocusChangeListener(this);
         amountTxt.setOnFocusChangeListener(this);
-        myViews.add(titleTxt);
-        myViews.add(amountTxt);
-        myViews.add(descriptionTxt);
 
         datePickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +91,11 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
                 });
             }
         });
+    }
+
+    public void onBackPressed() {
+        if(!isSavingProgress)
+            super.onBackPressed();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -132,28 +135,25 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
 
 
 
-    private void addIncome()
-    {
-        if(getCurrentFocus()!=null)
-            MyUtility.hideKeyboardFrom(this,getCurrentFocus());
-        for (View myView : myViews) {
-            myView.clearFocus();
+    private void addIncome() {
+        if (getCurrentFocus() != null) {
+            MyUtility.hideKeyboardFrom(this, getCurrentFocus());
+            getCurrentFocus().clearFocus();
         }
-        if(!checkEverythingReady())
+        if (!checkEverythingReady())
             return;
+        isSavingProgress = true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
-        Income income=new Income(titleTxt.getText().toString(),descriptionTxt.getText().toString(),timestamp,Double.parseDouble(amountTxt.getText().toString()));
+        Income income = new Income(titleTxt.getText().toString(), descriptionTxt.getText().toString(), timestamp, Double.parseDouble(amountTxt.getText().toString()));
         FirebaseManager.addIncomeIntoDB(income, new OnSuccessListener<Income>() {
             @Override
             public void onSuccess(Income income) {
                 MyUtility.disableLoading(IncomeAdd.this);
-                if(income!=null)
-                {
+                isSavingProgress = false;
+                if (income != null) {
                     finish();
-                }
-                else
-                {
+                } else {
 
                 }
 
@@ -192,6 +192,7 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
     {
         final Dialog dialog=MyUtility.displayDatePickerWindow(this);
         final DatePicker picker=dialog.findViewById(R.id.datePicker);
+        MyUtility.setDateForDatePicker(picker,pickedDate,null);
         final View okBtn = dialog.findViewById(R.id.okBtn);
         final View cancelBtn = dialog.findViewById(R.id.cancelBtn);
 

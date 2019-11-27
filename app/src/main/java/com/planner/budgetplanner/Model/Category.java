@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.planner.budgetplanner.Utility.MyUtility;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Category extends BudgetObject {
@@ -70,14 +71,14 @@ public class Category extends BudgetObject {
     }
 
     public static Category jsonToObject(DocumentSnapshot document) {
-        String id = document.get("id").toString();
+        //String id = document.get("id").toString();
         String title = document.get("title").toString();
         String description = document.get("description").toString();
-        Timestamp tempTimestamp = (Timestamp) document.get("timestamp");
-        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp.toDate());
+        Date tempTimestamp = (Date) document.get("timestamp");
+        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp);
         double spent = Double.parseDouble(document.get("spent").toString());
         double budget = Double.parseDouble(document.get("budget").toString());
 
-        return new Category(id, title, description, spent, budget, timestamp);
+        return new Category(document.getId(),title, description, spent, budget, timestamp);
     }
 }

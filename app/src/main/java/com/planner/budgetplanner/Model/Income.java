@@ -13,27 +13,26 @@ public class Income extends BudgetObject {
 
     private double amount;
 
-    public Income(String id,String title, String description, double amount) {
-        super(id,title, description);
+    public Income(String id, String title, String description, double amount) {
+        super(id, title, description);
         this.amount = amount;
-        type=BudjetObjectType.INCOME;
+        type = BudjetObjectType.INCOME;
     }
 
     public Income(String id, String title, String description, double amount, Timestamp timestamp) {
-        super(id,title,description,timestamp);
+        super(id, title, description, timestamp);
 
         this.title = title;
         this.description = description;
         this.amount = amount;
-        type=BudjetObjectType.INCOME;
+        type = BudjetObjectType.INCOME;
     }
 
-    public Income( String title, String description, Timestamp timestamp, double amount) {
+    public Income(String title, String description, Timestamp timestamp, double amount) {
         super("", title, description, timestamp);
         this.amount = amount;
-        type=BudjetObjectType.INCOME;
+        type = BudjetObjectType.INCOME;
     }
-
 
 
     public double getAmount() {
@@ -45,21 +44,20 @@ public class Income extends BudgetObject {
     }
 
 
-    public Map<String,Object> toJson()
-    {
+    public Map<String, Object> toJson() {
         Map<String, Object> map = super.toJson();
-        map.put("amount",amount);
+        map.put("amount", amount);
         return map;
     }
 
     public static Income jsonToObject(DocumentSnapshot document) {
-        String id = document.get("id").toString();
+        // String id = document.get("id").toString();
         String title = document.get("title").toString();
         String description = document.get("description").toString();
-        Timestamp tempTimestamp = (Timestamp) document.get("timestamp");
-        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp.toDate());
+        Date tempTimestamp = (Date) document.get("timestamp");
+        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp);
         double amount = Double.parseDouble(document.get("amount").toString());
 
-        return new Income(id,title,description,amount,timestamp);
+        return new Income(document.getId(),title, description, amount,timestamp);
     }
 }

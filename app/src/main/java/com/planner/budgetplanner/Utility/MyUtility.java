@@ -44,6 +44,13 @@ public class MyUtility {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static void setDateForDatePicker(DatePicker picker, Date date, DatePicker.OnDateChangedListener listener) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date.getTime());
+
+        picker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null);
+    }
+
     public static Date getPickerDate(DatePicker picker) {
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());

@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.planner.budgetplanner.Utility.MyUtility;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Expense extends BudgetObject {
@@ -27,6 +28,13 @@ public class Expense extends BudgetObject {
         type = BudjetObjectType.EXPENSE;
     }
 
+    public Expense(String title, double amount, String description, Timestamp timestamp) {
+        super("", title, description, timestamp);
+
+        this.amount = amount;
+        type = BudjetObjectType.EXPENSE;
+    }
+
     public Expense(Category category, String title, String description, Timestamp timestamp, double amount) {
         super("", title, description, timestamp);
 
@@ -34,6 +42,7 @@ public class Expense extends BudgetObject {
         this.amount = amount;
         type = BudjetObjectType.EXPENSE;
     }
+
 
     public Expense(String id, String title, String description, Category category, double amount) {
         super(id, title, description);
@@ -76,15 +85,15 @@ public class Expense extends BudgetObject {
     }
 
     public static Expense jsonToObject(DocumentSnapshot document) {
-        String id = document.get("id").toString();
+
         String categoryId=document.get("categoryId").toString();
         String title = document.get("title").toString();
         String description = document.get("description").toString();
-        Timestamp tempTimestamp = (Timestamp) document.get("timestamp");
-        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp.toDate());
+        Date tempTimestamp = (Date) document.get("timestamp");
+        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp);
         double amount = Double.parseDouble(document.get("amount").toString());
 
-        Expense expense = new Expense(id, title, amount, description, timestamp);
+        Expense expense = new Expense(document.getId(),title, amount, description, timestamp);
         expense.setCategoryId(categoryId);
 
         return expense;

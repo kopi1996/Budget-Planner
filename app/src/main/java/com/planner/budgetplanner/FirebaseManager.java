@@ -22,6 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.planner.budgetplanner.Model.Category;
+import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
@@ -117,13 +119,8 @@ public class FirebaseManager {
     }
 
     public static void addUserIntoDB(String key, User user, final OnSuccessListener<Boolean> listener) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", user.getId());
-        data.put("name", user.getName());
-        data.put("email", user.getEmail());
-        data.put("type", user.getType().toString());
 
-        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (listener == null)
@@ -224,9 +221,77 @@ public class FirebaseManager {
 
     // Add Budget Items into database methods
 
+    public static void addCategoryIntoDB(final Category category, final OnSuccessListener<Category> listener)
+    {
+        getDBInstance().collection(CATEGORIES_REF).add(category.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull final Task<DocumentReference> categoryAddTask) {
+
+                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("categoriesIds").document("lists").update("ids",FieldValue.arrayUnion(categoryAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful())
+                        {
+                            ArrayList<String> data=new ArrayList<>();
+                            data.add(categoryAddTask.getResult().getId());
+                            Map<String,Object> map=new HashMap<>();
+                            map.put("ids",data);
+                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("categoriesIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (listener==null)
+                                        return;
+                                    category.setId(categoryAddTask.getResult().getId());
+                                    if(task.isComplete()&&task.isSuccessful())
+                                        listener.onSuccess(category);
+                                    else
+                                        listener.onSuccess(null);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public static void addExpenseIntoDB(final Expense expense,final OnSuccessListener<Expense> listener)
+    {
+        getDBInstance().collection(EXPENSES_REF).add(expense.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull final Task<DocumentReference> expenseAddTask) {
+
+                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("expenseIds").document("lists").update("ids",FieldValue.arrayUnion(expenseAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful())
+                        {
+                            ArrayList<String> data=new ArrayList<>();
+                            data.add(expenseAddTask.getResult().getId());
+                            Map<String,Object> map=new HashMap<>();
+                            map.put("ids",data);
+                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("expenseIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (listener==null)
+                                        return;
+                                    expense.setId(expenseAddTask.getResult().getId());
+                                    if(task.isComplete()&&task.isSuccessful())
+                                        listener.onSuccess(expense);
+                                    else
+                                        listener.onSuccess(null);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     public static void addIncomeIntoDB(final Income income, final OnSuccessListener<Income> listener) {
 
-        getDBInstance().collection(INCOMES_REF).add(income).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        getDBInstance().collection(INCOMES_REF).add(income.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> incomeAddTask) {
 
@@ -257,7 +322,6 @@ public class FirebaseManager {
             }
         });
     }
-
 
     public enum LoginType
     {

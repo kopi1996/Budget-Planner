@@ -1,13 +1,18 @@
 package com.planner.budgetplanner.AddActivities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,18 +20,39 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.FirebaseManager;
+import com.planner.budgetplanner.MainActivity;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
+import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-public class ExpenseAdd extends BudgetObjectAdd<Expense> {
+public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocusChangeListener,OnSuccessListener<Date> {
 
-    private EditText pickCateBtn;
+    private static final String TAG = "ExpenseAdd";
+    private TextInputEditText pickCateBtn;
+    private TextInputEditText titleTxt;
+    private TextInputEditText amountTxt;
+    private TextInputEditText descriptionTxt;
+
+    private TextInputLayout pickCateBtnPar;
+    private TextInputLayout titleTxtPar;
+    private TextInputLayout amountTxtPar;
+    private TextInputLayout descriptionTxtPar;
+
+    private Button pickerBtn;
+
+    private Category pickedCategory;
+    private Date pickedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,28 +60,30 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         setContentView(R.layout.activity_expense_add);
 
         initialize("Add Expense");
+    }
 
-        final Button pickerBtn = findViewById(R.id.datePickerBtn);
+    @Override
+    protected void initialize(String title) {
+        super.initialize(title);
+        pickerBtn = findViewById(R.id.datePickerBtn);
+
+        pickCateBtn = findViewById(R.id.pickCateBtn);
+        titleTxt=findViewById(R.id.expAddTitleTxt);
+        amountTxt=findViewById(R.id.expAddAmountTxt);
+        descriptionTxt=findViewById(R.id.expAddDesTxt);
+
+        pickCateBtnPar=findViewById(R.id.pickCateBtnPar);
+        titleTxtPar=findViewById(R.id.expAddTitleTxtPar);
+        amountTxtPar=findViewById(R.id.expAddAmountTxtPar);
+        descriptionTxtPar=findViewById(R.id.expAddDesTxtPar);
+
+
         pickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayDatePicker();
+                displayDatePicker(ExpenseAdd.this);
             }
         });
-
-
-        pickCateBtn = findViewById(R.id.pickCateBtn);
-
-//        EditText amountTxt=findViewById(R.id.amountId);
-//        amountTxt.setSelected(false);
-//
-//        EditText desTxt=findViewById(R.id.descTxt);
-//        desTxt.setSelected(false);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            desTxt.setFocusedByDefault(false);
-//        }
-
-
         pickCateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,9 +91,11 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
             }
         });
 
+        pickedDate=new Date();
+        pickerBtn.setText(MyUtility.convertDateToString(pickedDate));
     }
 
-    private void displayDatePicker() {
+    private void displayDatePicker(final OnSuccessListener<Date> listener) {
         final Dialog dialog = MyUtility.displayDatePickerWindow(this);
         final DatePicker picker = dialog.findViewById(R.id.datePicker);
         final View okBtn = dialog.findViewById(R.id.okBtn);
@@ -74,7 +104,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Button pickerBtn = findViewById(R.id.datePickerBtn);
+                listener.onSuccess(MyUtility.getPickerDate(picker));
                 //pickerBtn.setText(MyUtility.getPickerDate(picker));
                 dialog.dismiss();
                 okBtn.setOnClickListener(null);
@@ -83,6 +113,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onSuccess(null);
                 dialog.dismiss();
                 cancelBtn.setOnClickListener(null);
             }
@@ -90,6 +121,23 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
     }
 
 
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(!hasFocus)
+            return;
+        switch (v.getId()) {
+            case R.id.pickCateBtn:
+                pickCateBtnPar.setError(null);
+                break;
+            case R.id.expAddTitleTxt:
+                titleTxtPar.setError(null);
+                break;
+            case R.id.expAddAmountTxt:
+                amountTxtPar.setError(null);
+                break;
+            default:
+                return;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,10 +146,70 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         return true;
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+            case R.id.saveBtn:
+                addExpense();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addExpense()
+    {
+        if(getCurrentFocus()!=null) {
+            MyUtility.hideKeyboardFrom(this, getCurrentFocus());
+            getCurrentFocus().clearFocus();
+        }
+        if(!checkEverythingReady())
+            return;
+        MyUtility.enableLoading(this);
+        Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
+        Expense expense=new Expense(pickedCategory,titleTxt.getText().toString(),descriptionTxt.getText().toString(),timestamp,Double.parseDouble(amountTxt.getText().toString()));
+        FirebaseManager.addExpenseIntoDB(expense, new OnSuccessListener<Expense>() {
+            @Override
+            public void onSuccess(Expense expense1) {
+                MyUtility.disableLoading(ExpenseAdd.this);
+                if(expense1!=null)
+                {
+                   finish();
+                }
+                else
+                {
+
+                }
+            }
+        });
+    }
+
+    private boolean checkEverythingReady()
+    {
+        if(pickCateBtn.getText().toString().isEmpty())
+        {
+            pickCateBtnPar.setError("Pick a category");
+        }
+        if(titleTxt.getText().toString().isEmpty())
+        {
+            titleTxtPar.setError("Enter a title");
+            return false;
+        }
+        if(amountTxt.getText().toString().isEmpty())
+        {
+            amountTxtPar.setError("Enter a amount");
+            return false;
+        }
+
+        return true;
+    }
+
     private void displayHintDialog() {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
-        elements.add(new BudgetObject("","1",""));
-        elements.add(new BudgetObject("","1",""));
+        elements.add(new Category("1","first","",250,150));
+        elements.add(new Category("2","second","",100,1500));
 //        elements.add(new BudgetObject("1",""));
 //        elements.add(new BudgetObject("1",""));
 //        elements.add(new BudgetObject("1",""));
@@ -146,8 +254,6 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         lWindowParams.copyFrom(dialog.getWindow().getAttributes());
         lWindowParams.height = dialogHeight;
 
-        //dialog.getWindow().setAttributes(lWindowParams);
-
         final RecyclerView myListView = dialog.findViewById(R.id.catePickDiaViewList);
         myListView.setHasFixedSize(true);
         myListView.setNestedScrollingEnabled(false);
@@ -156,7 +262,10 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         BudgetObjectAdapter adapter=new BudgetObjectAdapter(elements, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
-                    dialog.dismiss();
+                dialog.dismiss();
+                pickCateBtn.setText(elements.get(pos).getTitle());
+                pickedCategory = (Category) elements.get(pos);
+                Log.i(TAG, "onClick cate: " + pickedCategory.getBudget());
             }
         });
 
@@ -177,7 +286,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
                 dialog1.findViewById(R.id.catDialogHelpBtn).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog1.findViewById(R.id.catDialogHelpBox).setVisibility(View.VISIBLE);
+                        dialog1.findViewById(R.id.catAddWinHelpTxt).setVisibility(View.VISIBLE);
                     }
                 });
                 dialog.dismiss();
@@ -194,5 +303,13 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> {
         myListView.setLayoutParams(layoutParams);
         dialog.show();
 
+    }
+
+    @Override
+    public void onSuccess(Date date) {
+        if (date != null) {
+            pickedDate=date;
+            pickerBtn.setText(MyUtility.convertDateToString(date));
+        }
     }
 }

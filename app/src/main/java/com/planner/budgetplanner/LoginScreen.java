@@ -132,7 +132,6 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
     public void signUpBtnClick(View view) {
         Intent intent = new Intent(this, SignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -154,7 +153,9 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
             public void onSuccess(Boolean success) {
                 MyUtility.disableLoading(LoginScreen.this);
                 if (success) {
-                   goMainActivity();
+                    goMainActivity();
+                } else {
+                    errorLabel.setText("Account does not exist");
                 }
             }
         });

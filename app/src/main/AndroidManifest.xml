@@ -26,7 +26,7 @@
         <activity android:name=".ViewDirectories.ExpenseView" />
         <activity android:name=".ViewDirectories.CategoryView" />
         <activity android:name=".AddActivities.ExpenseAdd" />
-        <activity android:name=".AddActivities.IncomeAdd" />
+        <activity android:name=".AddActivities.IncomeAdd"/>
         <activity android:name=".AddActivities.CategoryAdd" />
 
         <meta-data

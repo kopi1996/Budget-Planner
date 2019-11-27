@@ -3,6 +3,8 @@ package com.planner.budgetplanner;
 import com.planner.budgetplanner.Model.DatabaseObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class User extends DatabaseObject {
 
@@ -63,5 +65,15 @@ public class User extends DatabaseObject {
 
     public void setIncomeIds(ArrayList<String> incomeIds) {
         this.incomeIds = incomeIds;
+    }
+
+    @Override
+    public Map<String, Object> toJson() {
+        Map<String,Object> map=new HashMap<>();
+        map.put("name",name);
+        map.put("email",email);
+        map.put("type",type.toString());
+
+        return map;
     }
 }

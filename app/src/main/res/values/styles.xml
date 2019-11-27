@@ -6,10 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="colorControlNormal">#111111</item>
-        <item name="colorControlActivated">@color/txtFocus</item>
-        <item name="colorControlHighlight">@color/txtFocus</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -20,6 +16,29 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="ErrorText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#FF0000</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="HintText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#B4B4B4</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
+        <!-- reference our hint & error styles -->
+        <item name="hintTextAppearance">@style/HintText</item>
+        <item name="errorTextAppearance">@style/ErrorText</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#181818</item>
+        <item name="android:textColorHint">#B4B4B4</item>
+        <item name="colorControlNormal">#B4B4B4</item>
+        <item name="colorControlActivated">@color/txtFocus</item>
+        <item name="colorControlHighlight">@color/txtFocus</item>
+    </style>
 
     <style name="HintInputTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/txtFocus</item>

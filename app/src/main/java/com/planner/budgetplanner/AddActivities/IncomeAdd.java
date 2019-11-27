@@ -1,15 +1,19 @@
 package com.planner.budgetplanner.AddActivities;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,16 +33,17 @@ import com.planner.budgetplanner.Utility.MyUtility;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListener<Date> {
+public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListener<Date>, View.OnFocusChangeListener {
 
     private static final String TAG = "IncomeAdd";
     private TextInputLayout titleTxtPar;
     private TextInputLayout amountTxtPar;
-    private EditText titleTxt;
-    private EditText amountTxt;
-    private EditText descriptionTxt;
+    private TextInputEditText titleTxt;
+    private TextInputEditText amountTxt;
+    private TextInputEditText descriptionTxt;
     private Button datePickerBtn;
     private Date pickedDate;
+    private ArrayList<View> myViews=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +51,6 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         setContentView(R.layout.activity_income_add);
 
         initialize("Add Income");
-
-
     }
 
     @Override
@@ -61,6 +64,12 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         amountTxtPar=findViewById(R.id.incomeAddAmountTxtPar);
         pickedDate=new Date();
         datePickerBtn.setText(MyUtility.convertDateToString(pickedDate));
+
+        titleTxt.setOnFocusChangeListener(this);
+        amountTxt.setOnFocusChangeListener(this);
+        myViews.add(titleTxt);
+        myViews.add(amountTxt);
+        myViews.add(descriptionTxt);
 
         datePickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +123,6 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         }
         if(amountTxt.getText().toString().isEmpty())
         {
-            amountTxtPar.setErrorEnabled(true);
             amountTxtPar.setError("Enter a amount");
             return false;
         }
@@ -122,8 +130,15 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         return true;
     }
 
+
+
     private void addIncome()
     {
+        if(getCurrentFocus()!=null)
+            MyUtility.hideKeyboardFrom(this,getCurrentFocus());
+        for (View myView : myViews) {
+            myView.clearFocus();
+        }
         if(!checkEverythingReady())
             return;
         MyUtility.enableLoading(this);
@@ -132,15 +147,16 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         FirebaseManager.addIncomeIntoDB(income, new OnSuccessListener<Income>() {
             @Override
             public void onSuccess(Income income) {
+                MyUtility.disableLoading(IncomeAdd.this);
                 if(income!=null)
                 {
-                    startActivity(new Intent(IncomeAdd.this, MainActivity.class));
+                    finish();
                 }
                 else
                 {
 
                 }
-                MyUtility.disableLoading(IncomeAdd.this);
+
             }
         });
     }
@@ -202,6 +218,22 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         if (date != null) {
             pickedDate=date;
             datePickerBtn.setText(MyUtility.convertDateToString(date));
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(!hasFocus)
+            return;
+        switch (v.getId()) {
+            case R.id.incomeAddTitleTxt:
+                titleTxtPar.setError(null);
+                break;
+            case R.id.incomeAddAmountTxt:
+                amountTxtPar.setError(null);
+                break;
+            default:
+                return;
         }
     }
 }

@@ -92,14 +92,8 @@ public class SignupActivity extends AppCompatActivity {
                             String lName = String.valueOf(lastName.getText());
                             String emailTxt = String.valueOf(email.getText().toString());
 
-                            Map<String, String> user = new HashMap<>();
-                            user.put("id", FirebaseManager.getAuth().getCurrentUser().getUid());
-                            user.put("name", fName + " " + lName);
-                            user.put("email", emailTxt);
-                            user.put("type", FirebaseManager.LoginType.Email.toString());
                             FirebaseUser fUser = FirebaseManager.getAuth().getCurrentUser();
                             MyUtility.currentUser = new User(fUser.getUid(), fName + " " + lName, emailTxt, FirebaseManager.LoginType.Email);
-
                             FirebaseManager.addUserIntoDB(fUser.getUid(), MyUtility.currentUser, new OnSuccessListener<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean isSuccess) {

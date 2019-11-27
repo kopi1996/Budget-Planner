@@ -1,6 +1,8 @@
 package com.planner.budgetplanner.Model;
 
-public class DatabaseObject {
+import java.util.Map;
+
+public abstract class DatabaseObject {
 
     protected String id;
 
@@ -15,4 +17,6 @@ public class DatabaseObject {
     public void setId(String id) {
         this.id = id;
     }
+
+    public abstract Map<String,Object> toJson();
 }

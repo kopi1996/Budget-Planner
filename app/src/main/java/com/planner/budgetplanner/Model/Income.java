@@ -14,6 +14,7 @@ public class Income extends BudgetObject {
     public Income(String id,String title, String description, double amount) {
         super(id,title, description);
         this.amount = amount;
+        type=BudjetObjectType.INCOME;
     }
 
     public Income(String id, String title, String description, double amount, Timestamp timestamp) {
@@ -22,11 +23,13 @@ public class Income extends BudgetObject {
         this.title = title;
         this.description = description;
         this.amount = amount;
+        type=BudjetObjectType.INCOME;
     }
 
     public Income( String title, String description, Timestamp timestamp, double amount) {
         super("", title, description, timestamp);
         this.amount = amount;
+        type=BudjetObjectType.INCOME;
     }
 
 

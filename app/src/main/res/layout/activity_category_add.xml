@@ -32,13 +32,15 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/catAddTitleTxtPar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/TextLabel"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:errorEnabled="true"
             android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/descId"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/catAddTitleTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -64,13 +66,15 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/catAddAmountTxtPar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/TextLabel"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:errorEnabled="true"
             android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/amountId"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/catAddAmountTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
@@ -89,13 +93,15 @@
     </LinearLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/catAddDesTxtPar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:theme="@style/TextLabel">
+        app:errorEnabled="true"
+        android:theme="@style/TextInputLayoutAppearance">
 
-        <EditText
-            android:id="@+id/cateAddDes"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/catAddDesTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -124,10 +130,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/catAddHelpTxt"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <TextView
             android:text="ssssssssssssssssssssssssssssssss"

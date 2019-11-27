@@ -32,11 +32,12 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/TextLabel"
+        app:errorEnabled="true"
+        android:theme="@style/TextInputLayoutAppearance"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="70dp">
-        <EditText
+        android:layout_marginTop="50dp">
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,9 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        app:errorEnabled="true"
         android:layout_marginTop="10dp"
-        android:theme="@style/TextLabel">
-        <EditText
+        android:theme="@style/TextInputLayoutAppearance">
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,9 +74,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:theme="@style/TextLabel"
+        app:errorEnabled="true"
+        android:theme="@style/TextInputLayoutAppearance"
         >
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/email"
             android:hint="EMAIL"
             android:inputType="textEmailAddress"
@@ -90,10 +93,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:theme="@style/TextLabel"
+        app:errorEnabled="true"
+        android:theme="@style/TextInputLayoutAppearance"
         >
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

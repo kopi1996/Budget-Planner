@@ -5,11 +5,24 @@ import com.google.firebase.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+enum BudjetObjectType {
+    CATEGORY, EXPENSE, INCOME
+}
+
 public class BudgetObject extends DatabaseObject {
 
     protected String title;
     protected String description;
     protected Timestamp timestamp;
+    protected BudjetObjectType type;
+
+    public BudjetObjectType getType() {
+        return type;
+    }
+
+    public void setType(BudjetObjectType type) {
+        this.type = type;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -51,10 +64,11 @@ public class BudgetObject extends DatabaseObject {
     public Map<String,Object> toJson()
     {
         Map<String,Object> data=new HashMap<>();
-        data.put("id",id);
+
         data.put("title",title);
         data.put("description",description);
         data.put("timestamp",timestamp);
+        data.put("type",type.toString());
 
         return data;
     }

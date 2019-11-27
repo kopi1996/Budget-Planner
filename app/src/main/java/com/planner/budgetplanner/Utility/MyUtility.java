@@ -22,17 +22,13 @@ import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.R;
-import com.planner.budgetplanner.User;
+import com.planner.budgetplanner.Model.User;
 
-import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class MyUtility {
 
@@ -167,7 +163,12 @@ public class MyUtility {
         return timestamp;
     }
 
-    public static Date dateFromUTC(Date date){
+    public static Timestamp convertFromUtcToStamp(Date date) {
+        Timestamp timestamp = new Timestamp(dateFromUTC(date));
+        return timestamp;
+    }
+
+    public static Date dateFromUTC(Date date) {
         return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }
 

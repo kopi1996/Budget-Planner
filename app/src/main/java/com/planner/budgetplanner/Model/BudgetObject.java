@@ -11,10 +11,12 @@ enum BudjetObjectType {
 
 public class BudgetObject extends DatabaseObject {
 
+    protected String userId;
     protected String title;
     protected String description;
     protected Timestamp timestamp;
     protected BudjetObjectType type;
+
 
     public BudjetObjectType getType() {
         return type;
@@ -32,14 +34,14 @@ public class BudgetObject extends DatabaseObject {
         this.timestamp = timestamp;
     }
 
-    public BudgetObject(String id, String title, String description,Timestamp timestamp) {
+    public BudgetObject(String id, String title, String description, Timestamp timestamp) {
         super(id);
         this.title = title;
         this.description = description;
-        this.timestamp=timestamp;
+        this.timestamp = timestamp;
     }
 
-    public BudgetObject(String id,String title, String description) {
+    public BudgetObject(String id, String title, String description) {
         super(id);
         this.title = title;
         this.description = description;
@@ -61,14 +63,21 @@ public class BudgetObject extends DatabaseObject {
         this.description = description;
     }
 
-    public Map<String,Object> toJson()
-    {
-        Map<String,Object> data=new HashMap<>();
+    public String getUserId() {
+        return userId;
+    }
 
-        data.put("title",title);
-        data.put("description",description);
-        data.put("timestamp",timestamp);
-        data.put("type",type.toString());
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Map<String, Object> toJson() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", userId);
+        data.put("title", title);
+        data.put("description", description);
+        data.put("timestamp", timestamp);
+        data.put("type", type.toString());
 
         return data;
     }

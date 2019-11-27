@@ -1,16 +1,13 @@
 package com.planner.budgetplanner;
 
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.DatePicker;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -21,14 +18,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.Model.Income;
+import com.planner.budgetplanner.Model.User;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +93,7 @@ public class FirebaseManager {
     }
 
     public static void getUser(final String key, final OnSuccessListener<User> listener) {
-        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        getDBInstance().collection(USERS_REF).document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -120,7 +118,7 @@ public class FirebaseManager {
 
     public static void addUserIntoDB(String key, User user, final OnSuccessListener<Boolean> listener) {
 
-        getDBInstance().collection(USERS_REF).document(key).collection("profile").document("basic-info").set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        getDBInstance().collection(USERS_REF).document(key).set(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (listener == null)
@@ -146,11 +144,15 @@ public class FirebaseManager {
                                         DocumentSnapshot document = task.getResult();
                                         Log.i(TAG, "onComplete login result: "+getAuth().getCurrentUser().getUid());
                                         if (document.exists()) {
-
                                             String fName = document.get("name").toString();
                                             String emailString = document.get("email").toString();
-                                            User user = new User(getAuth().getUid(),fName, emailString,LoginType.Email);
-                                            onFinished.onSuccess(user);
+                                            final User user = new User(getAuth().getUid(), fName, emailString, LoginType.Email);
+                                            FirebaseManager.fetchAllDataFromDB(user, new OnSuccessListener<Boolean>() {
+                                                @Override
+                                                public void onSuccess(Boolean success) {
+                                                    onFinished.onSuccess(success ? user : null);
+                                                }
+                                            });
                                         }
                                     } else {
                                         onFinished.onFailure(task.getException().getMessage());
@@ -223,100 +225,115 @@ public class FirebaseManager {
 
     public static void addCategoryIntoDB(final Category category, final OnSuccessListener<Category> listener)
     {
+        category.setUserId(MyUtility.currentUser.getId());
         getDBInstance().collection(CATEGORIES_REF).add(category.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> categoryAddTask) {
-
-                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("categoriesIds").document("lists").update("ids",FieldValue.arrayUnion(categoryAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(!task.isSuccessful())
-                        {
-                            ArrayList<String> data=new ArrayList<>();
-                            data.add(categoryAddTask.getResult().getId());
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("ids",data);
-                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("categoriesIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (listener==null)
-                                        return;
-                                    category.setId(categoryAddTask.getResult().getId());
-                                    if(task.isComplete()&&task.isSuccessful())
-                                        listener.onSuccess(category);
-                                    else
-                                        listener.onSuccess(null);
-                                }
-                            });
-                        }
-                    }
-                });
+                if(categoryAddTask.isSuccessful()&&listener!=null)
+                {
+                    category.setId(categoryAddTask.getResult().getId());
+                    listener.onSuccess(category);
+                }
             }
         });
     }
 
     public static void addExpenseIntoDB(final Expense expense,final OnSuccessListener<Expense> listener)
     {
+        expense.setUserId(MyUtility.currentUser.getId());
         getDBInstance().collection(EXPENSES_REF).add(expense.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> expenseAddTask) {
-
-                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("expenseIds").document("lists").update("ids",FieldValue.arrayUnion(expenseAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(!task.isSuccessful())
-                        {
-                            ArrayList<String> data=new ArrayList<>();
-                            data.add(expenseAddTask.getResult().getId());
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("ids",data);
-                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("expenseIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (listener==null)
-                                        return;
-                                    expense.setId(expenseAddTask.getResult().getId());
-                                    if(task.isComplete()&&task.isSuccessful())
-                                        listener.onSuccess(expense);
-                                    else
-                                        listener.onSuccess(null);
-                                }
-                            });
-                        }
-                    }
-                });
+                if(expenseAddTask.isSuccessful()&&listener!=null)
+                {
+                    expense.setId(expenseAddTask.getResult().getId());
+                    listener.onSuccess(expense);
+                }
             }
         });
     }
 
     public static void addIncomeIntoDB(final Income income, final OnSuccessListener<Income> listener) {
-
+        income.setUserId(MyUtility.currentUser.getId());
         getDBInstance().collection(INCOMES_REF).add(income.toJson()).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> incomeAddTask) {
+                if (incomeAddTask.isSuccessful() && listener != null) {
+                    income.setId(incomeAddTask.getResult().getId());
+                    listener.onSuccess(income);
+                }
+            }
+        });
+    }
 
-                getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("incomesIds").document("lists").update("ids",FieldValue.arrayUnion(incomeAddTask.getResult().getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+    // Get Data From Database
+
+    public static void getCategoriesFromDB(final OnSuccessListener<Category[]> listener) {
+        getDBInstance().collection(CATEGORIES_REF).whereEqualTo("userId", MyUtility.currentUser.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                ArrayList<Category> categories = new ArrayList<>();
+                for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                    Log.i(TAG, "onComplete id: " + snapshot.getId());
+                    categories.add(Category.jsonToObject(snapshot));
+                }
+                listener.onSuccess((Category[]) categories.toArray());
+            }
+        });
+    }
+
+    public static void getIncomesFromDB(final OnSuccessListener<Income[]> listner) {
+        getDBInstance().collection(INCOMES_REF).whereEqualTo("userId", MyUtility.currentUser.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                ArrayList<Income> incomes = new ArrayList<>();
+                for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                    incomes.add(Income.jsonToObject(snapshot));
+                }
+                listner.onSuccess((Income[]) incomes.toArray());
+            }
+        });
+    }
+
+    public static void getExpensesFromDB(final OnSuccessListener<Expense[]> listener) {
+        getDBInstance().collection(EXPENSES_REF).whereEqualTo("userId", MyUtility.currentUser.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                ArrayList<Expense> expenses = new ArrayList<>();
+                for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                    Log.i(TAG, "onComplete id: " + snapshot.getId());
+                    expenses.add(Expense.jsonToObject(snapshot));
+                }
+                listener.onSuccess((Expense[]) expenses.toArray());
+            }
+        });
+    }
+
+    public static void fetchAllDataFromDB(final User user, final OnSuccessListener<Boolean> listener) {
+        getCategoriesFromDB(new OnSuccessListener<Category[]>() {
+            @Override
+            public void onSuccess(Category[] categories) {
+                if (categories != null)
+                    user.addCategories(categories);
+                getExpensesFromDB(new OnSuccessListener<Expense[]>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(!task.isSuccessful())
-                        {
-                            ArrayList<String> data=new ArrayList<>();
-                            data.add(incomeAddTask.getResult().getId());
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("ids",data);
-                            getDBInstance().collection(USERS_REF).document(MyUtility.currentUser.getId()).collection("incomesIds").document("lists").set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (listener==null)
-                                        return;
-                                    income.setId(incomeAddTask.getResult().getId());
-                                    if(task.isComplete()&&task.isSuccessful())
-                                        listener.onSuccess(income);
-                                    else
-                                        listener.onSuccess(null);
-                                }
-                            });
+                    public void onSuccess(Expense[] expenses) {
+                        if (expenses != null) {
+                            for (Expense expens : expenses) {
+                                expens.setCategory(user.getCategoryForId(expens.getCategoryId()));
+                            }
+                            user.addExpenses(expenses);
                         }
+                        getIncomesFromDB(new OnSuccessListener<Income[]>() {
+                            @Override
+                            public void onSuccess(Income[] incomes) {
+                                if (incomes != null) {
+                                    user.addIncomes(incomes);
+                                }
+                                if (listener != null)
+                                    listener.onSuccess(true);
+                            }
+                        });
                     }
                 });
             }

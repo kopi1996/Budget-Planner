@@ -1,18 +1,12 @@
 package com.planner.budgetplanner.Managers;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,11 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.FirebaseManager;
-import com.planner.budgetplanner.Interfaces.IInitialize;
-import com.planner.budgetplanner.LoginScreen;
-import com.planner.budgetplanner.MainActivity;
 import com.planner.budgetplanner.R;
-import com.planner.budgetplanner.User;
+import com.planner.budgetplanner.Model.User;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 public class AuthenticationManager {
@@ -38,7 +29,7 @@ public class AuthenticationManager {
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor editor;
     private static final String LOGIN_TYPE = "LoginType";
-    private static boolean isInitStateListner=false;
+    private static boolean isInitStateListner = false;
 
 
     public static GoogleSignInClient getmGoogleSignInClient() {
@@ -53,9 +44,8 @@ public class AuthenticationManager {
         return fbLoginButton;
     }
 
-    public static void logOut(OnSuccessListener<Boolean> listener)
-    {
-        logOutListner=listener;
+    public static void logOut(OnSuccessListener<Boolean> listener) {
+        logOutListner = listener;
         FirebaseManager.logOut();
     }
 
@@ -73,7 +63,7 @@ public class AuthenticationManager {
                         editor.putString(LOGIN_TYPE, "null");
                         editor.apply();
                     }
-                    if(logOutListner!=null)
+                    if (logOutListner != null)
                         logOutListner.onSuccess(sucess);
                 }
             });
@@ -89,8 +79,7 @@ public class AuthenticationManager {
         mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
     }
 
-    public static void handleAutoLogin(final OnSuccessListener<Boolean> listener)
-    {
+    public static void handleAutoLogin(final OnSuccessListener<Boolean> listener) {
         if (FirebaseManager.getAuth().getCurrentUser() != null) {
             FirebaseManager.getUser(FirebaseManager.getAuth().getCurrentUser().getUid(), new OnSuccessListener<User>() {
                 @Override
@@ -98,11 +87,9 @@ public class AuthenticationManager {
                     MyUtility.currentUser = user;
                     if (listener != null)
                         listener.onSuccess(true);
-            }
+                }
             });
-        }
-        else
-        {
+        } else {
             if (listener != null)
                 listener.onSuccess(false);
         }
@@ -117,8 +104,7 @@ public class AuthenticationManager {
         fbLoginButton.registerCallback(callbackManager, fbCallback);
     }
 
-    public static void loginGoogle(OnSuccessListener<GoogleSignInAccount> listener)
-    {
+    public static void loginGoogle(OnSuccessListener<GoogleSignInAccount> listener) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
         listener.onSuccess(account);
     }
@@ -162,15 +148,18 @@ public class AuthenticationManager {
                 MyUtility.currentUser = user;
                 editor.putString(LOGIN_TYPE, type.toString());
                 editor.apply();
-
-                if (listener != null)
-                    listener.onSuccess(true);
+                if (user != null) {
+                    FirebaseManager.fetchAllDataFromDB(user, listener);
+                } else {
+                    if (listener != null)
+                        listener.onSuccess(true);
+                }
             }
 
             @Override
             public void onFailure(String error) {
                 if (listener != null)
-                    listener.onSuccess(true);
+                    listener.onSuccess(false);
             }
         });
     }

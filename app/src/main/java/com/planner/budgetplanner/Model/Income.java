@@ -1,6 +1,8 @@
 package com.planner.budgetplanner.Model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.sql.Time;
 import java.util.Date;
@@ -48,5 +50,16 @@ public class Income extends BudgetObject {
         Map<String, Object> map = super.toJson();
         map.put("amount",amount);
         return map;
+    }
+
+    public static Income jsonToObject(DocumentSnapshot document) {
+        String id = document.get("id").toString();
+        String title = document.get("title").toString();
+        String description = document.get("description").toString();
+        Timestamp tempTimestamp = (Timestamp) document.get("timestamp");
+        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp.toDate());
+        double amount = Double.parseDouble(document.get("amount").toString());
+
+        return new Income(id,title,description,amount,timestamp);
     }
 }

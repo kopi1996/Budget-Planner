@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import java.util.Date;
 
 public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFocusChangeListener {
 
+    private static final String TAG = "CategoryAdd";
     private TextInputEditText titleTxt;
     private TextInputEditText amountTxt;
     private TextInputEditText descriptionTxt;
@@ -107,6 +109,7 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
             public void onSuccess(Category category1) {
                 MyUtility.disableLoading(CategoryAdd.this);
                 if (category1 != null) {
+                    Log.i(TAG, "onSuccess category add: ");
                     finish();
                 } else {
 

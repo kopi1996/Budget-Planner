@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.planner.budgetplanner.Interfaces.IInitialize;
 import com.planner.budgetplanner.Managers.AuthenticationManager;
+import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
@@ -45,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -75,7 +77,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
     private void goMainActivity()
     {
-        Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -98,13 +100,19 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         AuthenticationManager.initialize(this);
         AuthenticationManager.initializeGoogle();
         AuthenticationManager.initializeFb(this);
-        MyUtility.disableLoading(this);
+        MyUtility.enableLoading(this);
         AuthenticationManager.handleAutoLogin(new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean success) {
-                MyUtility.disableLoading(LoginScreen.this);
                 if (success) {
-                    goMainActivity();
+                    FirebaseManager.fetchAllDataFromDB(MyUtility.currentUser, new OnSuccessListener<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean success) {
+                            MyUtility.disableLoading(LoginScreen.this);
+                            if(success)
+                                goMainActivity();
+                        }
+                    });
                 }
             }
         });
@@ -134,7 +142,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
         Intent intent = new Intent(this, SignupActivity.class);
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     public void loginBtnClick(View view) {
@@ -200,7 +208,7 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                         @Override
                         public void onSuccess(Boolean success) {
                             MyUtility.disableLoading(LoginScreen.this);
-                            if(!success)
+                            if (!success)
                                 return;
                             goMainActivity();
                         }
@@ -208,8 +216,8 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
                 }
             }
         });
-
     }
+
 
     private void loginWithFb() {
         MyUtility.enableLoading(this);

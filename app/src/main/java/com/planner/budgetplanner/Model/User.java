@@ -1,5 +1,7 @@
 package com.planner.budgetplanner.Model;
 
+import android.os.Build;
+
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.DatabaseObject;
 
@@ -86,16 +88,29 @@ public class User extends DatabaseObject {
         expenses.addAll(Arrays.asList(obj));
     }
 
+    public Expense[] getExpensesForCategory(String categoryId) {
+        ArrayList<Expense> tempList = new ArrayList<>();
+        for (Expense expense : expenses) {
+            if (expense.getCategoryId().equals(categoryId))
+                tempList.add(expense);
+        }
+
+        Expense[] expenses1 = new Expense[tempList.size()];
+        expenses1 = (Expense[]) tempList.toArray(expenses1);
+
+        return expenses1;
+    }
+
     public Income[] getIncomes() {
-        return (Income[]) incomes.toArray();
+        return incomes.toArray(new Income[incomes.size()]);
     }
 
     public Category[] getCategories() {
-        return (Category[]) categories.toArray();
+        return categories.toArray(new Category[categories.size()]);
     }
 
     public Expense[] getExpenses() {
-        return (Expense[]) expenses.toArray();
+        return expenses.toArray(new Expense[expenses.size()]);
     }
 
     public Category getCategoryForId(String id)
@@ -113,16 +128,25 @@ public class User extends DatabaseObject {
         return expenseVsId  .get(id);
     }
 
-    public boolean removeCategory(Category category) {
-        return categories.remove(category);
+    public boolean removeCategories(Category... category) {
+        for (Category category1 : category) {
+            categoryVsId.remove(category1.getId());
+        }
+        return categories.removeAll(Arrays.asList(category));
     }
 
-    public boolean removeExpense(Expense expense) {
-        return expenses.remove(expense);
+    public boolean removeExpenses(Expense... expense) {
+        for (Expense expense1 : expense) {
+            expenseVsId.remove(expense1.getId());
+        }
+        return expenses.removeAll(Arrays.asList(expense));
     }
 
-    public boolean removeIncome(Income income) {
-        return incomes.remove(income);
+    public boolean removeIncomes(Income... income) {
+        for (Income income1 : income) {
+            incomeVsId.remove(income1.getId());
+        }
+        return incomes.removeAll(Arrays.asList(income));
     }
 
     @Override

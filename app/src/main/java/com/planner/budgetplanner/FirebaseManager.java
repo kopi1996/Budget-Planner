@@ -280,6 +280,7 @@ public class FirebaseManager {
                 ArrayList<Category> categories = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
                     Category category = Category.jsonToObject(snapshot);
+                    category.setUserId(MyUtility.currentUser.getId());
                     categories.add(category);
                 }
                 Category[] categories1=new Category[categories.size()];
@@ -296,6 +297,7 @@ public class FirebaseManager {
                 ArrayList<Income> incomes = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
                     Income income = Income.jsonToObject(snapshot);
+                    income.setUserId(MyUtility.currentUser.getId());
                     incomes.add(income);
                 }
 
@@ -314,10 +316,11 @@ public class FirebaseManager {
                 ArrayList<Expense> expenses = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
                     Expense expense = Expense.jsonToObject(snapshot);
+                    expense.setUserId(MyUtility.currentUser.getId());
                     expenses.add(expense);
                 }
-                Expense[] expenses1=new Expense[expenses.size()];
-                expenses1=(Expense[]) expenses.toArray(expenses1);
+                Expense[] expenses1 = new Expense[expenses.size()];
+                expenses1 = (Expense[]) expenses.toArray(expenses1);
                 listener.onSuccess(expenses1);
             }
         });
@@ -350,6 +353,92 @@ public class FirebaseManager {
                         });
                     }
                 });
+            }
+        });
+    }
+
+    // Update Data from database
+    public static void updateCategories(Category category,final OnSuccessListener<Boolean> listener)
+    {
+        getDBInstance().collection(CATEGORIES_REF).document(category.getId()).update(category.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(listener!=null)
+                    listener.onSuccess(task.isComplete()&&task.isSuccessful());
+            }
+        });
+    }
+
+    public static void updateExpense(Expense expense, final OnSuccessListener<Boolean> listener) {
+        getDBInstance().collection(EXPENSES_REF).document(expense.getId()).update(expense.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (listener != null)
+                    listener.onSuccess(task.isComplete() && task.isSuccessful());
+            }
+        });
+    }
+
+    public static void updateIncome(Income income, final OnSuccessListener<Boolean> listener)
+    {
+        getDBInstance().collection(INCOMES_REF).document(income.getId()).update(income.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(listener!=null)
+                    listener.onSuccess(task.isComplete()&&task.isSuccessful());
+            }
+        });
+    }
+
+    // Delete data from database
+    public static void deleteCategory(final User user, final Category category, final OnSuccessListener<Boolean> listener) {
+        getDBInstance().collection(CATEGORIES_REF).document(category.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    final Expense[] expensesForCategory = MyUtility.currentUser.getExpensesForCategory(category.getId());
+                    for (int i = 0; i < expensesForCategory.length; i++) {
+                        final int finalI = i;
+                        deleteExpense(user, expensesForCategory[i], new OnSuccessListener<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean aBoolean) {
+                                if (finalI >= expensesForCategory.length - 1 && listener != null) {
+                                    listener.onSuccess(aBoolean);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onSuccess(false);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void deleteExpense(final User user, final Expense expense, final OnSuccessListener<Boolean> listener) {
+        getDBInstance().collection(EXPENSES_REF).document(expense.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()&&task.isComplete())
+                    user.removeExpenses(expense);
+                if (listener != null)
+                    listener.onSuccess(task.isComplete() && task.isSuccessful());
+            }
+        });
+    }
+
+    public static void deleteIncome(final User user, final Income income, final OnSuccessListener<Boolean> listener) {
+        getDBInstance().collection(INCOMES_REF).document(income.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()&&task.isComplete())
+                    user.removeIncomes(income);
+                if (listener != null)
+                {
+                    listener.onSuccess(task.isComplete() && task.isSuccessful());
+                }
             }
         });
     }

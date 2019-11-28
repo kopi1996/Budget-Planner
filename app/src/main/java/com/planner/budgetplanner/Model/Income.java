@@ -1,9 +1,12 @@
 package com.planner.budgetplanner.Model;
 
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.planner.budgetplanner.Utility.MyUtility;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;

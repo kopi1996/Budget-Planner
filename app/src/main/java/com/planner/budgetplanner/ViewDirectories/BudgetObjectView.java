@@ -19,7 +19,7 @@ import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends CustomAppBarActivity {
+public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends CustomAppBarActivity implements MyItemAdapter.IItemSwipeListner<T2> {
 
     private static final String TAG = "BudgetObjectView";
     protected SearchView searchView;
@@ -53,17 +53,17 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         recyclerView.setAdapter(adapter);
         adapter.enableSwipeToDeleteAndUndo(homeView, recyclerView);
 
-        adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, new MyItemAdapter.IItemSwipeListner<T2>() {
-            @Override
-            public void onRemove(T2 item, int pos) {
-                list.remove(item);
-            }
+        adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, this);
+    }
 
-            @Override
-            public void onRestore(T2 item, int pos) {
-                list.add(item);
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
+    protected void updateUI() {
+       adapter.setList(list);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,6 +159,16 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRemove(T2 item, int pos) {
+        list.remove(item);
+    }
+
+    @Override
+    public void onRestore(T2 item, int pos) {
+        list.add(item);
     }
 
     public interface ISearchListner<T>

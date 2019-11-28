@@ -138,6 +138,11 @@ public class MyUtility {
         return DateFormat.getDateInstance().format(date);
     }
 
+    public static String conDateToFullFormat(Date date)
+    {
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
+    }
+
     public static<T extends BudgetObject> ArrayList<T> filterWithName(ArrayList<T> oldList,String newTxt)
     {
         ArrayList<T> newList = new ArrayList<>();

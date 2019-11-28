@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import org.w3c.dom.Text;
 
@@ -54,7 +55,8 @@ public class IncomeAdapter extends MyItemAdapter<Income> {
             titleTxt.setText(income.getTitle());
             profTxtImg.setText(income.getTitle().length() > 0 ? income.getTitle().substring(0, 1).toUpperCase() : "");
             amountTxt.setText(income.getAmount() + "rs");
-            dateTxt.setText(income.getTimestamp().toString());
+            if (income.getTimestamp() != null)
+                dateTxt.setText(MyUtility.conDateToFullFormat(income.getTimestamp().toDate()));
         }
     }
 }

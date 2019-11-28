@@ -1,6 +1,5 @@
 package com.planner.budgetplanner.Adapters;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -8,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.planner.budgetplanner.Model.Category;
-import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.SwipeToDeleteCallBack;
 
 import java.util.ArrayList;
@@ -105,14 +101,16 @@ public abstract class MyItemAdapter<T> extends RecyclerView.Adapter<MyItemAdapte
                 final T item = getData().get(position);
 
                 removeItem(position);
-                listner.onRemove(item,position);
+                if(listner!=null)
+                    listner.onRemove(item,position);
                 Snackbar snackbar = Snackbar
                         .make(v, "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         restoreItem(item, position);
-                        listner.onRestore(item,position);
+                        if(listner!=null)
+                            listner.onRestore(item,position);
                         recyclerView.scrollToPosition(position);
                     }
                 });

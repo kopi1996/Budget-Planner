@@ -2,6 +2,7 @@ package com.planner.budgetplanner.Model;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

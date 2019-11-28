@@ -38,7 +38,7 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         list.add(new Category("","2","", 15, 35));
         list.add(new Category("","2","", 15, 35));
 
-        adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
+        adapter = new CategoryAdapter((ArrayList<Category>) list, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 startActivity(new Intent(CategoryView.this, ExpenseView.class));

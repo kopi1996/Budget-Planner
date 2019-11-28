@@ -24,7 +24,7 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
 
         list = new ArrayList<>();
 
-        adapter = new ExpenseAdapter(list, new MyItemAdapter.IItemListner() {
+        adapter = new ExpenseAdapter((ArrayList<Expense>) list, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
 

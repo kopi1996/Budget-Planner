@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,9 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
         private TextView spentTxt;
         private TextView budgetTxt;
         private TextView remainTxt;
+        private TextView createDateTxt;
         private ProgressBar progressBar;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +56,7 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
             budgetTxt = itemView.findViewById(R.id.cateBudgetTxt);
             remainTxt = itemView.findViewById(R.id.cateRemainTxt);
             progressBar = itemView.findViewById(R.id.cateProgressBar);
+            createDateTxt = itemView.findViewById(R.id.cateCreatDate);
         }
 
         @Override
@@ -62,9 +66,9 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
             spentTxt.setText(category.getSpent() + "rs");
             budgetTxt.setText(category.getBudget() + "rs");
             remainTxt.setText(category.getRemaining() + "rs");
-
+            if (category.getTimestamp() != null)
+                createDateTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(category.getTimestamp().toDate()).toDate()));
             int per = (int) ((category.getSpent() / category.getBudget()) * 100);
-
             progressBar.setProgress(per);
         }
     }

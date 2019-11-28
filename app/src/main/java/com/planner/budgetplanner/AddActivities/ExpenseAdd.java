@@ -34,9 +34,13 @@ import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocusChangeListener,OnSuccessListener<Date> {
+
+    public static final String EXPENSE_EDIT="ExpenseEdit";
+    public static final String EXPENSE_ID="ExpenseId";
 
     private static final String TAG = "ExpenseAdd";
     private TextInputEditText pickCateBtn;
@@ -50,50 +54,82 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
     private TextInputLayout descriptionTxtPar;
 
     private Button pickerBtn;
-
+    private Expense expense;
     private Category pickedCategory;
     private Date pickedDate;
+
     private boolean isSavingProgress;
+    private boolean isUpdate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_add);
 
-        initialize("Add Expense");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isUpdate = bundle.getBoolean(EXPENSE_EDIT, false);
+            if (isUpdate) {
+                String id = bundle.getString(EXPENSE_ID);
+                if (id != null)
+                    expense = MyUtility.currentUser.getExpenseForId(id);
+            }
+        }
+
+        if (expense == null)
+            isUpdate = false;
+
+        initialize(isUpdate ? "Edit Expense" : "Add Expense", expense);
     }
 
     @Override
-    protected void initialize(String title) {
-        super.initialize(title);
+    protected void initialize(String title,Expense expense) {
+        super.initialize(title,expense);
         pickerBtn = findViewById(R.id.datePickerBtn);
 
         pickCateBtn = findViewById(R.id.pickCateBtn);
-        titleTxt=findViewById(R.id.expAddTitleTxt);
-        amountTxt=findViewById(R.id.expAddAmountTxt);
-        descriptionTxt=findViewById(R.id.expAddDesTxt);
+        titleTxt = findViewById(R.id.expAddTitleTxt);
+        amountTxt = findViewById(R.id.expAddAmountTxt);
+        descriptionTxt = findViewById(R.id.expAddDesTxt);
 
-        pickCateBtnPar=findViewById(R.id.pickCateBtnPar);
-        titleTxtPar=findViewById(R.id.expAddTitleTxtPar);
-        amountTxtPar=findViewById(R.id.expAddAmountTxtPar);
-        descriptionTxtPar=findViewById(R.id.expAddDesTxtPar);
+        pickCateBtnPar = findViewById(R.id.pickCateBtnPar);
+        titleTxtPar = findViewById(R.id.expAddTitleTxtPar);
+        amountTxtPar = findViewById(R.id.expAddAmountTxtPar);
+        descriptionTxtPar = findViewById(R.id.expAddDesTxtPar);
+        pickedDate = new Date();
 
+        if (isUpdate) {
+            pickCateBtn.setClickable(false);
+            pickCateBtn.setAlpha(0.5f);
+        }
+        if (expense != null) {
+            pickCateBtn.setText(expense.getCategory().getTitle());
+            titleTxt.setText(expense.getTitle());
+            amountTxt.setText(Double.toString(expense.getAmount()));
+            descriptionTxt.setText(expense.getDescription());
+            if (expense.getTimestamp() != null)
+                pickedDate = MyUtility.convertFromUtcToStamp(expense.getTimestamp().toDate()).toDate();
+        }
 
+        pickerBtn.setOnFocusChangeListener(this);
+        titleTxt.setOnFocusChangeListener(this);
+        amountTxt.setOnFocusChangeListener(this);
+        descriptionTxt.setOnFocusChangeListener(this);
+        pickerBtn.setText(MyUtility.convertDateToString(pickedDate));
         pickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayDatePicker(ExpenseAdd.this);
             }
         });
-        pickCateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayHintDialog();
-            }
-        });
-
-        pickedDate=new Date();
-        pickerBtn.setText(MyUtility.convertDateToString(pickedDate));
+        if (!isUpdate)
+            pickCateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    displayHintDialog();
+                }
+            });
     }
 
     private void displayDatePicker(final OnSuccessListener<Date> listener) {
@@ -156,40 +192,65 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                    onBackPressed();
-//                return true;
             case R.id.saveBtn:
-                addExpense();
+                if (!isUpdate)
+                    addExpense();
+                else
+                    updateExpense();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void addExpense()
-    {
-        if(getCurrentFocus()!=null) {
+    private void addExpense() {
+        if (getCurrentFocus() != null) {
             MyUtility.hideKeyboardFrom(this, getCurrentFocus());
             getCurrentFocus().clearFocus();
         }
-        if(!checkEverythingReady())
+        if (!checkEverythingReady())
             return;
-        isSavingProgress=true;
+        isSavingProgress = true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
-        Expense expense=new Expense(pickedCategory,titleTxt.getText().toString(),descriptionTxt.getText().toString(),timestamp,Double.parseDouble(amountTxt.getText().toString()));
+        final Expense expense = new Expense(pickedCategory, titleTxt.getText().toString(), descriptionTxt.getText().toString(), timestamp, Double.parseDouble(amountTxt.getText().toString()));
         FirebaseManager.addExpenseIntoDB(expense, new OnSuccessListener<Expense>() {
             @Override
             public void onSuccess(Expense expense1) {
                 MyUtility.disableLoading(ExpenseAdd.this);
-                isSavingProgress=false;
-                if(expense1!=null)
-                {
-                   finish();
+                isSavingProgress = false;
+                if (expense1 != null) {
+                    MyUtility.currentUser.addExpenses(expense1);
+                    finish();
+                } else {
+
                 }
-                else
-                {
+            }
+        });
+    }
+
+    private void updateExpense() {
+        if (getCurrentFocus() != null) {
+            MyUtility.hideKeyboardFrom(this, getCurrentFocus());
+            getCurrentFocus().clearFocus();
+        }
+        if (!checkEverythingReady())
+            return;
+        isSavingProgress = true;
+        MyUtility.enableLoading(this);
+        Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
+        expense.setTitle(titleTxt.getText().toString());
+        expense.setDescription(descriptionTxt.getText().toString());
+        expense.setAmount(Double.parseDouble(amountTxt.getText().toString()));
+        expense.setTimestamp(timestamp);
+        FirebaseManager.updateExpense(expense, new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean success) {
+                MyUtility.disableLoading(ExpenseAdd.this);
+                isSavingProgress = false;
+                if (success != null) {
+                    finish();
+                } else {
 
                 }
             }
@@ -201,6 +262,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         if(pickCateBtn.getText().toString().isEmpty())
         {
             pickCateBtnPar.setError("Pick a category");
+            return false;
         }
         if(titleTxt.getText().toString().isEmpty())
         {
@@ -218,26 +280,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
 
     private void displayHintDialog() {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
-        elements.add(new Category("1","first","",250,150));
-        elements.add(new Category("2","second","",100,1500));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
-//        elements.add(new BudgetObject("1",""));
+        elements.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
 
         int width = 0;
         int height = 0;

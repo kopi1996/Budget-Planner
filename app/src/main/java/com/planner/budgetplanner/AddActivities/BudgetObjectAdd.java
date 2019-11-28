@@ -9,7 +9,14 @@ import com.planner.budgetplanner.Model.BudgetObject;
 
 public class BudgetObjectAdd<T extends BudgetObject> extends CustomAppBarActivity {
 
-    protected void initialize(String title,T data) {
+
+    @Override
+    protected void initialize(String title) {
+        super.initialize(title);
+        enableBackBtn();
+    }
+
+    protected void initialize(String title, T data) {
         super.initialize(title);
         enableBackBtn();
     }

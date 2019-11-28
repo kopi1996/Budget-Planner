@@ -37,8 +37,8 @@ public class Expense extends BudgetObject {
 
     public Expense(Category category, String title, String description, Timestamp timestamp, double amount) {
         super("", title, description, timestamp);
-
         this.category = category;
+        categoryId=category.getId();
         this.amount = amount;
         type = BudjetObjectType.EXPENSE;
     }

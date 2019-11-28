@@ -5,7 +5,8 @@
     android:id="@+id/cateItem"
     android:orientation="vertical"
     android:paddingHorizontal="5dp"
-    android:paddingVertical="5dp">
+    android:paddingBottom="5dp"
+    android:paddingTop="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,15 +25,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <TextView
-
-            android:id="@+id/cateCreatDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="sdhsjdhskd"
-            android:textColor="@color/dimmTxtColor"
-            android:textSize="12sp"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Budget Spent"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/cateSpentTxt"
@@ -69,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Actual Budget"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/cateBudgetTxt"
@@ -89,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Remaining"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/cateRemainTxt"
@@ -108,7 +100,12 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <ProgressBar
+        android:layout_weight="1"
         android:id="@+id/cateProgressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
@@ -119,6 +116,19 @@
         android:max="100"
         android:progress="35"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="35dp" />
+        android:layout_marginRight="20dp"/>
 
+
+        <TextView
+            android:layout_weight="3"
+            android:id="@+id/cateCreatDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/dimmTxtColor"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textSize="11sp"/>
+
+    </LinearLayout>
 </LinearLayout>

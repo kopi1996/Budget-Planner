@@ -40,38 +40,6 @@
         <item name="colorControlHighlight">@color/txtFocus</item>
     </style>
 
-    <style name="HintInputTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/txtFocus</item>
-        <item name="android:textSize">13sp</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-    </style>
-    <style name="InputTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/txtFocus</item>
-        <item name="android:textColorHint">#B4B4B4</item>
-        <item name="android:textSize">15sp</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="ErrorTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">#ffff0000</item>
-        <item name="android:textColorHint">#ffff0000</item>
-        <item name="android:textSize">12sp</item>
-        <item name="colorAccent">#ffff0000</item>
-    </style>
-
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textColorHint">#B4B4B4</item>
-        <item name="android:textSize">15sp</item>
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">#B4B4B4</item>
-        <item name="colorControlActivated">@color/txtFocus</item>
-
-    </style>
-
     <style name="spinner_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -96,7 +64,7 @@
     </style>
 
     <style name="LoadingProgress" parent="@style/Theme.AppCompat">
-        <item name="colorAccent">#0000A0</item>
+        <item name="colorAccent">#F0F0F0</item>
     </style>
 
     <style name="MyDialogTheme" parent="android:Theme.Dialog">

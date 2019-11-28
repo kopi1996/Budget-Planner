@@ -1,6 +1,7 @@
 package com.planner.budgetplanner.Model;
 
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class Income extends BudgetObject {
 
+    private static final String TAG = "Income";
     private double amount;
 
     public Income(String id, String title, String description, double amount) {
@@ -24,7 +26,6 @@ public class Income extends BudgetObject {
 
     public Income(String id, String title, String description, double amount, Timestamp timestamp) {
         super(id, title, description, timestamp);
-
         this.title = title;
         this.description = description;
         this.amount = amount;
@@ -36,7 +37,6 @@ public class Income extends BudgetObject {
         this.amount = amount;
         type = BudjetObjectType.INCOME;
     }
-
 
     public double getAmount() {
         return amount;
@@ -58,9 +58,10 @@ public class Income extends BudgetObject {
         String title = document.get("title").toString();
         String description = document.get("description").toString();
         Date tempTimestamp = (Date) document.get("timestamp");
-        Timestamp timestamp = MyUtility.convertFromUtcToStamp(tempTimestamp);
+        Timestamp timestamp = MyUtility.convertDateToStamp(tempTimestamp);
+        Log.i(TAG, "jsonToObject : " + title + " : " + MyUtility.convertDateToString(tempTimestamp));
         double amount = Double.parseDouble(document.get("amount").toString());
 
-        return new Income(document.getId(),title, description, amount,timestamp);
+        return new Income(document.getId(), title, description, amount, timestamp);
     }
 }

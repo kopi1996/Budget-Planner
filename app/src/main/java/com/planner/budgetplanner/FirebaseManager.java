@@ -399,9 +399,11 @@ public class FirebaseManager {
                     final Expense[] expensesForCategory = MyUtility.currentUser.getExpensesForCategory(category.getId());
                     for (int i = 0; i < expensesForCategory.length; i++) {
                         final int finalI = i;
-                        deleteExpense(user, expensesForCategory[i], new OnSuccessListener<Boolean>() {
+                        deleteExpense(expensesForCategory[i], new OnSuccessListener<Boolean>() {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
+                                if(aBoolean)
+                                    MyUtility.currentUser.removeExpenses(expensesForCategory[finalI]);
                                 if (finalI >= expensesForCategory.length - 1 && listener != null) {
                                     listener.onSuccess(aBoolean);
                                 }
@@ -417,12 +419,10 @@ public class FirebaseManager {
         });
     }
 
-    public static void deleteExpense(final User user, final Expense expense, final OnSuccessListener<Boolean> listener) {
+    public static void deleteExpense(final Expense expense, final OnSuccessListener<Boolean> listener) {
         getDBInstance().collection(EXPENSES_REF).document(expense.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()&&task.isComplete())
-                    user.removeExpenses(expense);
                 if (listener != null)
                     listener.onSuccess(task.isComplete() && task.isSuccessful());
             }
@@ -433,10 +433,7 @@ public class FirebaseManager {
         getDBInstance().collection(INCOMES_REF).document(income.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()&&task.isComplete())
-                    user.removeIncomes(income);
-                if (listener != null)
-                {
+                if (listener != null) {
                     listener.onSuccess(task.isComplete() && task.isSuccessful());
                 }
             }

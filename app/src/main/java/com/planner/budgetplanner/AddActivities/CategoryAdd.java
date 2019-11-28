@@ -45,13 +45,6 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         setContentView(R.layout.activity_category_add);
 
         initialize("Add Category");
-
-        findViewById(R.id.cateHintBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayHintCateTitle();
-            }
-        });
     }
 
     @Override
@@ -64,6 +57,16 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         titleTxtPar = findViewById(R.id.catAddTitleTxtPar);
         amountTxtPar = findViewById(R.id.catAddAmountTxtPar);
         descriptionTxtPar = findViewById(R.id.catAddDesTxtPar);
+
+        titleTxt.setOnFocusChangeListener(this);
+        amountTxt.setOnFocusChangeListener(this);
+        descriptionTxt.setOnFocusChangeListener(this);
+        findViewById(R.id.cateHintBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayHintCateTitle();
+            }
+        });
     }
 
     @Override
@@ -75,9 +78,6 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                onBackPressed();
-//                return true;
             case R.id.saveBtn:
                 addCategory();
                 return true;
@@ -108,18 +108,17 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         }
         if (!checkEverythingReady())
             return;
-        isSavingProgress=true;
+        isSavingProgress = true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(new Date());
-        Category category = new Category(titleTxt.getText().toString(), descriptionTxt.getText().toString(), Double.parseDouble(amountTxt.getText().toString()), timestamp);
-        // Expense expense=new Expense(pickedCategory,titleTxt.getText().toString(),descriptionTxt.getText().toString(),timestamp,Double.parseDouble(amountTxt.getText().toString()));
+        final Category category = new Category(titleTxt.getText().toString(), descriptionTxt.getText().toString(), Double.parseDouble(amountTxt.getText().toString()), timestamp);
         FirebaseManager.addCategoryIntoDB(category, new OnSuccessListener<Category>() {
             @Override
             public void onSuccess(Category category1) {
                 MyUtility.disableLoading(CategoryAdd.this);
-                isSavingProgress=false;
+                isSavingProgress = false;
                 if (category1 != null) {
-                    Log.i(TAG, "onSuccess category add: ");
+                    MyUtility.currentUser.addCategories(category1);
                     finish();
                 } else {
 

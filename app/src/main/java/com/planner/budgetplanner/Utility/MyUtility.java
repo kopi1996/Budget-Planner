@@ -180,6 +180,11 @@ public class MyUtility {
         return timestamp;
     }
 
+    public static Timestamp convertDateToStamp(Date date)
+    {
+       return new Timestamp(date);
+    }
+
     public static Date dateFromUTC(Date date) {
         return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }

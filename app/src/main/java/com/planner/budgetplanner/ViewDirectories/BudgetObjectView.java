@@ -32,7 +32,6 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     protected T1 adapter;
 
 
-
     protected void initialize(String title,View homeView, RecyclerView recyclerView) {
         super.initialize(title);
         enableBackBtn();
@@ -51,7 +50,7 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        adapter.enableSwipeToDeleteAndUndo(homeView, recyclerView);
+        adapter.enableSwipeToDeleteAndUndo(homeView, recyclerView,this);
 
         adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, this);
     }
@@ -63,7 +62,8 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     }
 
     protected void updateUI() {
-       adapter.setList(list);
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,7 +168,8 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
 
     @Override
     public void onRestore(T2 item, int pos) {
-        list.add(item);
+        if (!list.contains(item))
+            list.add(item);
     }
 
     public interface ISearchListner<T>

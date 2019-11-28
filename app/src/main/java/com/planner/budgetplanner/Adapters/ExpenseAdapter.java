@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
@@ -32,8 +33,7 @@ public class ExpenseAdapter extends MyItemAdapter<Expense> {
         super.onBindViewHolder(viewHolder, i);
     }
 
-    public class ViewHolder extends MyItemAdapter.ViewHolder
-    {
+    public class ViewHolder extends MyItemAdapter.ViewHolder {
         private TextView titleTxt;
         private TextView profileImg;
         private TextView amountTxt;
@@ -41,19 +41,20 @@ public class ExpenseAdapter extends MyItemAdapter<Expense> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTxt=itemView.findViewById(R.id.expItemTitle);
-            profileImg=itemView.findViewById(R.id.expItemProf);
-            amountTxt=itemView.findViewById(R.id.expItemAmount);
-            dateTimeTxt=itemView.findViewById(R.id.expItemDate);
+            titleTxt = itemView.findViewById(R.id.expItemTitle);
+            profileImg = itemView.findViewById(R.id.expItemProf);
+            amountTxt = itemView.findViewById(R.id.expItemAmount);
+            dateTimeTxt = itemView.findViewById(R.id.expItemDate);
         }
 
         @Override
         public void bindData(Object o) {
-            Expense expense=(Expense)o;
+            Expense expense = (Expense) o;
             titleTxt.setText(expense.getTitle());
-            profileImg.setText(expense.getTitle().length()>0?expense.getTitle().substring(0,1).toUpperCase():"");
-            amountTxt.setText(expense.getAmount()+"rs");
-            dateTimeTxt.setText(expense.getTimestamp().toString());
+            profileImg.setText(expense.getTitle().length() > 0 ? expense.getTitle().substring(0, 1).toUpperCase() : "");
+            amountTxt.setText(expense.getAmount() + "rs");
+            if (expense.getTimestamp() != null)
+                dateTimeTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(expense.getTimestamp().toDate()).toDate()));
         }
     }
 }

@@ -12,6 +12,7 @@
     <include layout="@layout/my_action_bar"/>
 
     <RelativeLayout
+        android:paddingHorizontal="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -82,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
-                        android:hint="Estimated Budget"
+                        android:hint="Estimated Budget(USD)"
                         android:textCursorDrawable="@color/txtFocus" />
                 </android.support.design.widget.TextInputLayout>
 

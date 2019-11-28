@@ -66,8 +66,8 @@ public class User extends DatabaseObject {
 
     public void addIncomes(Income... income) {
         for (Income income1 : income) {
-            if(!incomeVsId.containsKey(income1.id))
-                incomeVsId.put(income1.id,income1);
+            if (!incomeVsId.containsKey(income1.id))
+                incomeVsId.put(income1.id, income1);
         }
         incomes.addAll(Arrays.asList(income));
     }
@@ -95,10 +95,7 @@ public class User extends DatabaseObject {
                 tempList.add(expense);
         }
 
-        Expense[] expenses1 = new Expense[tempList.size()];
-        expenses1 = (Expense[]) tempList.toArray(expenses1);
-
-        return expenses1;
+        return tempList.toArray(new Expense[tempList.size()]);
     }
 
     public Income[] getIncomes() {

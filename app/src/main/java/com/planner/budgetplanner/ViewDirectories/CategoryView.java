@@ -7,12 +7,16 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
 
@@ -23,37 +27,26 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         setContentView(R.layout.activity_category_view);
 
         list = new ArrayList<>();
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","1","", 100, 200));
-        list.add(new Category("","2","", 15, 35));
-        list.add(new Category("","2","", 15, 35));
+        list.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
 
-        adapter = new CategoryAdapter((ArrayList<Category>) list, new MyItemAdapter.IItemListner() {
+        adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
-                startActivity(new Intent(CategoryView.this, ExpenseView.class));
-                Toast.makeText(CategoryView.this, list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(CategoryView.this, ExpenseView.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, list.get(pos).getId());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
-        initialize("Expenditure",findViewById(R.id.cateViewLayout),(RecyclerView) findViewById(R.id.cateViewList));
+        initialize("Expenditure", findViewById(R.id.cateViewLayout), (RecyclerView) findViewById(R.id.cateViewList));
     }
 
 
     @Override
     protected void onCloseSearchView() {
         super.onCloseSearchView();
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,17 +55,44 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         setupSearchView(adapter, list, new ISearchListner<Category>() {
             @Override
             public void onResult(ArrayList<Category> result) {
-                adapter.initialize(result,new MyItemAdapter.IItemListner() {
-                        @Override
-                        public void onClick(View v, int pos) {
-                            startActivity(new Intent(CategoryView.this, ExpenseView.class));
-                            Toast.makeText(CategoryView.this, CategoryView.this.list.get(pos).getTitle(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    searchRecyclerView.setAdapter(adapter);
+                adapter.initialize(result, new MyItemAdapter.IItemListner() {
+                    @Override
+                    public void onClick(View v, int pos) {
+                        Intent intent = new Intent(CategoryView.this, ExpenseView.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, list.get(pos).getId());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+                searchRecyclerView.setAdapter(adapter);
             }
         });
 
         return true;
+    }
+
+    @Override
+    public void onRemove(final Category item, int pos) {
+        super.onRemove(item, pos);
+        FirebaseManager.deleteCategory(MyUtility.currentUser, item, new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                if (aBoolean)
+                    MyUtility.currentUser.removeCategories(item);
+            }
+        });
+    }
+
+    @Override
+    public void onRestore(Category item, int pos) {
+        super.onRestore(item, pos);
+        FirebaseManager.addCategoryIntoDB(item, new OnSuccessListener<Category>() {
+            @Override
+            public void onSuccess(Category category) {
+                if (category != null)
+                    MyUtility.currentUser.addCategories(category);
+            }
+        });
     }
 }

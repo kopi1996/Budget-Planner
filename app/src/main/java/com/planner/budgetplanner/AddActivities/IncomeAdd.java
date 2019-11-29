@@ -191,8 +191,7 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
             return;
         isSavingProgress = true;
         MyUtility.enableLoading(this);
-        Date newDate=new Date();
-        pickedDate.setTime(newDate.getTime());
+
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(pickedDate);
         income = new Income(titleTxt.getText().toString(), descriptionTxt.getText().toString(), timestamp, Double.parseDouble(amountTxt.getText().toString()));
         FirebaseManager.addIncomeIntoDB(income, new OnSuccessListener<Income>() {

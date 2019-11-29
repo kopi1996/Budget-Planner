@@ -52,6 +52,7 @@
                     android:layout_weight="0.6" />
 
                     <TextView
+                        android:id="@+id/categoryEditBtn"
                         android:layout_weight="4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

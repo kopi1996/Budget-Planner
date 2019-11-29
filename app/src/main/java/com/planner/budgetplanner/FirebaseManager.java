@@ -252,7 +252,6 @@ public class FirebaseManager {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> expenseAddTask) {
                 if (expenseAddTask.isSuccessful() && listener != null) {
-
                     expense.setId(expenseAddTask.getResult().getId());
                     listener.onSuccess(expense);
                 }
@@ -394,19 +393,18 @@ public class FirebaseManager {
     }
 
     // Delete data from database
-    public static void deleteCategory(final User user, final Category category, final OnSuccessListener<Boolean> listener) {
+    public static void deleteCategory(final Category category, final OnSuccessListener<Boolean> listener) {
         getDBInstance().collection(CATEGORIES_REF).document(category.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     final Expense[] expensesForCategory = MyUtility.currentUser.getExpensesForCategory(category.getId());
+                    Log.i(TAG, "onComplete delete: "+expensesForCategory.length);
                     for (int i = 0; i < expensesForCategory.length; i++) {
                         final int finalI = i;
                         deleteExpense(expensesForCategory[i], new OnSuccessListener<Boolean>() {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
-                                if(aBoolean)
-                                    MyUtility.currentUser.removeExpenses(expensesForCategory[finalI]);
                                 if (finalI >= expensesForCategory.length - 1 && listener != null) {
                                     listener.onSuccess(aBoolean);
                                 }
@@ -422,6 +420,17 @@ public class FirebaseManager {
         });
     }
 
+    public static void deleteCategory(final Category category) {
+        getDBInstance().collection(CATEGORIES_REF).document(category.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                } else {
+                }
+            }
+        });
+    }
+
     public static void deleteExpense(final Expense expense, final OnSuccessListener<Boolean> listener) {
         getDBInstance().collection(EXPENSES_REF).document(expense.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -432,7 +441,7 @@ public class FirebaseManager {
         });
     }
 
-    public static void deleteIncome(final User user, final Income income, final OnSuccessListener<Boolean> listener) {
+    public static void deleteIncome(final Income income, final OnSuccessListener<Boolean> listener) {
         getDBInstance().collection(INCOMES_REF).document(income.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

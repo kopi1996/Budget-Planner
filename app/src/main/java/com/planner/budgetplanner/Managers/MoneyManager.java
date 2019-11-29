@@ -1,9 +1,13 @@
 package com.planner.budgetplanner.Managers;
 
+import android.util.Log;
+
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Model.User;
+
+import static com.planner.budgetplanner.FirebaseManager.TAG;
 
 public class MoneyManager {
 
@@ -37,7 +41,8 @@ public class MoneyManager {
     {
         double spent=0;
         for (Expense expense : user.getExpensesForCategory(categoryId)) {
-            spent=expense.getAmount();
+            Log.i(TAG, "totalSpentForCategory: " + expense.getId());
+            spent += expense.getAmount();
         }
 
         return spent;

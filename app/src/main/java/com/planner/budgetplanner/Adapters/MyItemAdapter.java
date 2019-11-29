@@ -114,6 +114,19 @@ public abstract class MyItemAdapter<T> extends RecyclerView.Adapter<MyItemAdapte
                         recyclerView.scrollToPosition(position);
                     }
                 });
+                snackbar.addCallback(new Snackbar.Callback(){
+                    @Override
+                    public void onShown(Snackbar sb) {
+                        super.onShown(sb);
+                        Log.i(TAG, "onShown snackbar: ");
+                    }
+
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        Log.i(TAG, "onDismissed snackbar: ");
+                    }
+                });
 
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();

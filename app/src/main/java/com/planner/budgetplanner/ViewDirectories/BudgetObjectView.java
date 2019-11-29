@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObject> extends CustomAppBarActivity implements MyItemAdapter.IItemSwipeListner<T2> {
 
-    private static final String TAG = "BudgetObjectView";
+    static final String TAG = "BudgetObjectView";
     protected SearchView searchView;
     protected RecyclerView searchRecyclerView;
     protected RecyclerView recyclerView;
@@ -59,6 +59,7 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
 
     protected void updateUI() {
         super.updateUI();
+
         if (adapter != null)
             adapter.notifyDataSetChanged();
     }

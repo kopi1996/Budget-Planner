@@ -28,6 +28,9 @@ import java.util.Date;
 public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFocusChangeListener {
 
     private static final String TAG = "CategoryAdd";
+    public static final String CATEGORY_EDIT="CategoryEdit";
+    public static final String CATEGORY_ID="CategoryId";
+
     private TextInputEditText titleTxt;
     private TextInputEditText amountTxt;
     private TextInputEditText descriptionTxt;
@@ -35,6 +38,9 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
     private TextInputLayout titleTxtPar;
     private TextInputLayout amountTxtPar;
     private TextInputLayout descriptionTxtPar;
+
+    private Category category;
+    private boolean isUpdate;
 
     private boolean isSavingProgress;
 
@@ -44,11 +50,22 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_add);
 
-        initialize("Add Category");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isUpdate = bundle.getBoolean(CATEGORY_EDIT);
+            String id = bundle.getString(CATEGORY_ID);
+            if (id != null)
+                category = MyUtility.currentUser.getCategoryForId(id);
+        }
+
+        if (category == null)
+            isUpdate = false;
+
+        initialize(isUpdate ? "Edit Category" : "Add Category", category);
     }
 
     @Override
-    protected void initialize(String title) {
+    protected void initialize(String title,Category category) {
         super.initialize(title);
         titleTxt = findViewById(R.id.catAddTitleTxt);
         amountTxt = findViewById(R.id.catAddAmountTxt);
@@ -57,6 +74,12 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         titleTxtPar = findViewById(R.id.catAddTitleTxtPar);
         amountTxtPar = findViewById(R.id.catAddAmountTxtPar);
         descriptionTxtPar = findViewById(R.id.catAddDesTxtPar);
+
+        if(category!=null) {
+            titleTxt.setText(category.getTitle());
+            amountTxt.setText(Double.toString(category.getBudget()));
+            descriptionTxt.setText(category.getDescription());
+        }
 
         titleTxt.setOnFocusChangeListener(this);
         amountTxt.setOnFocusChangeListener(this);
@@ -79,7 +102,10 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveBtn:
-                addCategory();
+                if(isUpdate)
+                    updateCategory();
+                else
+                    addCategory();
                 return true;
         }
 
@@ -101,6 +127,34 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         }
     }
 
+    private void updateCategory() {
+        if (getCurrentFocus() != null) {
+            MyUtility.hideKeyboardFrom(this, getCurrentFocus());
+            getCurrentFocus().clearFocus();
+        }
+        if (!checkEverythingReady())
+            return;
+        isSavingProgress = true;
+        MyUtility.enableLoading(this);
+        Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(new Date());
+        category.setTitle(titleTxt.getText().toString());
+        category.setBudget(Double.parseDouble(amountTxt.getText().toString()));
+        category.setTimestamp(timestamp);
+        category.setDescription(descriptionTxt.getText().toString());
+        FirebaseManager.updateCategories(category, new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean success) {
+                MyUtility.disableLoading(CategoryAdd.this);
+                isSavingProgress = false;
+                if (success) {
+                    finish();
+                } else {
+
+                }
+            }
+        });
+    }
+
     private void addCategory() {
         if (getCurrentFocus() != null) {
             MyUtility.hideKeyboardFrom(this, getCurrentFocus());
@@ -111,7 +165,7 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         isSavingProgress = true;
         MyUtility.enableLoading(this);
         Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(new Date());
-        final Category category = new Category(titleTxt.getText().toString(), descriptionTxt.getText().toString(), Double.parseDouble(amountTxt.getText().toString()), timestamp);
+        category = new Category(titleTxt.getText().toString(), descriptionTxt.getText().toString(), Double.parseDouble(amountTxt.getText().toString()), timestamp);
         FirebaseManager.addCategoryIntoDB(category, new OnSuccessListener<Category>() {
             @Override
             public void onSuccess(Category category1) {

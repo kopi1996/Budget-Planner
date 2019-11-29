@@ -44,6 +44,7 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         searchRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
@@ -55,13 +56,9 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateUI();
-    }
 
     protected void updateUI() {
+        super.updateUI();
         if (adapter != null)
             adapter.notifyDataSetChanged();
     }

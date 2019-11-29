@@ -1,6 +1,9 @@
 package com.planner.budgetplanner;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,22 +25,43 @@ import com.planner.budgetplanner.AddActivities.CategoryAdd;
 import com.planner.budgetplanner.AddActivities.ExpenseAdd;
 import com.planner.budgetplanner.AddActivities.IncomeAdd;
 import com.planner.budgetplanner.Managers.AuthenticationManager;
+import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Utility.MyUtility;
 import com.planner.budgetplanner.ViewDirectories.CategoryView;
 import com.planner.budgetplanner.ViewDirectories.IncomeView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends CustomAppBarActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG="MainActivity";
+    private TextView overviewRouPerTxt;
+    private TextView overviewTotIncTxt;
+    private TextView overviewToExpTxt;
+    private TextView overviewProPerTxt;
+    private TextView overviewTotSavTxt;
+    private TextView totalBudgetedTxt;
+    private TextView remianSpentTxt;
+    private TextView provBalanceTxt;
+    private TextView dispTncBtnTxt;
+    private TextView expBtnTxt;
+
+    private ProgressBar overviewProg;
+    private ProgressBar budgetedProg;
+
+    int dangerColId;
+    int normalColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        initialize("Budget Planner");
+    }
 
+    @Override
+    protected void initialize(String title) {
+        super.initialize(title);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,6 +69,22 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        overviewRouPerTxt=findViewById(R.id.overviewRouPerTxt);
+        overviewProg=findViewById(R.id.homeOverviewProgress);
+        overviewProPerTxt=findViewById(R.id.overviewProPerTxt);
+        overviewTotIncTxt=findViewById(R.id.overviewTotIncTxt);
+        overviewToExpTxt=findViewById(R.id.overviewToExpTxt);
+        overviewTotSavTxt=findViewById(R.id.overviewTotSaveTxt);
+        totalBudgetedTxt=findViewById(R.id.overviewTotBudgetedTxt);
+        provBalanceTxt=findViewById(R.id.overviewToProvBalaTxt);
+        remianSpentTxt=findViewById(R.id.overviewTotRemSpentTxt);
+        budgetedProg=findViewById(R.id.budgetedProg);
+        dispTncBtnTxt=findViewById(R.id.dispoIncBtnTxt);
+        expBtnTxt=findViewById(R.id.expBtnTxt);
+
+        dangerColId=getResources().getColor(R.color.dangerColor);
+        normalColor=totalBudgetedTxt.getTextColors().getDefaultColor();
 
         TextView name = navigationView.getHeaderView(0).findViewById(R.id.navName);
         name.setText(MyUtility.currentUser.getName());
@@ -57,50 +97,19 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.netDisposableBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent=new Intent(MainActivity.this, IncomeView.class);
-               startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, IncomeView.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.totalExpBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, CategoryView.class);
+                Intent intent = new Intent(MainActivity.this, CategoryView.class);
                 startActivity(intent);
             }
         });
 
         addBottomBarEvent();
-    }
-
-    private void checkBtn()
-    {
-        Intent intent = new Intent(this, CategoryAdd.class);
-        startActivity(intent);
-    }
-
-    private void checkBtn2()
-    {
-        Intent intent=new Intent(this, ExpenseAdd.class);
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onMyDestroy: "+hashCode());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        Log.i(TAG, "onMyResume : "+toString()+" "+hashCode());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onMyPause: "+toString()+" "+hashCode());
     }
 
     private void addBottomBarEvent()
@@ -132,6 +141,60 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void updateUI() {
+        super.updateUI();
+        String currencyType="rs";
+
+
+        double totalIncome = MoneyManager.totalIncome(MyUtility.currentUser);
+        double totalExpense = MoneyManager.totalExpenditure(MyUtility.currentUser);
+        double totalSaving = totalIncome - totalExpense;
+        double percentage=totalIncome==0?0:(totalExpense/totalIncome)*100;
+
+        double totalBudgeted=MoneyManager.totalBudgeted(MyUtility.currentUser);
+        double provBalance=totalIncome-totalBudgeted;
+        double remainSpent=totalBudgeted-totalExpense;
+        double budgetedPer=totalBudgeted ==0 ? 0 : (totalExpense/totalBudgeted)*100;
+
+        overviewTotIncTxt.setText(totalIncome + currencyType);
+        overviewToExpTxt.setText(totalExpense + currencyType);
+        overviewTotSavTxt.setText(totalSaving + currencyType);
+        overviewProg.setProgress((int) percentage);
+        overviewRouPerTxt.setText(MyUtility.wrapDecPointDouble(percentage)+" %");
+
+        totalBudgetedTxt.setText(totalBudgeted+currencyType);
+        provBalanceTxt.setText(provBalance+currencyType);
+        remianSpentTxt.setText(remainSpent+currencyType);
+        overviewProPerTxt.setText(MyUtility.wrapDecPointDouble(budgetedPer)+" %");
+        budgetedProg.setProgress((int) budgetedPer);
+
+        dispTncBtnTxt.setText(totalIncome+currencyType);
+        expBtnTxt.setText(totalExpense+currencyType);
+
+        overviewTotSavTxt.setTextColor(normalColor);
+        overviewRouPerTxt.setTextColor(normalColor);
+
+        Drawable overProDrawable = overviewProg.getProgressDrawable();
+        overProDrawable.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+
+        if (totalSaving < 0) {
+            overviewTotSavTxt.setTextColor(dangerColId);
+            overviewRouPerTxt.setTextColor(dangerColId);
+            overProDrawable.setColorFilter(dangerColId, PorterDuff.Mode.SRC_IN);
+        }
+        overviewProg.setProgressDrawable(overProDrawable);
+
+        Drawable budgetedProgDrawable = budgetedProg.getProgressDrawable();
+        budgetedProgDrawable.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+
+        if(budgetedPer>100)
+        {
+            budgetedProgDrawable.setColorFilter(dangerColId, PorterDuff.Mode.SRC_IN);
+        }
+        budgetedProg.setProgressDrawable(budgetedProgDrawable);
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -139,27 +202,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

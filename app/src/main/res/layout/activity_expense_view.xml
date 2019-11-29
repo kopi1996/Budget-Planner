@@ -151,10 +151,10 @@
             android:id="@+id/expViewFloatBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:layout_alignParentBottom="true"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:layout_alignParentRight="true"
+            android:src="@drawable/floating_btn_src"
             android:layout_margin="16dp" />
-
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

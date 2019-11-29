@@ -2,6 +2,7 @@ package com.planner.budgetplanner.ViewDirectories;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.AddActivities.CategoryAdd;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 
 public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
 
+    private FloatingActionButton floatingBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,18 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         initialize("Expenditure", findViewById(R.id.cateViewLayout), (RecyclerView) findViewById(R.id.cateViewList));
     }
 
+    @Override
+    protected void initialize(String title, View homeView, RecyclerView recyclerView) {
+        super.initialize(title, homeView, recyclerView);
+        floatingBtn = findViewById(R.id.cateViewFloatBtn);
+        floatingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CategoryView.this, CategoryAdd.class));
+                finish();
+            }
+        });
+    }
 
     @Override
     protected void onCloseSearchView() {
@@ -75,17 +90,18 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
     @Override
     public void onRemove(final Category item, int pos) {
         super.onRemove(item, pos);
+        MyUtility.currentUser.removeCategories(item);
         FirebaseManager.deleteCategory(MyUtility.currentUser, item, new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean aBoolean) {
-                if (aBoolean)
-                    MyUtility.currentUser.removeCategories(item);
+                if (!aBoolean)
+                    MyUtility.currentUser.addCategories(item);
             }
         });
     }
 
     @Override
-    public void onRestore(Category item, int pos) {
+    public void onRestore(final Category item, int pos) {
         super.onRestore(item, pos);
         FirebaseManager.addCategoryIntoDB(item, new OnSuccessListener<Category>() {
             @Override

@@ -106,9 +106,9 @@ public class FirebaseManager {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-
-                        String emailString = document.get("email").toString();
-
+                        String emailString="";
+                        if(document.get("email")!=null)
+                            emailString = document.get("email").toString();
                         String fName = document.get("name").toString();
 
                         User user = new User(key, fName, emailString, LoginType.valueOf(document.get("type").toString()));
@@ -238,6 +238,7 @@ public class FirebaseManager {
             public void onComplete(@NonNull final Task<DocumentReference> categoryAddTask) {
                 if(categoryAddTask.isSuccessful()&&listener!=null)
                 {
+                    category.setUser(MyUtility.currentUser);
                     category.setId(categoryAddTask.getResult().getId());
                     listener.onSuccess(category);
                 }
@@ -251,6 +252,7 @@ public class FirebaseManager {
             @Override
             public void onComplete(@NonNull final Task<DocumentReference> expenseAddTask) {
                 if (expenseAddTask.isSuccessful() && listener != null) {
+
                     expense.setId(expenseAddTask.getResult().getId());
                     listener.onSuccess(expense);
                 }
@@ -280,6 +282,7 @@ public class FirebaseManager {
                 ArrayList<Category> categories = new ArrayList<>();
                 for (QueryDocumentSnapshot snapshot : task.getResult()) {
                     Category category = Category.jsonToObject(snapshot);
+                    category.setUser(MyUtility.currentUser);
                     category.setUserId(MyUtility.currentUser.getId());
                     categories.add(category);
                 }

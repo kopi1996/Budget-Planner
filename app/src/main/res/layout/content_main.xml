@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#F7F4F4"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -30,14 +29,14 @@
 
                 <RelativeLayout
                     android:id="@+id/progressLayout"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp">
 
                     <ProgressBar
-                        android:id="@+id/progreesBarView"
+                        android:id="@+id/homeOverviewProgress"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -49,13 +48,15 @@
                         android:progressDrawable="@drawable/circular_progress_bar" />
 
                     <TextView
+                        android:id="@+id/overviewRouPerTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="100"
+                        android:maxLines="1"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
-                        android:textSize="25sp" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -65,15 +66,14 @@
                     android:layout_marginRight="10dp"
                     android:layout_toEndOf="@id/progressLayout"
                     android:layout_toRightOf="@id/progressLayout"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical">
-
+                        android:gravity="center_vertical"
+                        android:paddingVertical="2dp">
                         <TextView
                             android:id="@+id/netDisTxt"
                             android:layout_width="match_parent"
@@ -83,10 +83,11 @@
                             android:textSize="10sp" />
 
                         <TextView
-                            android:id="@+id/netDisAmountTxt"
+                            android:id="@+id/overviewTotIncTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.5"
+                            android:maxLines="1"
                             android:text="52369652rs"
                             android:textSize="15sp" />
 
@@ -95,8 +96,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="25dp"
-                        android:layout_weight="1"
+                        android:paddingVertical="2dp"
                         android:gravity="center_vertical">
 
                         <TextView
@@ -108,12 +108,36 @@
                             android:textSize="10sp" />
 
                         <TextView
-                            android:id="@+id/totalAmountTxt"
+                            android:id="@+id/overviewToExpTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.5"
                             android:text="52369652rs"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="2dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/saveTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total saving: "
+                            android:textSize="10sp" />
+                        <TextView
+                            android:id="@+id/overviewTotSaveTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:maxLines="1"
+                            android:text="52369652rs"
                             android:textSize="15sp" />
 
                     </LinearLayout>
@@ -155,10 +179,12 @@
                             android:textSize="10dp" />
 
                         <TextView
+                            android:id="@+id/overviewTotBudgetedTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="2514rs"
+                            android:maxLines="1"
                             android:textAlignment="center"
                             android:textSize="17dp" />
 
@@ -178,11 +204,13 @@
                             android:textSize="10sp" />
 
                         <TextView
+                            android:id="@+id/overviewToProvBalaTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
 
                             android:text="874rs"
+                            android:maxLines="1"
                             android:textAlignment="center"
                             android:textSize="17dp" />
 
@@ -202,11 +230,13 @@
                             android:textSize="10dp" />
 
                         <TextView
+                            android:id="@+id/overviewTotRemSpentTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
 
                             android:text="254rs"
+                            android:maxLines="1"
                             android:textAlignment="center"
                             android:textSize="17dp" />
 
@@ -220,7 +250,7 @@
                     android:layout_marginTop="15dp">
 
                     <ProgressBar
-                        android:id="@+id/bottomProgressBar"
+                        android:id="@+id/budgetedProg"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="25dp"
@@ -233,7 +263,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/bottomProgressBar"
+                        android:layout_alignBaseline="@+id/budgetedProg"
                         android:layout_centerVertical="true"
                         android:paddingLeft="20dp"
                         android:text="Budget Spent"
@@ -242,6 +272,7 @@
                         android:textSize="15dp" />
 
                     <TextView
+                        android:id="@+id/overviewProPerTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/bottomProgressBar"

@@ -41,6 +41,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
 
     public static final String EXPENSE_EDIT="ExpenseEdit";
     public static final String EXPENSE_ID="ExpenseId";
+    public static final String EXPENSE_CAT_ID="ExpenseCatId";
 
     private static final String TAG = "ExpenseAdd";
     private TextInputEditText pickCateBtn;
@@ -75,6 +76,9 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
                 if (id != null)
                     expense = MyUtility.currentUser.getExpenseForId(id);
             }
+            String catId=bundle.getString(EXPENSE_CAT_ID);
+            if(catId!=null)
+               pickedCategory = MyUtility.currentUser.getCategoryForId(catId);
         }
 
         if (expense == null)
@@ -103,6 +107,8 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
             pickCateBtn.setClickable(false);
             pickCateBtn.setAlpha(0.5f);
         }
+        if(pickedCategory!=null)
+            pickCateBtn.setText(pickedCategory.getTitle());
         if (expense != null) {
             pickCateBtn.setText(expense.getCategory().getTitle());
             titleTxt.setText(expense.getTitle());

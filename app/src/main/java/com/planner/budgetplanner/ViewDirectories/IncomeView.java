@@ -3,6 +3,7 @@ package com.planner.budgetplanner.ViewDirectories;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.Adapters.IncomeAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.AddActivities.ExpenseAdd;
 import com.planner.budgetplanner.AddActivities.IncomeAdd;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.Income;
@@ -27,6 +29,7 @@ import java.util.Queue;
 public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
 
     private static final String TAG = "IncomeView";
+    private FloatingActionButton floatingBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,19 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
         initialize("Incomes", findViewById(R.id.incomeViewLayout), (RecyclerView) findViewById(R.id.incomeViewList));
     }
 
+    @Override
+    protected void initialize(String title, View homeView, RecyclerView recyclerView) {
+        super.initialize(title, homeView, recyclerView);
+        floatingBtn = findViewById(R.id.incViewFloatBtn);
+        floatingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(IncomeView.this, IncomeAdd.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
@@ -67,7 +83,7 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
                         bundle.putString(IncomeAdd.INCOME_DATA_ID, list.get(pos).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
-                      }
+                    }
                 });
                 searchRecyclerView.setAdapter(adapter);
             }
@@ -79,11 +95,12 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
     @Override
     public void onRemove(final Income item, int pos) {
         super.onRemove(item, pos);
+        MyUtility.currentUser.removeIncomes(item);
         FirebaseManager.deleteIncome(MyUtility.currentUser, item, new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean aBoolean) {
-                if (aBoolean)
-                    MyUtility.currentUser.removeIncomes(item);
+                if (!aBoolean)
+                    MyUtility.currentUser.addIncomes(item);
             }
         });
     }

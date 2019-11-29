@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="2dp">
 
         <TextView
             android:id="@+id/cateTitle"
@@ -48,6 +49,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="11sp"
                 android:text="$250"/>
 
         </LinearLayout>
@@ -68,6 +71,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:maxLines="1"
                 android:text="$250"/>
 
         </LinearLayout>
@@ -88,6 +93,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:maxLines="1"
                 android:text="$250"/>
 
         </LinearLayout>

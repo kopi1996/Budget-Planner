@@ -2,6 +2,7 @@ package com.planner.budgetplanner.ViewDirectories;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.Adapters.ExpenseAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.AddActivities.CategoryAdd;
 import com.planner.budgetplanner.AddActivities.ExpenseAdd;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.Category;
@@ -26,6 +28,8 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
     public static final String EXPENSE_VIEW_CAT_ID = "ExpenseViewCatId";
     private static final String TAG = "ExpenseView";
     private Category expenseCate;
+
+    private FloatingActionButton floatingBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,23 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
         initialize(expenseCate.getTitle(), findViewById(R.id.expViewLayout), (RecyclerView) findViewById(R.id.expViewList));
     }
 
+    @Override
+    protected void initialize(String title, View homeView, RecyclerView recyclerView) {
+        super.initialize(title, homeView, recyclerView);
+        floatingBtn = findViewById(R.id.expViewFloatBtn);
+        floatingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ExpenseView.this, ExpenseAdd.class);
+                Bundle bundle = new Bundle();
+                if (expenseCate != null) {
+                    bundle.putString(ExpenseAdd.EXPENSE_CAT_ID, expenseCate.getId());
+                }
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -87,18 +108,20 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
     @Override
     public void onRemove(final Expense item, int pos) {
         super.onRemove(item, pos);
+        MyUtility.currentUser.removeExpenses(item);
         FirebaseManager.deleteExpense(item, new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean aBoolean) {
-                if (aBoolean)
-                    MyUtility.currentUser.removeExpenses(item);
+                if (!aBoolean)
+                    MyUtility.currentUser.addExpenses(item);
             }
         });
     }
 
     @Override
-    public void onRestore(Expense item, int pos) {
+    public void onRestore(final Expense item, int pos) {
         super.onRestore(item, pos);
+
         FirebaseManager.addExpenseIntoDB(item, new OnSuccessListener<Expense>() {
             @Override
             public void onSuccess(Expense expense) {

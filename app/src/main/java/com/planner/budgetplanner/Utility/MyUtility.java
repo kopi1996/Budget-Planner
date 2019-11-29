@@ -25,6 +25,7 @@ import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Model.User;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +64,12 @@ public class MyUtility {
         dialog.show();
 
         return dialog;
+    }
+
+    public static String wrapDecPointDouble(double value)
+    {
+        DecimalFormat df2 = new DecimalFormat("#.##");
+        return df2.format(value);
     }
 
     public static Dialog displayHintDialog(final Activity activity, ArrayList<BudgetObject> list, final MyItemAdapter.IItemListner listener, final DialogInterface.OnCancelListener cancelListener, final boolean dismissBox) {

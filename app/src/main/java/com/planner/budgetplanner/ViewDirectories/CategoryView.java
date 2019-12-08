@@ -16,12 +16,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.planner.budgetplanner.Adapters.CategoryAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.AddActivities.CategoryAdd;
+import com.planner.budgetplanner.AddActivities.ExpenseAdd;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,15 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
                 Intent intent = new Intent(CategoryView.this, ExpenseView.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, list.get(pos).getId());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }, new MyItemAdapter.IItemListner() {
+            @Override
+            public void onClick(View v, int pos) {
+                Intent intent = new Intent(CategoryView.this, ExpenseAdd.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(ExpenseAdd.EXPENSE_CAT_ID, list.get(pos).getId());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -133,54 +144,24 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
     @Override
     public void onRemove(final Category item, int pos) {
         super.onRemove(item, pos);
+        Log.i(TAG, "onMyRemove: " + item.hashCode());
         tempExpenses = MyUtility.currentUser.getExpensesForCategory(item.getId());
+        Trash.addTrash(item);
+        Trash.addTrash((Object[]) tempExpenses);
         MyUtility.currentUser.removeCategories(item);
+        MyUtility.currentUser.removeExpenses(tempExpenses);
         updateOverview();
-        FirebaseManager.deleteCategory(item, new OnSuccessListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                if (!aBoolean) {
-                    MyUtility.currentUser.addCategories(item);
-                } else
-                    MyUtility.currentUser.removeExpenses(tempExpenses);
-                //updateOverview();
-            }
-        });
     }
 
     @Override
     public void onRestore(final Category item, int pos) {
         super.onRestore(item, pos);
+        Log.i(TAG, "onMyRestore: " + item.hashCode());
         MyUtility.currentUser.addCategories(item);
-
+        Trash.removeTrash(item);
+        Trash.removeTrash((Object[]) tempExpenses);
+        MyUtility.currentUser.addExpenses(tempExpenses);
         updateOverview();
-        FirebaseManager.addCategoryIntoDB(item, new OnSuccessListener<Category>() {
-            @Override
-            public void onSuccess(Category category) {
-                if (category != null) {
-                    if (tempExpenses != null) {
-                        for (int i = 0; i < tempExpenses.length; i++) {
-                            tempExpenses[i].setCategoryId(category.getId());
-                        }
-                    }
-                    MyUtility.currentUser.removeCategories(item);
-                    MyUtility.currentUser.addCategories(category);
-                    for (int i = 0; i < tempExpenses.length; i++) {
-                        final int finalI = i;
-                        FirebaseManager.addExpenseIntoDB(tempExpenses[i], new OnSuccessListener<Expense>() {
-                            @Override
-                            public void onSuccess(Expense expense) {
-                                MyUtility.currentUser.addExpenses(expense);
-                                if (finalI >= tempExpenses.length - 1) {
-                                    updateOverview();
-                                    Log.i(TAG, "onSuccess update expense: ");
-                                }
-                            }
-                        });
-                    }
-                } else
-                    MyUtility.currentUser.removeExpenses(tempExpenses);
-            }
-        });
     }
+
 }

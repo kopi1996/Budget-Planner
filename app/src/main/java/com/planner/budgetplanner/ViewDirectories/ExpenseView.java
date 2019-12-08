@@ -24,6 +24,7 @@ import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +85,6 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
         spentTxt = findViewById(R.id.expFullViewSpent);
         progressBar = findViewById(R.id.expFullViewProBar);
         cateEditBtn = findViewById(R.id.categoryEditBtn);
-
 
 
         floatingBtn = findViewById(R.id.expViewFloatBtn);
@@ -172,29 +172,15 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
     public void onRemove(final Expense item, int pos) {
         super.onRemove(item, pos);
         MyUtility.currentUser.removeExpenses(item);
+        Trash.addTrash(item);
         updateOverView();
-        FirebaseManager.deleteExpense(item, new OnSuccessListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                if (!aBoolean)
-                    MyUtility.currentUser.addExpenses(item);
-            }
-        });
     }
 
     @Override
     public void onRestore(final Expense item, int pos) {
         super.onRestore(item, pos);
         MyUtility.currentUser.addExpenses(item);
-        FirebaseManager.addExpenseIntoDB(item, new OnSuccessListener<Expense>() {
-            @Override
-            public void onSuccess(Expense expense) {
-                if (expense != null) {
-                    MyUtility.currentUser.removeExpenses(item);
-                    MyUtility.currentUser.addExpenses(expense);
-                    updateOverView();
-                }
-            }
-        });
+        Trash.removeTrash(item);
+        updateOverView();
     }
 }

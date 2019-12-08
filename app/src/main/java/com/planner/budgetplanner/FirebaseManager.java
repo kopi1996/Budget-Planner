@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.planner.budgetplanner.Model.Category;
@@ -37,8 +38,11 @@ public class FirebaseManager {
     private static final String CATEGORIES_REF="Categories";
     private static final String EXPENSES_REF="Expenses";
 
-    public static void initialize()
-    {
+    public static void initialize() {
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        getDBInstance().setFirestoreSettings(settings);
         getDBInstance().disableNetwork()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -393,40 +397,12 @@ public class FirebaseManager {
     }
 
     // Delete data from database
-    public static void deleteCategory(final Category category, final OnSuccessListener<Boolean> listener) {
+    public static void deleteCategory(final Category category, final OnSuccessListener listener) {
         getDBInstance().collection(CATEGORIES_REF).document(category.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    final Expense[] expensesForCategory = MyUtility.currentUser.getExpensesForCategory(category.getId());
-                    Log.i(TAG, "onComplete delete: "+expensesForCategory.length);
-                    for (int i = 0; i < expensesForCategory.length; i++) {
-                        final int finalI = i;
-                        deleteExpense(expensesForCategory[i], new OnSuccessListener<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean aBoolean) {
-                                if (finalI >= expensesForCategory.length - 1 && listener != null) {
-                                    listener.onSuccess(aBoolean);
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    if (listener != null) {
-                        listener.onSuccess(false);
-                    }
-                }
-            }
-        });
-    }
-
-    public static void deleteCategory(final Category category) {
-        getDBInstance().collection(CATEGORIES_REF).document(category.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                } else {
-                }
+                if(listener!=null)
+                    listener.onSuccess(task.isComplete()&&task.isSuccessful());
             }
         });
     }

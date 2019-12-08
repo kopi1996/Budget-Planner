@@ -22,9 +22,11 @@ import java.util.ArrayList;
 
 public class CategoryAdapter extends MyItemAdapter<Category> {
 
+    private IItemListner btnListner;
 
-    public CategoryAdapter(ArrayList<Category> list, MyItemAdapter.IItemListner listner) {
+    public CategoryAdapter(ArrayList<Category> list, MyItemAdapter.IItemListner listner,IItemListner btnListner) {
         super(list, listner);
+        this.btnListner=btnListner;
     }
 
     @NonNull
@@ -59,6 +61,13 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
             remainTxt = itemView.findViewById(R.id.cateRemainTxt);
             progressBar = itemView.findViewById(R.id.cateProgressBar);
             createDateTxt = itemView.findViewById(R.id.cateCreatDate);
+            itemView.findViewById(R.id.cateItemPlusBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (btnListner != null)
+                        btnListner.onClick(v, getAdapterPosition());
+                }
+            });
         }
 
         @Override

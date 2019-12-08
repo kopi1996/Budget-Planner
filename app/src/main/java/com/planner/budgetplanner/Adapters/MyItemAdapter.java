@@ -101,30 +101,35 @@ public abstract class MyItemAdapter<T> extends RecyclerView.Adapter<MyItemAdapte
                 final T item = getData().get(position);
 
                 removeItem(position);
-                if(listner!=null)
-                    listner.onRemove(item,position);
+                if (listner != null)
+                    listner.onRemove(item, position);
                 Snackbar snackbar = Snackbar
                         .make(v, "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         restoreItem(item, position);
-                        if(listner!=null)
-                            listner.onRestore(item,position);
+                        if (listner != null)
+                            listner.onRestore(item, position);
                         recyclerView.scrollToPosition(position);
                     }
                 });
-                snackbar.addCallback(new Snackbar.Callback(){
+                snackbar.addCallback(new Snackbar.Callback() {
                     @Override
                     public void onShown(Snackbar sb) {
                         super.onShown(sb);
+                        if(listner!=null)
+                            listner.onShowSnackBar(sb);
                         Log.i(TAG, "onShown snackbar: ");
                     }
 
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
-                        Log.i(TAG, "onDismissed snackbar: ");
+                        if (listner!=null) {
+                            listner.onHideSnackBar(event);
+                        }
+                        Log.i(TAG, "onDismissed snackbar: " + event);
                     }
                 });
 
@@ -159,7 +164,9 @@ public abstract class MyItemAdapter<T> extends RecyclerView.Adapter<MyItemAdapte
 
     public static interface IItemSwipeListner<T>
     {
+        void onShowSnackBar(Snackbar snackbar);
         void onRemove(T item,int pos);
         void onRestore(T item,int pos);
+        void onHideSnackBar(int event);
     }
 }

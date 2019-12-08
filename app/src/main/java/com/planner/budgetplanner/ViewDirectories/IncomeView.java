@@ -18,6 +18,7 @@ import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,30 +108,15 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
     public void onRemove(final Income item, int pos) {
         super.onRemove(item, pos);
         MyUtility.currentUser.removeIncomes(item);
+        Trash.addTrash(item);
         updateOverView();
-        FirebaseManager.deleteIncome(item, new OnSuccessListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                if (!aBoolean)
-                    MyUtility.currentUser.addIncomes(item);
-            }
-        });
     }
 
     @Override
     public void onRestore(final Income item, int pos) {
         super.onRestore(item, pos);
         MyUtility.currentUser.addIncomes(item);
+        Trash.removeTrash(item);
         updateOverView();
-        FirebaseManager.addIncomeIntoDB(item, new OnSuccessListener<Income>() {
-            @Override
-            public void onSuccess(Income income) {
-                if (income != null) {
-                    MyUtility.currentUser.removeIncomes(item);
-                    MyUtility.currentUser.addIncomes(income);
-                    updateOverView();
-                }
-            }
-        });
     }
 }

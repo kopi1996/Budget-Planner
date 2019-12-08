@@ -107,8 +107,9 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
             pickCateBtn.setClickable(false);
             pickCateBtn.setAlpha(0.5f);
         }
-        if(pickedCategory!=null)
+        if(pickedCategory!=null) {
             pickCateBtn.setText(pickedCategory.getTitle());
+        }
         if (expense != null) {
             pickCateBtn.setText(expense.getCategory().getTitle());
             titleTxt.setText(expense.getTitle());

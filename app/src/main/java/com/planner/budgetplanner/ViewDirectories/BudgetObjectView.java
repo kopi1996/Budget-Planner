@@ -1,10 +1,12 @@
 package com.planner.budgetplanner.ViewDirectories;
 
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.planner.budgetplanner.CustomAppBarActivity;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,8 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     protected View homeView;
     protected ArrayList<T2> list;
     protected T1 adapter;
+
+    protected Snackbar undoSnackBar;
 
 
     protected void initialize(String title,View homeView, RecyclerView recyclerView) {
@@ -160,6 +165,11 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     }
 
     @Override
+    public void onShowSnackBar(Snackbar snackbar) {
+        undoSnackBar=snackbar;
+    }
+
+    @Override
     public void onRemove(T2 item, int pos) {
         list.remove(item);
     }
@@ -168,6 +178,19 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     public void onRestore(T2 item, int pos) {
         if (!list.contains(item))
             list.add(item);
+    }
+
+    @Override
+    public void onHideSnackBar(int event) {
+        undoSnackBar=null;
+        Trash.clearTrash();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (undoSnackBar != null)
+            undoSnackBar.dismiss();
     }
 
     public interface ISearchListner<T>

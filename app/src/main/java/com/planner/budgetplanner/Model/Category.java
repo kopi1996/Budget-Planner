@@ -56,6 +56,11 @@ public class Category extends BudgetObject {
 
 
     @Override
+    public double getAmount() {
+        return getBudget();
+    }
+
+    @Override
     public Map<String, Object> toJson() {
         Map<String, Object> map = super.toJson();
         map.put("budget", budget);

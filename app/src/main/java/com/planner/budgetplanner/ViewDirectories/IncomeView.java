@@ -1,5 +1,6 @@
 package com.planner.budgetplanner.ViewDirectories;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,7 +20,9 @@ import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyDialogWindow;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.SortType;
 import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
@@ -29,11 +34,12 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
     private FloatingActionButton floatingBtn;
     private TextView incomeTxt;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income_view);
-
 
         list = new ArrayList<>();
         list.addAll(Arrays.asList(MyUtility.currentUser.getIncomes()));
@@ -58,6 +64,7 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
         super.initialize(title, homeView, recyclerView);
         floatingBtn = findViewById(R.id.incViewFloatBtn);
         incomeTxt = findViewById(R.id.incomeViewAmount);
+
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +73,8 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
             }
         });
     }
+
+
 
     @Override
     protected void updateUI() {

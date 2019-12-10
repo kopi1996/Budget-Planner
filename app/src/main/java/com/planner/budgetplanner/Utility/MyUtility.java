@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.Model.BudgetObject;
+import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Model.User;
 
@@ -29,6 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MyUtility {
@@ -66,8 +68,7 @@ public class MyUtility {
         return dialog;
     }
 
-    public static String wrapDecPointDouble(double value)
-    {
+    public static String wrapDecPointDouble(double value) {
         DecimalFormat df2 = new DecimalFormat("#.##");
         return df2.format(value);
     }
@@ -120,19 +121,16 @@ public class MyUtility {
         return dialog;
     }
 
-    public static User conFirUserToMyUser(FirebaseUser firebaseUser)
-    {
-        return new User(firebaseUser.getUid(),firebaseUser.getDisplayName(),firebaseUser.getEmail());
+    public static User conFirUserToMyUser(FirebaseUser firebaseUser) {
+        return new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
     }
 
-    public static void startLoading(Activity activity,ILoadingListner listner)
-    {
+    public static void startLoading(Activity activity, ILoadingListner listner) {
         activity.findViewById(R.id.loadingHoriBar).setVisibility(View.VISIBLE);
         listner.onLoading(true);
     }
 
-    public static void stopLoading(Activity activity,ILoadingListner listner)
-    {
+    public static void stopLoading(Activity activity, ILoadingListner listner) {
         activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
         listner.onLoading(false);
     }
@@ -145,13 +143,11 @@ public class MyUtility {
         return DateFormat.getDateInstance().format(date);
     }
 
-    public static String conDateToFullFormat(Date date)
-    {
+    public static String conDateToFullFormat(Date date) {
         return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
     }
 
-    public static<T extends BudgetObject> ArrayList<T> filterWithName(ArrayList<T> oldList,String newTxt)
-    {
+    public static <T extends BudgetObject> ArrayList<T> filterWithName(ArrayList<T> oldList, String newTxt) {
         ArrayList<T> newList = new ArrayList<>();
         for (T c : oldList) {
             if (c.getTitle().contains(newTxt))
@@ -167,18 +163,16 @@ public class MyUtility {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public static void disableLoading(Activity activity)
-    {
+    public static void disableLoading(Activity activity) {
         activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public static Timestamp convDateToUtcTimeStamp(Date date)
-    {
+    public static Timestamp convDateToUtcTimeStamp(Date date) {
 //        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);
 //        calendar.set(2019,10,24);
 //
-        Timestamp timestamp=new Timestamp(dateToUTC(date));
+        Timestamp timestamp = new Timestamp(dateToUTC(date));
         return timestamp;
     }
 
@@ -187,16 +181,52 @@ public class MyUtility {
         return timestamp;
     }
 
-    public static Timestamp convertDateToStamp(Date date)
-    {
-       return new Timestamp(date);
+    public static Timestamp convertDateToStamp(Date date) {
+        return new Timestamp(date);
     }
 
     public static Date dateFromUTC(Date date) {
         return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
     }
 
-    public static Date dateToUTC(Date date){
+    public static Date dateToUTC(Date date) {
         return new Date(date.getTime() - Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
+    }
+
+    public static <T extends BudgetObject> void sortList(List<T> list, SortType type, boolean isAscendant) {
+        boolean isNeedSwap = true;
+        while (isNeedSwap) {
+            isNeedSwap = false;
+            for (int i = 1; i < list.size(); i++) {
+                boolean compare = false;
+                switch (type) {
+                    case Name:
+                        if (isAscendant)
+                            compare = list.get(i - 1).getTitle().compareTo(list.get(i).getTitle()) > 0;
+                        else
+                            compare = list.get(i - 1).getTitle().compareTo(list.get(i).getTitle()) < 0;
+                        break;
+                    case Date:
+                        if (isAscendant)
+                            compare = list.get(i - 1).getTimestamp().compareTo(list.get(i).getTimestamp()) > 0;
+                        else
+                            compare = list.get(i - 1).getTimestamp().compareTo(list.get(i).getTimestamp()) < 0;
+                        break;
+                    case Amount:
+                        if (isAscendant)
+                            compare = list.get(i - 1).getAmount() > list.get(i).getAmount();
+                        else
+                            compare = list.get(i - 1).getAmount() < list.get(i).getAmount();
+                        break;
+                }
+
+                if (compare) {
+                    T temp = list.get(i);
+                    list.set(i, list.get(i - 1));
+                    list.set(i - 1, temp);
+                    isNeedSwap = true;
+                }
+            }
+        }
     }
 }

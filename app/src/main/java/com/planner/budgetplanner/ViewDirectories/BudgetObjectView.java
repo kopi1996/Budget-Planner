@@ -1,5 +1,6 @@
 package com.planner.budgetplanner.ViewDirectories;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,14 +11,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.CustomAppBarActivity;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.MyDialogWindow;
 import com.planner.budgetplanner.Utility.MyUtility;
+import com.planner.budgetplanner.Utility.SortType;
 import com.planner.budgetplanner.Utility.Trash;
 
 import java.util.ArrayList;
@@ -33,15 +39,24 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
     protected View homeView;
     protected ArrayList<T2> list;
     protected T1 adapter;
-
+    protected ImageButton sortBtn;
     protected Snackbar undoSnackBar;
-
+    protected SortType lastSortType=SortType.Name;
+    protected boolean isAscendant=true;
 
     protected void initialize(String title,View homeView, RecyclerView recyclerView) {
         super.initialize(title);
         enableBackBtn();
+        sortBtn=findViewById(R.id.sortBtn);
+        sortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBtnClick();
+            }
+        });
         this.recyclerView = recyclerView;
         this.homeView = homeView;
+        MyUtility.sortList(list,lastSortType,isAscendant);
         searchRecyclerView = findViewById(R.id.searhCateViewList);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchRecyclerView.setHasFixedSize(true);
@@ -61,6 +76,49 @@ public class BudgetObjectView<T1 extends MyItemAdapter<T2>,T2 extends BudgetObje
         adapter.enableSwipeToDeleteAndUndo(homeView, searchRecyclerView, this);
     }
 
+    protected void sortBtnClick() {
+        final Dialog dialog = MyDialogWindow.defaultSortDialog(this, null, false);
+
+        TextView okBtn=dialog.findViewById(R.id.okBtn);
+        TextView cancelBtn=dialog.findViewById(R.id.cancelBtn);
+        final RadioButton nameBtn=dialog.findViewById(R.id.nameRadioBtn);
+        final RadioButton amountBtn=dialog.findViewById(R.id.amountRadioBtn);
+        RadioButton dateBtn=dialog.findViewById(R.id.dateRadioBtn);
+        final RadioButton ascenBtn=dialog.findViewById(R.id.ascendantBtn);
+        RadioButton descendant=dialog.findViewById(R.id.descendantBtn);
+
+        if (lastSortType == SortType.Name) {
+            nameBtn.setChecked(true);
+        }
+        else if (lastSortType == SortType.Amount) {
+            amountBtn.setChecked(true);
+        }else {
+            dateBtn.setChecked(true);
+        }
+
+        if(isAscendant)
+            ascenBtn.setChecked(true);
+        else
+            descendant.setChecked(true);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lastSortType=nameBtn.isChecked()?SortType.Name:amountBtn.isChecked()?SortType.Amount:SortType.Date;
+                isAscendant=ascenBtn.isChecked();
+                MyUtility.sortList(list,lastSortType,isAscendant);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
 
     protected void updateUI() {
         super.updateUI();

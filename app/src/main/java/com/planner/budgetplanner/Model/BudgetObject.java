@@ -68,6 +68,8 @@ public class BudgetObject extends DatabaseObject {
         return userId;
     }
 
+    public double getAmount(){return 0;}
+
     public void setUserId(String userId) {
         this.userId = userId;
     }

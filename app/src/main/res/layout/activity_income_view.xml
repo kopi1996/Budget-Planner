@@ -70,6 +70,15 @@
 
         </android.support.v7.widget.CardView>
 
+        <ImageButton
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="7sp"
+            android:layout_gravity="end"
+            android:id="@+id/sortBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/baseline_sort_black_18dp"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/incomeViewList"
             android:layout_width="match_parent"

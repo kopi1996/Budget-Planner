@@ -61,8 +61,9 @@
                         android:layout_gravity="center"
                         android:gravity="end"
                         android:textColor="@color/txtFocus"
-                        android:layout_marginLeft="10dp"
-                        android:paddingVertical="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:paddingHorizontal="5dp"
+                        android:paddingVertical="7dp"
                         android:background="@drawable/transparentbtn"/>
 
                 </LinearLayout>

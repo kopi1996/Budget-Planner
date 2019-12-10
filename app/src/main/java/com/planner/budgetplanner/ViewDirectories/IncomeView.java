@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +21,7 @@ import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
+import com.planner.budgetplanner.Utility.FilterType;
 import com.planner.budgetplanner.Utility.MyDialogWindow;
 import com.planner.budgetplanner.Utility.MyUtility;
 import com.planner.budgetplanner.Utility.SortType;
@@ -41,16 +43,19 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income_view);
 
-        list = new ArrayList<>();
-        list.addAll(Arrays.asList(MyUtility.currentUser.getIncomes()));
+        orginList = new ArrayList<>();
+        orginList.addAll(Arrays.asList(MyUtility.currentUser.getIncomes()));
 
-        adapter = new IncomeAdapter(list, new MyItemAdapter.IItemListner() {
+        tempList=new ArrayList<>();
+        tempList.addAll(orginList);
+
+        adapter = new IncomeAdapter(tempList, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 Intent intent = new Intent(IncomeView.this, IncomeAdd.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(IncomeAdd.INCOME_EDIT, true);
-                bundle.putString(IncomeAdd.INCOME_DATA_ID, list.get(pos).getId());
+                bundle.putString(IncomeAdd.INCOME_DATA_ID, tempList.get(pos).getId());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -74,36 +79,36 @@ public class IncomeView extends BudgetObjectView<IncomeAdapter,Income> {
         });
     }
 
-
-
     @Override
     protected void updateUI() {
-        list.clear();
-        list.addAll(Arrays.asList(MyUtility.currentUser.getIncomes()));
-        adapter.setList(list);
+        orginList.clear();
+        orginList.addAll(Arrays.asList(MyUtility.currentUser.getIncomes()));
+
+        tempList.clear();
+        filterList(type);
         super.updateUI();
-        updateOverView();
     }
 
-    private void updateOverView() {
-        incomeTxt.setText(MoneyManager.totalIncome(MyUtility.currentUser) + MyUtility.currentUser.getCurrencyType());
+    protected void updateOverView() {
+        incomeTxt.setText(MoneyManager.totalIncome(tempList) + MyUtility.currentUser.getCurrencyType());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        setupSearchView(adapter, (ArrayList<Income>) list, new ISearchListner<Income>() {
+        setupSearchView(adapter, new ISearchListner<Income>() {
             @Override
-            public void onResult(ArrayList<Income> result) {
+            public void onResult(final ArrayList<Income> result) {
                 adapter.initialize(result, new MyItemAdapter.IItemListner() {
                     @Override
                     public void onClick(View v, int pos) {
                         Intent intent = new Intent(IncomeView.this, IncomeAdd.class);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(IncomeAdd.INCOME_EDIT, true);
-                        bundle.putString(IncomeAdd.INCOME_DATA_ID, list.get(pos).getId());
+                        bundle.putString(IncomeAdd.INCOME_DATA_ID, result.get(pos).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
+
                     }
                 });
                 searchRecyclerView.setAdapter(adapter);

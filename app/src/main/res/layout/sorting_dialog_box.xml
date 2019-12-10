@@ -70,6 +70,7 @@
                 android:text="Ascendant"/>
 
             <RadioButton
+                android:layout_marginTop="5dp"
                 android:id="@+id/descendantBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

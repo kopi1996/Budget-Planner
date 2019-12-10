@@ -41,15 +41,14 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
-
-        list = new ArrayList<>();
-
-        adapter = new CategoryAdapter(list, new MyItemAdapter.IItemListner() {
+        orginList = new ArrayList<>();
+        tempList=new ArrayList<>();
+        adapter = new CategoryAdapter(tempList, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 Intent intent = new Intent(CategoryView.this, ExpenseView.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, list.get(pos).getId());
+                bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, tempList.get(pos).getId());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -58,7 +57,7 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
             public void onClick(View v, int pos) {
                 Intent intent = new Intent(CategoryView.this, ExpenseAdd.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(ExpenseAdd.EXPENSE_CAT_ID, list.get(pos).getId());
+                bundle.putString(ExpenseAdd.EXPENSE_CAT_ID, tempList.get(pos).getId());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -85,10 +84,17 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
     }
 
     @Override
+    protected void initFilterView() {
+
+    }
+
+    @Override
     protected void updateUI() {
-        list.clear();
-        list.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
-        adapter.setList(list);
+        orginList.clear();
+        orginList.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
+        tempList.clear();
+        tempList.addAll(orginList);
+        adapter.setList(tempList);
         super.updateUI();
 
         updateOverview();
@@ -121,15 +127,15 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        setupSearchView(adapter, list, new ISearchListner<Category>() {
+        setupSearchView(adapter, new ISearchListner<Category>() {
             @Override
-            public void onResult(ArrayList<Category> result) {
+            public void onResult(final ArrayList<Category> result) {
                 adapter.initialize(result, new MyItemAdapter.IItemListner() {
                     @Override
                     public void onClick(View v, int pos) {
                         Intent intent = new Intent(CategoryView.this, ExpenseView.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, list.get(pos).getId());
+                        bundle.putString(ExpenseView.EXPENSE_VIEW_CAT_ID, result.get(pos).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }

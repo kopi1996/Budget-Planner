@@ -7,6 +7,8 @@ import com.planner.budgetplanner.Model.Expense;
 import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Model.User;
 
+import java.util.List;
+
 import static com.planner.budgetplanner.FirebaseManager.TAG;
 
 public class MoneyManager {
@@ -17,6 +19,25 @@ public class MoneyManager {
             incomeAmount += income.getAmount();
         }
         return incomeAmount;
+    }
+
+    public static double totalIncome(List<Income> incomes)
+    {
+        double incomeAmount=0;
+        for (Income income : incomes) {
+            incomeAmount += income.getAmount();
+        }
+
+        return incomeAmount;
+    }
+
+    public static double totalExpenditure(List<Expense> expenses) {
+        double expenseAmount = 0;
+        for (Expense expense : expenses) {
+            expenseAmount += expense.getAmount();
+        }
+
+        return expenseAmount;
     }
 
     public static double totalExpenditure(User user) {

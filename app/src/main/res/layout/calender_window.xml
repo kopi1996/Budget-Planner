@@ -34,6 +34,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/cancelBtn"
                 android:text="CANCEL"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
                 android:layout_marginRight="20dp"
                 android:textColor="@color/txtFocus"/>
 
@@ -42,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/okBtn"
                 android:text="OK"
-
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
                 android:textColor="@color/txtFocus"/>
         </LinearLayout>
 

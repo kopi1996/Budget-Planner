@@ -151,6 +151,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
             public void onClick(View v) {
                 listener.onSuccess(MyUtility.getPickerDate(picker));
                 //pickerBtn.setText(MyUtility.getPickerDate(picker));
+                
                 dialog.dismiss();
                 okBtn.setOnClickListener(null);
             }

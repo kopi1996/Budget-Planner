@@ -9,6 +9,8 @@ import android.os.Build;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
@@ -36,6 +38,7 @@ import java.util.Locale;
 public class MyUtility {
 
 
+    private static final String TAG = "MyUtol";
     public static User currentUser;
 
     public static boolean isValidEmail(CharSequence target) {
@@ -228,5 +231,42 @@ public class MyUtility {
                 }
             }
         }
+    }
+
+    public static <T extends BudgetObject> List<T> filterList(List<T> list,FilterType type)
+    {
+        if(type==FilterType.LIFETIME) {
+            List<T> temp=new ArrayList<>();
+            temp.addAll(list);
+            return temp;
+        }
+        if(type==FilterType.CUSTOM)
+            return null;
+
+        int day=type==FilterType.SEVENDAY?7:type==FilterType.THIRTYDAY?30:type==FilterType.THREESIXTYDAY?360:180;
+
+        Date currDate = new Date();
+        Date fromDate = MyUtility.subtractDate(currDate, day);
+        return filterList(list,fromDate,currDate);
+    }
+
+    public static <T extends BudgetObject> List<T> filterList(List<T> list,Date from,Date to) {
+
+        List<T> tempList = new ArrayList<>();
+        for (T t : list) {
+            if (t.getTimestamp().toDate().compareTo(from) >= 0 && t.getTimestamp().toDate().compareTo(to) <= 0)
+                tempList.add(t);
+        }
+
+        return tempList;
+    }
+
+    public static Date subtractDate(Date now, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        cal.add(Calendar.DATE, -days);
+
+        return cal.getTime();
     }
 }

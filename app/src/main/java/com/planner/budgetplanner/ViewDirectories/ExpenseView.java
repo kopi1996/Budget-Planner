@@ -58,17 +58,19 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
         }
         if (expenseCate == null)
             return;
-        list = new ArrayList<>();
-        Log.i(TAG, "onCreate: " + MyUtility.currentUser.getExpensesForCategory(expenseCate.getId()).length);
-        list.addAll(Arrays.asList(MyUtility.currentUser.getExpensesForCategory(expenseCate.getId())));
+        orginList = new ArrayList<>();
+        orginList.addAll(Arrays.asList(MyUtility.currentUser.getExpensesForCategory(expenseCate.getId())));
 
-        adapter = new ExpenseAdapter(list, new MyItemAdapter.IItemListner() {
+        tempList=new ArrayList<>();
+        tempList.addAll(orginList);
+
+        adapter = new ExpenseAdapter(tempList, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 Intent intent = new Intent(ExpenseView.this, ExpenseAdd.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ExpenseAdd.EXPENSE_EDIT, true);
-                bundle.putString(ExpenseAdd.EXPENSE_ID, list.get(pos).getId());
+                bundle.putString(ExpenseAdd.EXPENSE_ID, tempList.get(pos).getId());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -116,17 +118,18 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
 
     @Override
     protected void updateUI() {
-        list.clear();
-        list.addAll(Arrays.asList(MyUtility.currentUser.getExpensesForCategory(expenseCate.getId())));
-        adapter.setList(list);
+        orginList.clear();
+        orginList.addAll(Arrays.asList(MyUtility.currentUser.getExpensesForCategory(expenseCate.getId())));
+        tempList.clear();
+        filterList(type);
         super.updateUI();
         updateOverView();
     }
 
-    private void updateOverView() {
+    protected void updateOverView() {
         if (expenseCate == null)
             return;
-        double totalSpent = expenseCate.getSpent();
+        double totalSpent = MoneyManager.totalExpenditure(tempList);
         double totalBudget = expenseCate.getBudget();
         double totalRemin = totalBudget - totalSpent;
         double percentage = totalBudget == 0 ? 0 : (totalSpent / totalBudget) * 100;
@@ -147,16 +150,16 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        setupSearchView(adapter, list, new ISearchListner<Expense>() {
+        setupSearchView(adapter, new ISearchListner<Expense>() {
             @Override
-            public void onResult(ArrayList<Expense> result) {
+            public void onResult(final ArrayList<Expense> result) {
                 adapter.initialize(result, new MyItemAdapter.IItemListner() {
                     @Override
                     public void onClick(View v, int pos) {
                         Intent intent = new Intent(ExpenseView.this, ExpenseAdd.class);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ExpenseAdd.EXPENSE_EDIT, true);
-                        bundle.putString(ExpenseAdd.EXPENSE_ID, list.get(pos).getId());
+                        bundle.putString(ExpenseAdd.EXPENSE_ID, result.get(pos).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }

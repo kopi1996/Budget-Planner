@@ -408,6 +408,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
                                 if(category!=null)
                                 {
                                     MyUtility.currentUser.addCategories(category);
+                                    dialog1.dismiss();
                                     displayHintDialog();
                                 }
                                 else

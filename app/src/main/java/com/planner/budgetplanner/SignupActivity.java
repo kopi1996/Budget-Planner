@@ -2,13 +2,10 @@ package com.planner.budgetplanner;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.Model.User;
 import com.planner.budgetplanner.Utility.MyUtility;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends LoadingActivity {
 
     private static final String TAG = "SignUpActivity";
     private EditText email;
@@ -29,16 +26,18 @@ public class SignupActivity extends AppCompatActivity {
     private EditText lastName;
     private TextView errorLabel;
 
-    private ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        progressBar = findViewById(R.id.loading);
+        initialize();
+    }
 
+    @Override
+    public void initialize() {
+        super.initialize();
         email = findViewById(R.id.email);
         pass = findViewById(R.id.password);
 
@@ -46,7 +45,6 @@ public class SignupActivity extends AppCompatActivity {
         lastName = findViewById(R.id.lastName);
         errorLabel = findViewById(R.id.errorLabel);
     }
-
 
     public void loginBtnClick(View view) {
         Intent intent = new Intent(this, LoginScreen.class);
@@ -72,9 +70,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+       MyUtility.enableLoading(this);
 
         FirebaseManager.getAuth().createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString()).
                 addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -95,8 +91,7 @@ public class SignupActivity extends AppCompatActivity {
                                     if (isSuccess) {
                                         startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     }
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                   MyUtility.disableLoading(SignupActivity.this);
                                 }
                             });
                         }

@@ -4,12 +4,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -17,8 +14,6 @@ import com.planner.budgetplanner.Adapters.MyItemAdapter;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Category;
-import com.planner.budgetplanner.Model.Expense;
-import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Utility.MyUtility;
 

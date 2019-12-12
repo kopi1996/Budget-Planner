@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
 import com.planner.budgetplanner.Adapters.MyItemAdapter;
+import com.planner.budgetplanner.LoadingActivity;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Model.Category;
 import com.planner.budgetplanner.R;
@@ -160,16 +161,29 @@ public class MyUtility {
         return newList;
     }
 
-    public static void enableLoading(Activity activity) {
-        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.VISIBLE);
+    public static void enableLoading(LoadingActivity activity) {
+        activity.findViewById(R.id.round_loading_bar).setVisibility(View.VISIBLE);
+        activity.getHomeView().setVisibility(View.INVISIBLE);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public static void disableLoading(Activity activity) {
-        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
+    public static void disableLoading(LoadingActivity activity) {
+        activity.findViewById(R.id.round_loading_bar).setVisibility(View.INVISIBLE);
+        activity.getHomeView().setVisibility(View.VISIBLE);
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
+//
+//    public static void enableLoading(Activity activity) {
+//        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.VISIBLE);
+//        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+//    }
+
+//    public static void disableLoading(Activity activity) {
+//        activity.findViewById(R.id.loadingHoriBar).setVisibility(View.INVISIBLE);
+//        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+//    }
 
     public static Timestamp convDateToUtcTimeStamp(Date date) {
 //        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);

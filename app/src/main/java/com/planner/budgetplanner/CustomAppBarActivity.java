@@ -4,13 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class CustomAppBarActivity extends AppCompatActivity {
+public class CustomAppBarActivity extends LoadingActivity {
 
     protected Toolbar toolbar;
-    protected View homeView;
 
     protected void initialize(String title)
     {
+        super.initialize();
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(title);

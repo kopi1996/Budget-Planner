@@ -6,13 +6,16 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
-    <include
-        android:id="@+id/loadingHoriBar"
-        layout="@layout/loading_screen"
+    <include layout="@layout/round_loading_screen"
+        android:id="@+id/round_loading_bar"
+        android:layout_centerInParent="true"
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:visibility="invisible"/>
+    <RelativeLayout
+        android:id="@+id/homeView"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible" />
+        android:layout_height="wrap_content">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -148,13 +151,22 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss"
                     android:textColor="#fff"
+                    android:textSize="15sp"
+                    android:paddingVertical="1dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ssssssssssssssssssssssssssssssss"
+                    android:textColor="#fff"
+                    android:paddingVertical="1dp"
                     android:textSize="15sp" />
 
                 <TextView
@@ -162,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss"
                     android:textColor="#fff"
+                    android:paddingVertical="1dp"
                     android:textSize="15sp" />
 
                 <TextView
@@ -169,16 +182,11 @@
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss"
                     android:textColor="#fff"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ssssssssssssssssssssssssssssssss"
-                    android:textColor="#fff"
+                    android:paddingVertical="1dp"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    </RelativeLayout>
 
 </RelativeLayout>

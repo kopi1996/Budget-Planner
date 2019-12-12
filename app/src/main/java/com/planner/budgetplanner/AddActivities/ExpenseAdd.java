@@ -350,6 +350,16 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
                         dialog1.findViewById(R.id.catAddWinHelpTxt).setVisibility(View.VISIBLE);
                     }
                 });
+                View okBtn = dialog1.findViewById(R.id.catDialOkBtn);
+                View cancelBtn = dialog1.findViewById(R.id.catDialCancelBtn);
+
+                okBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
                 dialog.dismiss();
             }
         });

@@ -1,59 +1,29 @@
 package com.planner.budgetplanner;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.planner.budgetplanner.Interfaces.IInitialize;
 import com.planner.budgetplanner.Managers.AuthenticationManager;
-import com.planner.budgetplanner.Model.Category;
-import com.planner.budgetplanner.Model.Income;
 import com.planner.budgetplanner.Utility.MyUtility;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
-public class LoginScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, IInitialize,FacebookCallback<LoginResult> {
+public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnConnectionFailedListener,FacebookCallback<LoginResult> {
 
     private static final String TAG = "LoginScreen";
     private static final String LOGIN_TYPE = "LoginType";
@@ -61,7 +31,6 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
     private EditText email;
     private EditText pass;
     private TextView errorLabel;
-    private ProgressBar progressBar;
     private static final int RC_SIGN_IN = 9001;
     private int num;
 
@@ -86,9 +55,9 @@ public class LoginScreen extends AppCompatActivity implements GoogleApiClient.On
 
 
     public void initialize() {
+        super.initialize();
         errorLabel = findViewById(R.id.errorLabel);
         email = findViewById(R.id.username);
-        progressBar = findViewById(R.id.loadingHoriBar);
         pass = findViewById(R.id.password);
         findViewById(R.id.fbBtn).setOnClickListener(new View.OnClickListener() {
             @Override

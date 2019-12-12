@@ -10,12 +10,23 @@
     >
 
     <include layout="@layout/my_action_bar"/>
-
     <RelativeLayout
-        android:paddingHorizontal="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+    <include layout="@layout/round_loading_screen"
+            android:id="@+id/round_loading_bar"
+            android:layout_centerInParent="true"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:visibility="invisible"/>
+    <RelativeLayout
+        android:id="@+id/homeView"
+        android:paddingHorizontal="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -156,5 +167,6 @@
     </LinearLayout>
     </LinearLayout>
     </ScrollView>
+    </RelativeLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -295,6 +295,13 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
             titleTxtPar2.setError("Enter title");
             return false;
         }
+        Category[] categories = MyUtility.currentUser.getCategories();
+        for (Category category1 : categories) {
+            if(category1.getTitle().equals(titleInp.getText().toString())) {
+                titleTxtPar2.setError("This title already exist");
+                return false;
+            }
+        }
         if (amountInp.getText().toString().isEmpty()) {
             amountTxtPar2.setError("Enter a amount");
             return false;

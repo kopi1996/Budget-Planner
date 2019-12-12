@@ -94,6 +94,7 @@ public class CategoryView extends BudgetObjectView<CategoryAdapter,Category> {
         orginList.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
         tempList.clear();
         tempList.addAll(orginList);
+        MyUtility.sortList(tempList,lastSortType,isAscendant);
         adapter.setList(tempList);
         super.updateUI();
 

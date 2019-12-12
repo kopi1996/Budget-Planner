@@ -246,6 +246,8 @@ public class FirebaseManager {
                     category.setId(categoryAddTask.getResult().getId());
                     listener.onSuccess(category);
                 }
+                else if(listener!=null)
+                    listener.onSuccess(null);
             }
         });
     }

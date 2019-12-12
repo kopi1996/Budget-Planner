@@ -19,7 +19,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.planner.budgetplanner.Adapters.BudgetObjectAdapter;
@@ -286,6 +289,20 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         return true;
     }
 
+    private boolean checkCatAddReady(TextInputLayout titleTxtPar2,TextInputLayout amountTxtPar2,TextInputEditText titleInp,TextInputEditText amountInp) {
+        if (titleInp.getText().toString().isEmpty()) {
+            Log.i(TAG, "checkCatAddReady: ");
+            titleTxtPar2.setError("Enter title");
+            return false;
+        }
+        if (amountInp.getText().toString().isEmpty()) {
+            amountTxtPar2.setError("Enter a amount");
+            return false;
+        }
+
+        return true;
+    }
+
     private void displayHintDialog() {
         final ArrayList<BudgetObject> elements=new ArrayList<>();
         elements.addAll(Arrays.asList(MyUtility.currentUser.getCategories()));
@@ -320,7 +337,7 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         myListView.setNestedScrollingEnabled(false);
         myListView.setItemAnimator(new DefaultItemAnimator());
 
-        BudgetObjectAdapter adapter=new BudgetObjectAdapter(elements, new MyItemAdapter.IItemListner() {
+        final BudgetObjectAdapter adapter=new BudgetObjectAdapter(elements, new MyItemAdapter.IItemListner() {
             @Override
             public void onClick(View v, int pos) {
                 dialog.dismiss();
@@ -344,19 +361,67 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
                 dialog1.setContentView(R.layout.category_add_dialog_box);
                 dialog1.setTitle("Add Category");
                 dialog1.show();
-                dialog1.findViewById(R.id.catDialogHelpBtn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog1.findViewById(R.id.catAddWinHelpTxt).setVisibility(View.VISIBLE);
-                    }
-                });
+
+                final TextInputLayout titleTxt2Par=dialog1.findViewById(R.id.cateDialogTitlePar);
+                final TextInputLayout amountTxt2Par=dialog1.findViewById(R.id.cateDialogAmountPar);
+
+                final TextInputEditText titleTxt2=dialog1.findViewById(R.id.catDialogTitle);
+                final TextInputEditText desTxt2=dialog1.findViewById(R.id.catDialogDes);
+                final TextInputEditText amountTxt2=dialog1.findViewById(R.id.catDialogAmount);
+                final View homeView2=dialog1.findViewById(R.id.homeView);
                 View okBtn = dialog1.findViewById(R.id.catDialOkBtn);
                 View cancelBtn = dialog1.findViewById(R.id.catDialCancelBtn);
+
+                titleTxt2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus)
+                        {
+                            titleTxt2Par.setError(null);
+                        }
+                    }
+                });
+
+                amountTxt2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if(hasFocus)
+                        {
+                            amountTxt2Par.setError(null);
+                        }
+                    }
+                });
 
                 okBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
+                        if (dialog1.getCurrentFocus() != null) {
+                            MyUtility.hideKeyboardFrom(dialog1.getContext(), dialog1.getCurrentFocus());
+                            dialog1.getCurrentFocus().clearFocus();
+                        }
+                        if(!checkCatAddReady(titleTxt2Par,amountTxt2Par,titleTxt2,amountTxt2))
+                            return;
+                        addCategory(dialog1,homeView2,titleTxt2, desTxt2, amountTxt2, new OnSuccessListener<Category>() {
+                            @Override
+                            public void onSuccess(Category category) {
+                                if(category!=null)
+                                {
+                                    MyUtility.currentUser.addCategories(category);
+                                    displayHintDialog();
+                                }
+                                else
+                                    Toast.makeText(ExpenseAdd.this,"Something went wrong",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog1.dismiss();
+                       displayHintDialog();
                     }
                 });
 
@@ -374,6 +439,21 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         myListView.setLayoutParams(layoutParams);
         dialog.show();
 
+    }
+
+    private void addCategory(final Dialog dialog, final View home, TextInputEditText title, TextInputEditText des, TextInputEditText amount, final OnSuccessListener<Category> listener) {
+
+        MyUtility.enableLoading(dialog,home);
+        Timestamp timestamp = MyUtility.convDateToUtcTimeStamp(new Date());
+        Category category = new Category(title.getText().toString(), des.getText().toString(), Double.parseDouble(amount.getText().toString()), timestamp);
+        FirebaseManager.addCategoryIntoDB(category, new OnSuccessListener<Category>() {
+            @Override
+            public void onSuccess(Category category1) {
+                MyUtility.disableLoading(dialog,home);
+                if (listener != null)
+                    listener.onSuccess(category1);
+            }
+        });
     }
 
     @Override

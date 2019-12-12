@@ -161,6 +161,21 @@ public class MyUtility {
         return newList;
     }
 
+    public static void enableLoading(Dialog dialog,View homeView) {
+        dialog.findViewById(R.id.round_loading_bar).setVisibility(View.VISIBLE);
+        if(homeView!=null)
+        homeView.setVisibility(View.INVISIBLE);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public static void disableLoading(Dialog dialog,View homeView) {
+        dialog.findViewById(R.id.round_loading_bar).setVisibility(View.INVISIBLE);
+        if(homeView!=null)
+        homeView.setVisibility(View.VISIBLE);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
     public static void enableLoading(LoadingActivity activity) {
         activity.findViewById(R.id.round_loading_bar).setVisibility(View.VISIBLE);
         activity.getHomeView().setVisibility(View.INVISIBLE);

@@ -125,6 +125,12 @@ public class MainActivity extends CustomAppBarActivity
         startActivity(intent);
     }
 
+    private void gotoChartAct()
+    {
+        Intent intent=new Intent(MainActivity.this, ChartActivity.class);
+        startActivity(intent);
+    }
+
     private void gotoCatrgotyAct()
     {
         Intent intent=new Intent(MainActivity.this,CategoryAdd.class);
@@ -152,6 +158,13 @@ public class MainActivity extends CustomAppBarActivity
             @Override
             public void onClick(View v) {
                 gotoCatrgotyAct();
+            }
+        });
+
+        viewById.findViewById(R.id.chartBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoChartAct();
             }
         });
     }
@@ -236,7 +249,7 @@ public class MainActivity extends CustomAppBarActivity
         }
         else if(id==R.id.nav_chart)
         {
-            
+
         }
         else if (id == R.id.logOutBtn) {
             MyUtility.enableLoading(this);

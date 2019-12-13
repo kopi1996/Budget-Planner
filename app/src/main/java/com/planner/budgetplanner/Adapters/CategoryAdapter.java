@@ -3,6 +3,7 @@ package com.planner.budgetplanner.Adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -81,11 +82,11 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
                 createDateTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(category.getTimestamp().toDate()).toDate()));
             double per = ((category.getSpent() / category.getBudget()) * 100);
             progressBar.setProgress((int) per);
-            Drawable budgetedProgDrawable = progressBar.getProgressDrawable();
+            LayerDrawable budgetedProgDrawable = (LayerDrawable) progressBar.getProgressDrawable();
             if (per > 100) {
-                budgetedProgDrawable.setColorFilter(itemView.getResources().getColor(R.color.dangerColor), PorterDuff.Mode.SRC_IN);
+                budgetedProgDrawable.getDrawable(1).setColorFilter(itemView.getResources().getColor(R.color.dangerColor), PorterDuff.Mode.SRC_IN);
             } else {
-                budgetedProgDrawable.setColorFilter(itemView.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+                budgetedProgDrawable.getDrawable(1).setColorFilter(itemView.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
             }
             progressBar.setProgressDrawable(budgetedProgDrawable);
         }

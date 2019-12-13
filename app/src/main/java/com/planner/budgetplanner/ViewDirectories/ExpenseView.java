@@ -3,6 +3,7 @@ package com.planner.budgetplanner.ViewDirectories;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -138,11 +139,11 @@ public class ExpenseView extends BudgetObjectView<ExpenseAdapter,Expense> {
         spentTxt.setText(totalSpent + MyUtility.currentUser.getCurrencyType());
         remainTxt.setText(totalRemin + MyUtility.currentUser.getCurrencyType());
         progressBar.setProgress((int) percentage);
-        Drawable budgetedProgDrawable = progressBar.getProgressDrawable();
+        LayerDrawable budgetedProgDrawable = (LayerDrawable) progressBar.getProgressDrawable();
         if (percentage > 100) {
-            budgetedProgDrawable.setColorFilter(getResources().getColor(R.color.dangerColor), PorterDuff.Mode.SRC_IN);
+            budgetedProgDrawable.getDrawable(1).setColorFilter(getResources().getColor(R.color.dangerColor), PorterDuff.Mode.SRC_IN);
         } else {
-            budgetedProgDrawable.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+            budgetedProgDrawable.getDrawable(1).setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }
         progressBar.setProgressDrawable(budgetedProgDrawable);
     }

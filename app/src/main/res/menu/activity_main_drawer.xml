@@ -4,20 +4,31 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
+
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_category"
+            android:icon="@drawable/add_category"
+            android:title="Add Category" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:id="@+id/nav_income"
+            android:icon="@drawable/income_icon"
+            android:title="Add Income" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_expense"
+            android:icon="@drawable/expenses"
+            android:title="Add Expense" />
+        <item
+            android:id="@+id/nav_chart"
+            android:icon="@drawable/combo_chart"
+            android:title="Analysis" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/setting_icon"
+            android:title="Setting" />
         <item
             android:id="@+id/logOutBtn"
+            android:icon="@drawable/log_out_icon_3"
             android:title="Log out" />
     </group>
 

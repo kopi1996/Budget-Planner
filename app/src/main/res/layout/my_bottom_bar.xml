@@ -21,13 +21,14 @@
         android:paddingHorizontal="7dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
 
-            android:background="@drawable/ic_menu_gallery" />
+            android:background="@drawable/expense_icon_drawable" />
 
         <TextView
+            android:paddingTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -52,12 +53,13 @@
         android:paddingHorizontal="7dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_menu_gallery" />
+            android:background="@drawable/income_icon_drawable" />
 
         <TextView
+            android:paddingTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -82,12 +84,13 @@
         android:paddingHorizontal="7dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_menu_gallery" />
+            android:background="@drawable/category_icon_drawable" />
 
         <TextView
+            android:paddingTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -112,12 +115,13 @@
         android:paddingHorizontal="15dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_menu_gallery" />
+            android:background="@drawable/chart_icon_drawable" />
 
         <TextView
+            android:paddingTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

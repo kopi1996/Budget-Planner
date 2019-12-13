@@ -181,13 +181,16 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
             titleTxtPar.setError("Enter a title");
             return false;
         }
-        Category[] categories = MyUtility.currentUser.getCategories();
-        for (Category category1 : categories) {
-            if(category1.getTitle().equals(titleTxt.getText().toString())) {
-                titleTxtPar.setError("This title already exist");
-                return false;
+            Category[] categories = MyUtility.currentUser.getCategories();
+            for (Category category1 : categories) {
+                if(isUpdate&&category!=null&&category.getTitle().equals(category1.getTitle()))
+                    continue;
+                if (category1.getTitle().equals(titleTxt.getText().toString())) {
+                    titleTxtPar.setError("This title already exist");
+                    return false;
+                }
             }
-        }
+
         if (amountTxt.getText().toString().isEmpty()) {
             amountTxtPar.setError("Enter a amount");
             return false;

@@ -268,7 +268,8 @@
                         android:indeterminate="false"
                         android:max="100"
                         android:progress="35"
-                        android:progressDrawable="@drawable/horizontal_progress_bar" />
+                        android:progressDrawable="@drawable/horizontal_progress_bar"
+                         />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -112,30 +113,45 @@ public class MainActivity extends CustomAppBarActivity
         addBottomBarEvent();
     }
 
+    private void gotoExpenseAct()
+    {
+        Intent intent=new Intent(MainActivity.this,ExpenseAdd.class);
+        startActivity(intent);
+    }
+
+    private void gotoIncomeAct()
+    {
+        Intent intent=new Intent(MainActivity.this, IncomeAdd.class);
+        startActivity(intent);
+    }
+
+    private void gotoCatrgotyAct()
+    {
+        Intent intent=new Intent(MainActivity.this,CategoryAdd.class);
+        startActivity(intent);
+    }
+
     private void addBottomBarEvent()
     {
         View viewById = findViewById(R.id.my_bottom_nav);
         viewById.findViewById(R.id.expenseAddBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,ExpenseAdd.class);
-                startActivity(intent);
+                gotoExpenseAct();
             }
         });
 
         viewById.findViewById(R.id.incomeAddBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, IncomeAdd.class);
-                startActivity(intent);
+               gotoIncomeAct();
             }
         });
 
         viewById.findViewById(R.id.cateAddBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,CategoryAdd.class);
-                startActivity(intent);
+                gotoCatrgotyAct();
             }
         });
     }
@@ -143,39 +159,42 @@ public class MainActivity extends CustomAppBarActivity
     @Override
     protected void updateUI() {
         super.updateUI();
-        String currencyType="rs";
+        String currencyType = "rs";
 
 
         double totalIncome = MoneyManager.totalIncome(MyUtility.currentUser);
         double totalExpense = MoneyManager.totalExpenditure(MyUtility.currentUser);
         double totalSaving = totalIncome - totalExpense;
-        double percentage=totalIncome==0?0:(totalExpense/totalIncome)*100;
+        double percentage = totalIncome == 0 ? 0 : (totalExpense / totalIncome) * 100;
 
-        double totalBudgeted=MoneyManager.totalBudgeted(MyUtility.currentUser);
-        double provBalance=totalIncome-totalBudgeted;
-        double remainSpent=totalBudgeted-totalExpense;
-        double budgetedPer=totalBudgeted ==0 ? 0 : (totalExpense/totalBudgeted)*100;
+        double totalBudgeted = MoneyManager.totalBudgeted(MyUtility.currentUser);
+        double provBalance = totalIncome - totalBudgeted;
+        double remainSpent = totalBudgeted - totalExpense;
+        double budgetedPer = totalBudgeted == 0 ? 0 : (totalExpense / totalBudgeted) * 100;
 
         overviewTotIncTxt.setText(totalIncome + currencyType);
         overviewToExpTxt.setText(totalExpense + currencyType);
         overviewTotSavTxt.setText(totalSaving + currencyType);
         overviewProg.setProgress((int) percentage);
-        overviewRouPerTxt.setText(MyUtility.wrapDecPointDouble(percentage)+" %");
+        overviewRouPerTxt.setText(MyUtility.wrapDecPointDouble(percentage) + " %");
 
-        totalBudgetedTxt.setText(totalBudgeted+currencyType);
-        provBalanceTxt.setText(provBalance+currencyType);
-        remianSpentTxt.setText(remainSpent+currencyType);
-        overviewProPerTxt.setText(MyUtility.wrapDecPointDouble(budgetedPer)+" %");
+        totalBudgetedTxt.setText(totalBudgeted + currencyType);
+        provBalanceTxt.setText(provBalance + currencyType);
+        remianSpentTxt.setText(remainSpent + currencyType);
+        overviewProPerTxt.setText(MyUtility.wrapDecPointDouble(budgetedPer) + " %");
         budgetedProg.setProgress((int) budgetedPer);
 
-        dispTncBtnTxt.setText(totalIncome+currencyType);
-        expBtnTxt.setText(totalExpense+currencyType);
+        Log.i(TAG, "updateUI: " + budgetedPer);
+
+        dispTncBtnTxt.setText(totalIncome + currencyType);
+        expBtnTxt.setText(totalExpense + currencyType);
 
         overviewTotSavTxt.setTextColor(normalColor);
         overviewRouPerTxt.setTextColor(normalColor);
 
         Drawable overProDrawable = overviewProg.getProgressDrawable();
         overProDrawable.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+
 
         if (totalSaving < 0) {
             overviewTotSavTxt.setTextColor(dangerColId);
@@ -184,12 +203,11 @@ public class MainActivity extends CustomAppBarActivity
         }
         overviewProg.setProgressDrawable(overProDrawable);
 
-        Drawable budgetedProgDrawable = budgetedProg.getProgressDrawable();
-        budgetedProgDrawable.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        LayerDrawable budgetedProgDrawable = (LayerDrawable) budgetedProg.getProgressDrawable();
+        budgetedProgDrawable.getDrawable(1).setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
-        if(budgetedPer>100)
-        {
-            budgetedProgDrawable.setColorFilter(dangerColId, PorterDuff.Mode.SRC_IN);
+        if (budgetedPer > 100) {
+              budgetedProgDrawable.getDrawable(1).setColorFilter(dangerColId, PorterDuff.Mode.SRC_IN);
         }
         budgetedProg.setProgressDrawable(budgetedProgDrawable);
     }
@@ -207,23 +225,26 @@ public class MainActivity extends CustomAppBarActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.logOutBtn) {
+        if (id == R.id.nav_category) {
+            gotoCatrgotyAct();
+        } else if (id == R.id.nav_expense) {
+            gotoExpenseAct();
+        } else if (id == R.id.nav_income) {
+            gotoIncomeAct();
+        }
+        else if(id==R.id.nav_chart)
+        {
+            
+        }
+        else if (id == R.id.logOutBtn) {
             MyUtility.enableLoading(this);
             AuthenticationManager.logOut(new OnSuccessListener<Boolean>() {
                 @Override
                 public void onSuccess(Boolean aBoolean) {
                     MyUtility.disableLoading(MainActivity.this);
                     Intent intent = new Intent(MainActivity.this, LoginScreen.class);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }
@@ -234,6 +255,4 @@ public class MainActivity extends CustomAppBarActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 }

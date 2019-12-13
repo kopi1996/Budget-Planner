@@ -9,10 +9,10 @@
     <item
         android:id="@+id/addIncomeMenu"
         android:title="Add income"
-        android:icon="@drawable/icons8_home_50px"/>
+        android:icon="@drawable/income_icon"/>
     <item
         android:id="@+id/addCategoryMenu"
-        android:title="Add Category"
+        android:title="Add Categoryee"
         android:tooltipText="Soe"
         android:icon="@drawable/icons8_home_50px"/>
     <item

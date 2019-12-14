@@ -27,7 +27,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Incomes"
+                        android:textColor="#141414"
+                        android:textSize="17sp"/>
+
                     <LinearLayout
+                        android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -37,7 +46,7 @@
                             style="@style/spinner_style"
                             android:minWidth="80dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="35dp" />
 
                         <Space
                             android:layout_width="0dp"
@@ -49,7 +58,7 @@
                             style="@style/spinner_style"
                             android:minWidth="80dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="35dp" />
 
                         <Space
                             android:layout_width="0dp"
@@ -61,7 +70,7 @@
                             style="@style/spinner_style"
                             android:minWidth="80dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="35dp" />
                     </LinearLayout>
 
                 <com.github.mikephil.charting.charts.BarChart

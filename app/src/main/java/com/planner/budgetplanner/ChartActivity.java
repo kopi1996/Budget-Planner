@@ -3,10 +3,12 @@ package com.planner.budgetplanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -15,13 +17,14 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.planner.budgetplanner.Managers.MoneyManager;
 import com.planner.budgetplanner.Model.BudgetObject;
 import com.planner.budgetplanner.Utility.DateUtility;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
 
-public class ChartActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ChartActivity extends CustomAppBarActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "Chart";
     private BarChart incBarChart,expBarChart;
@@ -37,13 +40,30 @@ public class ChartActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
 
+        initialize("Analytics");
+    }
+
+    @Override
+    public void initialize(String title) {
+        super.initialize(title);
+        enableBackBtn();
         incBarChart=findViewById(R.id.incBarChart);
         expBarChart=findViewById(R.id.expBarChart);
 
         initSpinner();
-
+        initStats();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     private void initSpinner() {
         incTypeSpinner = findViewById(R.id.incTypeSelect);
         incmSecondSpinner = findViewById(R.id.incSelectTwo);
@@ -61,27 +81,66 @@ public class ChartActivity extends AppCompatActivity implements AdapterView.OnIt
         expSecondSpinner.setOnItemSelectedListener(this);
         expThirdSpinner.setOnItemSelectedListener(this);
 
+
         ArrayList<String> typeList = new ArrayList<>();
         typeList.add("DailyInterval");
         typeList.add("MonthlyInterval");
         typeList.add("YearlyInterval");
-
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(this, R.layout.spinner_text, typeList);
-        incTypeSpinner.setAdapter(typeAdapter);
-        incTypeSpinner.setSelection(0);
+        if (MyUtility.currentUser.getIncomes().length > 0) {
 
-        expTypeSpinner.setAdapter(typeAdapter);
-        expTypeSpinner.setSelection(0);
+            incTypeSpinner.setAdapter(typeAdapter);
+            incTypeSpinner.setSelection(0);
 
-        resetIncomeThirdSpinners(ChartType.DAILY);
-        incSelectYear = minYear(MyUtility.currentUser.getIncomes());
-        resetIncomeSecodSpinner(ChartType.DAILY);
-        setupChartData(incBarChart, "Income", ChartType.DAILY, MyUtility.currentUser.getIncomes(), incSelectMonth, incSelectYear);
+            resetIncomeThirdSpinners(ChartType.DAILY);
+            incSelectYear = minYear(MyUtility.currentUser.getIncomes());
+            resetIncomeSecodSpinner(ChartType.DAILY);
+            setupChartData(incBarChart, "Income", ChartType.DAILY, MyUtility.currentUser.getIncomes(), incSelectMonth, incSelectYear);
+        }
+        if (MyUtility.currentUser.getExpenses().length > 0) {
+            expTypeSpinner.setAdapter(typeAdapter);
+            expTypeSpinner.setSelection(0);
 
-        resetExpenseThirdSpinners(ChartType.DAILY);
-        expSelectYear = minYear(MyUtility.currentUser.getExpenses());
-        resetExpenseSecodSpinner(ChartType.DAILY);
-        setupChartData(expBarChart, "Expense", ChartType.DAILY, MyUtility.currentUser.getExpenses(), expSelectMonth, expSelectYear);
+            resetExpenseThirdSpinners(ChartType.DAILY);
+            expSelectYear = minYear(MyUtility.currentUser.getExpenses());
+            resetExpenseSecodSpinner(ChartType.DAILY);
+            setupChartData(expBarChart, "Expense", ChartType.DAILY, MyUtility.currentUser.getExpenses(), expSelectMonth, expSelectYear);
+        }
+    }
+
+    private void initStats() {
+        TextView totalEarn = findViewById(R.id.totalEarnTxt);
+        TextView totalExp = findViewById(R.id.totalSpentTxt);
+        TextView avgEarn = findViewById(R.id.avgEarnTxt);
+        TextView avgSpent = findViewById(R.id.avgSpentTxt);
+
+        double earn = MoneyManager.totalIncome(MyUtility.currentUser);
+        double spent = MoneyManager.totalExpenditure(MyUtility.currentUser);
+
+
+        int minIncYear = minYear(MyUtility.currentUser.getIncomes());
+        int maxIncYear = maxYear(MyUtility.currentUser.getIncomes());
+
+        int minIncMonth = minMonthForYear(MyUtility.currentUser.getIncomes(), minIncYear);
+        int maxIncMonth = maxMonthFromYear(MyUtility.currentUser.getIncomes(), maxIncYear);
+        int totalIncMonth = 11 - minIncMonth + maxIncMonth;
+        totalIncMonth += (maxIncYear - minIncYear) > 0 ? (maxIncYear - minIncYear - 1) * 12 : 0;
+        double avgInc = earn / totalIncMonth;
+
+        int minExpYear = minYear(MyUtility.currentUser.getExpenses());
+        int maxExpYear = maxYear(MyUtility.currentUser.getExpenses());
+
+        int minExpMonth = minMonthForYear(MyUtility.currentUser.getExpenses(), minExpYear);
+        int maxExpMonth = maxMonthFromYear(MyUtility.currentUser.getExpenses(), maxExpYear);
+        int totalExpMonth = 12 - minExpMonth + maxExpMonth;
+        totalExpMonth += (maxExpYear - minExpYear) > 0 ? (maxExpYear - minExpYear - 1) * 12 : 0;
+        double avgExp = spent / totalExpMonth;
+
+        totalEarn.setText(earn + " " + MyUtility.currentUser.getCurrencyType());
+        totalExp.setText(spent + " " + MyUtility.currentUser.getCurrencyType());
+
+        avgEarn.setText(MyUtility.wrapDecPointDouble(avgInc));
+        avgSpent.setText(MyUtility.wrapDecPointDouble(avgExp));
     }
 
     private void resetIncomeThirdSpinners(ChartType type) {
@@ -301,7 +360,6 @@ public class ChartActivity extends AppCompatActivity implements AdapterView.OnIt
         barChart.setPinchZoom(false);
         barChart.setDragEnabled(false);
         barChart.setDoubleTapToZoomEnabled(false);
-        //barChart.getXAxis().setDrawAxisLine(false);
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
         barChart.getAxisRight().setEnabled(false);

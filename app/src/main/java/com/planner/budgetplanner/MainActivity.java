@@ -127,6 +127,12 @@ public class MainActivity extends CustomAppBarActivity
 
     private void gotoChartAct()
     {
+        Intent intent=new Intent(MainActivity.this, PieChartActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoAnalticsAct()
+    {
         Intent intent=new Intent(MainActivity.this, ChartActivity.class);
         startActivity(intent);
     }
@@ -249,7 +255,7 @@ public class MainActivity extends CustomAppBarActivity
         }
         else if(id==R.id.nav_chart)
         {
-
+            gotoAnalticsAct();
         }
         else if (id == R.id.logOutBtn) {
             MyUtility.enableLoading(this);

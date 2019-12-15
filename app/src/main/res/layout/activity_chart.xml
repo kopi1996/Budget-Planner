@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChartActivity">
+
+    <include layout="@layout/my_action_bar"/>
+
+    <RelativeLayout
+        android:id="@+id/homeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,6 +26,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 app:cardCornerRadius="5dp"
+                android:elevation="5dp"
                 app:cardUseCompatPadding="true"
                 android:layout_marginHorizontal="5dp"
                 android:layout_height="wrap_content">
@@ -88,6 +97,7 @@
                 android:layout_width="match_parent"
                 app:cardCornerRadius="5dp"
                 app:cardUseCompatPadding="true"
+                android:elevation="5dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content">
@@ -151,13 +161,134 @@
                 android:layout_height="360dp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-            <!--    <lecho.lib.hellocharts.view.LineChartView-->
-            <!--        android:layout_marginVertical="10dp"-->
-            <!--        android:id="@+id/chart"-->
-            <!--        android:layout_width="match_parent"-->
-            <!--        android:layout_height="320dp" />-->
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total earning:"/>
+
+                        <TextView
+                            android:id="@+id/totalEarnTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:textColor="#202020"
+                            android:text="25000"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total spending:"/>
+
+                        <TextView
+                            android:id="@+id/totalSpentTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:textColor="#202020"
+                            android:text="25000"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Average earning per month:"/>
+
+                        <TextView
+                            android:id="@+id/avgEarnTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:textColor="#202020"
+                            android:text="25000"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Average spending per month:"/>
+
+                        <TextView
+                            android:id="@+id/avgSpentTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:textColor="#202020"
+                            android:text="25000"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="25dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
 
     </ScrollView>
-
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

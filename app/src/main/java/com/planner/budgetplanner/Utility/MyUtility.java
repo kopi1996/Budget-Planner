@@ -72,6 +72,18 @@ public class MyUtility {
         return dialog;
     }
 
+    public static boolean passwordValidation(String pass) {
+        if (pass.length() < 8) return false;
+        boolean isUpperCase = false;
+        for (int i = 0; i < pass.length(); i++)
+            if (Character.isUpperCase(pass.charAt(i))) {
+                isUpperCase = true;
+                break;
+            }
+
+        return isUpperCase;
+    }
+
     public static String wrapDecPointDouble(double value) {
         DecimalFormat df2 = new DecimalFormat("#.##");
         return df2.format(value);

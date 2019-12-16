@@ -553,7 +553,7 @@ public class ChartActivity extends CustomAppBarActivity implements AdapterView.O
             int yearFromDate = DateUtility.getYearFromDate(obj.getTimestamp().toDate());
             if (yearFromDate != year) continue;
 
-            arr[dayFromDate-1] = obj.getAmount();
+            arr[dayFromDate-1] += obj.getAmount();
         }
 
         return arr;

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
+
+    <include layout="@layout/my_action_bar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+    <include layout="@layout/round_loading_screen"
+        android:id="@+id/round_loading_bar"
+        android:layout_centerInParent="true"
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:visibility="invisible"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/homeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/firstNamePar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                android:theme="@style/TextInputLayoutAppearance"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="50dp">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="FIRST NAME"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@color/txtFocus"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/lastNamePar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:errorEnabled="true"
+                android:layout_marginTop="10dp"
+                android:theme="@style/TextInputLayoutAppearance">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="LAST NAME"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:textCursorDrawable="@color/txtFocus"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/passBoxCard"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="1dp"
+                    app:cardUseCompatPadding="true"
+                    android:layout_marginHorizontal="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Change Password"
+                            android:textSize="15sp"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="10dp"
+                            />
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/chageBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="10dp"
+                                android:text="Change"
+                                android:textColor="@color/txtFocus"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/passChangeBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/currPassPar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="0dp"
+                                app:errorEnabled="true"
+                                android:theme="@style/TextInputLayoutAppearance"
+                                >
+
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/currPass"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="CURRENT PASSWORD"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textPassword"
+                                    android:textCursorDrawable="@color/txtFocus"/>
+
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/newPassPar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="0dp"
+                                app:errorEnabled="true"
+                                android:theme="@style/TextInputLayoutAppearance"
+                                >
+
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/newPass"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="NEW PASSWORD"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textPassword"
+                                    android:textCursorDrawable="@color/txtFocus"/>
+
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/confirmPassPar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="0dp"
+                                app:errorEnabled="true"
+                                android:theme="@style/TextInputLayoutAppearance"
+                                >
+
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/confirmPass"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="CONFIRM PASSWORD"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textPassword"
+                                    android:textCursorDrawable="@color/txtFocus"/>
+
+                            </android.support.design.widget.TextInputLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/deleteAccBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:textColor="#EC1515"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:layout_marginHorizontal="20dp"
+                    android:paddingVertical="10dp"
+                    android:text="DELETE ACCOUNT"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/errorLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:textAlignment="center"
+                android:textColor="#E60505"
+                android:textAllCaps="false"
+                android:textSize="13dp"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

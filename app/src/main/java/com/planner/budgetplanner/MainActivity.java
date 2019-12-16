@@ -35,6 +35,8 @@ public class MainActivity extends CustomAppBarActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG="MainActivity";
+    private NavigationView navigationView;
+
     private TextView overviewRouPerTxt;
     private TextView overviewTotIncTxt;
     private TextView overviewToExpTxt;
@@ -49,8 +51,9 @@ public class MainActivity extends CustomAppBarActivity
     private ProgressBar overviewProg;
     private ProgressBar budgetedProg;
 
-    int dangerColId;
-    int normalColor;
+    private int dangerColId;
+    private int normalColor;
+    private int lastCheckNavItem=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class MainActivity extends CustomAppBarActivity
     protected void initialize(String title) {
         super.initialize(title);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -111,6 +114,11 @@ public class MainActivity extends CustomAppBarActivity
         });
 
         addBottomBarEvent();
+    }
+
+    private void gotoSettingAct() {
+        Intent intent=new Intent(MainActivity.this,SettingActivity.class);
+        startActivity(intent);
     }
 
     private void gotoExpenseAct()
@@ -178,6 +186,9 @@ public class MainActivity extends CustomAppBarActivity
     @Override
     protected void updateUI() {
         super.updateUI();
+
+        if(navigationView.getCheckedItem()!=null)
+            navigationView.getCheckedItem().setChecked(false);
         String currencyType = "rs";
 
 
@@ -245,7 +256,7 @@ public class MainActivity extends CustomAppBarActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        lastCheckNavItem=id;
         if (id == R.id.nav_category) {
             gotoCatrgotyAct();
         } else if (id == R.id.nav_expense) {
@@ -257,15 +268,22 @@ public class MainActivity extends CustomAppBarActivity
         {
             gotoAnalticsAct();
         }
+        else if(id==R.id.nav_setting)
+        {
+            gotoSettingAct();
+        }
         else if (id == R.id.logOutBtn) {
             MyUtility.enableLoading(this);
             AuthenticationManager.logOut(new OnSuccessListener<Boolean>() {
                 @Override
                 public void onSuccess(Boolean aBoolean) {
-                    MyUtility.disableLoading(MainActivity.this);
-                    Intent intent = new Intent(MainActivity.this, LoginScreen.class);
-                    startActivity(intent);
-                    finish();
+                    if(aBoolean) {
+                        MyUtility.currentUser=null;
+                        MyUtility.disableLoading(MainActivity.this);
+                        Intent intent = new Intent(MainActivity.this, LoginScreen.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             });
         }
@@ -274,4 +292,6 @@ public class MainActivity extends CustomAppBarActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

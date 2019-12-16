@@ -13,7 +13,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.FirebaseManager;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Model.User;
@@ -28,7 +32,7 @@ public class AuthenticationManager {
     private static LoginButton fbLoginButton;
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor editor;
-    private static final String LOGIN_TYPE = "LoginType";
+    public static final String LOGIN_TYPE = "LoginType";
     private static boolean isInitStateListner = false;
 
 
@@ -44,8 +48,20 @@ public class AuthenticationManager {
         return fbLoginButton;
     }
 
+    public static void updatePassword(String old,String pass, OnCompleteListener<Void> listener) {
+        FirebaseUser user = FirebaseManager.getAuth().getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(MyUtility.currentUser.getEmail(), old);
+
+        //user.reauthenticate()
+        user.updatePassword(pass)
+                .addOnCompleteListener(listener);
+    }
+
     public static void logOut(OnSuccessListener<Boolean> listener) {
         logOutListner = listener;
+        editor.putString(LOGIN_TYPE,"null");
+        editor.apply();
         FirebaseManager.logOut();
     }
 

@@ -47,7 +47,6 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
     private void goMainActivity()
     {
         Intent intent = new Intent(this, MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
@@ -75,6 +74,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         AuthenticationManager.handleAutoLogin(new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean success) {
+                Log.i(TAG, "onSuccess: "+success);
                 if (success) {
                     FirebaseManager.fetchAllDataFromDB(MyUtility.currentUser, new OnSuccessListener<Boolean>() {
                         @Override
@@ -132,6 +132,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         AuthenticationManager.loginWithEmail(email.getText().toString(), pass.getText().toString(), new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean success) {
+                Log.i(TAG, "onSuccess login: "+success);
                 MyUtility.disableLoading(LoginScreen.this);
                 if (success) {
                     goMainActivity();

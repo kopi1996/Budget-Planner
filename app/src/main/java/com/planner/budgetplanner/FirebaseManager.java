@@ -28,6 +28,7 @@ import com.planner.budgetplanner.Model.User;
 import com.planner.budgetplanner.Utility.MyUtility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,6 +140,18 @@ public class FirebaseManager {
         });
     }
 
+    public static void updateUserIntoDB(String key, Map<String,Object> map, final OnSuccessListener<Boolean> listener) {
+
+        getDBInstance().collection(USERS_REF).document(key).update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (listener == null)
+                    return;
+                listener.onSuccess(task.isComplete() && task.isSuccessful());
+            }
+        });
+    }
+
     public static void loginWithId(Activity activity, String email, String password, final IUserLogin onFinished) {
         getAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -146,14 +159,16 @@ public class FirebaseManager {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.i(TAG, "onComplete login: "+task.isSuccessful());
                         if (task.isSuccessful()) {
+                            Log.i(TAG, "onComplete uid: "+getAuth().getCurrentUser().getUid());
                             DocumentReference docRef = getDBInstance().collection(USERS_REF).document(getAuth().getCurrentUser().getUid()).collection("profile").document("basic-info");
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
-
                                         DocumentSnapshot document = task.getResult();
                                         Log.i(TAG, "onComplete login result: "+getAuth().getCurrentUser().getUid());
+
+                                        Log.i(TAG, "onComplete exist: "+document.exists());
                                         if (document.exists()) {
                                             String fName = document.get("name").toString();
                                             String emailString = document.get("email").toString();
@@ -428,6 +443,132 @@ public class FirebaseManager {
                 }
             }
         });
+    }
+
+    private static void deleteCategoryList(final Category[] categories, final OnSuccessListener<Boolean> listener)
+    {
+        if(categories.length==0)
+        {
+            if(listener!=null)
+                listener.onSuccess(true);
+        }
+        else
+        {
+            for (int i = 0; i < categories.length; i++) {
+                final int finalI = i;
+                deleteCategory(categories[i], new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if(finalI >=categories.length-1)
+                        {
+                            if(listener!=null)
+                                listener.onSuccess(true);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private static void deleteExpenseList(final Expense[] expenses, final OnSuccessListener<Boolean> listener)
+    {
+        if(expenses.length==0)
+        {
+            if(listener!=null)
+                listener.onSuccess(true);
+        }
+        else
+        {
+            for (int i = 0; i < expenses.length; i++) {
+                final int finalI = i;
+                deleteExpense(expenses[i], new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if(finalI >=expenses.length-1)
+                        {
+                            if(listener!=null)
+                                listener.onSuccess(true);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private static void deleteIncomeList(final Income[] incomes, final OnSuccessListener<Boolean> listener)
+    {
+        if(incomes.length==0)
+        {
+            if(listener!=null)
+                listener.onSuccess(true);
+        }
+        else
+        {
+            for (int i = 0; i < incomes.length; i++) {
+                final int finalI = i;
+                deleteIncome(incomes[i], new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if(finalI >=incomes.length-1)
+                        {
+                            if(listener!=null)
+                                listener.onSuccess(true);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public static void deleteAccount(final User user, final OnSuccessListener<Boolean> listener) {
+
+        deleteExpenseList(user.getExpenses(), new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                if(aBoolean)
+                {
+                    deleteIncomeList(user.getIncomes(), new OnSuccessListener<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            if(aBoolean)
+                            {
+                                deleteCategoryList(user.getCategories(), new OnSuccessListener<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean aBoolean) {
+                                        if(aBoolean)
+                                        {
+                                            getDBInstance().collection(USERS_REF).document(user.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful())
+                                                    {
+                                                        getAuth().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    if (listener != null)
+                                                                        listener.onSuccess(true);
+                                                                }
+                                                                else
+                                                                {
+                                                                    if(listener!=null)
+                                                                        listener.onSuccess(task.isSuccessful());
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     public enum LoginType

@@ -15,7 +15,7 @@ public class User extends DatabaseObject {
 
     private String name;
     private String email;
-    private String currencyType="rs";
+    private String currencyType="";
 
 
     private FirebaseManager.LoginType type;
@@ -172,6 +172,7 @@ public class User extends DatabaseObject {
         map.put("name", name);
         map.put("email", email);
         map.put("type", type.toString());
+        map.put("currencyType",currencyType);
 
         return map;
     }

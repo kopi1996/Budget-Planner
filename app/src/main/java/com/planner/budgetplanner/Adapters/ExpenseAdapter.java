@@ -52,7 +52,7 @@ public class ExpenseAdapter extends MyItemAdapter<Expense> {
             Expense expense = (Expense) o;
             titleTxt.setText(expense.getTitle());
             profileImg.setText(expense.getTitle().length() > 0 ? expense.getTitle().substring(0, 1).toUpperCase() : "");
-            amountTxt.setText(expense.getAmount() + "rs");
+            amountTxt.setText(expense.getAmount() + MyUtility.currentUser.getCurrencyType());
             if (expense.getTimestamp() != null)
                 dateTimeTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(expense.getTimestamp().toDate()).toDate()));
         }

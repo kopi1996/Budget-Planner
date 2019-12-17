@@ -65,8 +65,9 @@
     <ImageButton
         android:id="@+id/cateHintBtn"
         android:background="@drawable/hint_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        android:layout_gravity="center"
+        android:layout_width="27dp"
+        android:layout_height="27dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:hint="Estimated Budget(USD)"
+                android:hint=""
                 android:textCursorDrawable="@color/txtFocus"
                 />
         </android.support.design.widget.TextInputLayout>
@@ -116,6 +117,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/helpBox"
         android:layout_below="@+id/amountBox"
         android:layout_marginTop="15dp"

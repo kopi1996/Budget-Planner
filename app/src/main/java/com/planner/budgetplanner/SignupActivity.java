@@ -65,8 +65,8 @@ public class SignupActivity extends LoadingActivity {
             errorLabel.setText("email address can't be emty or not valid format");
             return;
         }
-        if (TextUtils.isEmpty(pass.getText())) {
-            errorLabel.setText("password can't be emty");
+        if (!MyUtility.passwordValidation(pass.getText().toString())) {
+            errorLabel.setText("8 characters or longer. Combine upper and lowercase letters.");
             return;
         }
 
@@ -76,6 +76,7 @@ public class SignupActivity extends LoadingActivity {
                 addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                         if (task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Account create successful", Toast.LENGTH_LONG).show();
                             String fName = String.valueOf(firstName.getText());
@@ -87,9 +88,9 @@ public class SignupActivity extends LoadingActivity {
                             FirebaseManager.addUserIntoDB(fUser.getUid(), MyUtility.currentUser, new OnSuccessListener<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean isSuccess) {
-
                                     if (isSuccess) {
-                                        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                        startActivity(new Intent(SignupActivity.this, CurrencyTypeActivity.class));
+                                        finish();
                                     }
                                    MyUtility.disableLoading(SignupActivity.this);
                                 }

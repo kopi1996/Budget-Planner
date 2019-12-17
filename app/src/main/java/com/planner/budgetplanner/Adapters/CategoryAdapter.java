@@ -75,9 +75,9 @@ public class CategoryAdapter extends MyItemAdapter<Category> {
         public void bindData(Object o) {
             Category category = (Category) o;
             titleTxt.setText(category.getTitle());
-            spentTxt.setText(category.getSpent() + "rs");
-            budgetTxt.setText(category.getBudget() + "rs");
-            remainTxt.setText(category.getRemaining() + "rs");
+            spentTxt.setText(category.getSpent() + MyUtility.currentUser.getCurrencyType());
+            budgetTxt.setText(category.getBudget() + MyUtility.currentUser.getCurrencyType());
+            remainTxt.setText(category.getRemaining() + MyUtility.currentUser.getCurrencyType());
             if (category.getTimestamp() != null)
                 createDateTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(category.getTimestamp().toDate()).toDate()));
             double per = ((category.getSpent() / category.getBudget()) * 100);

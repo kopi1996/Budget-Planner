@@ -70,6 +70,8 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
         amountTxtPar = findViewById(R.id.catAddAmountTxtPar);
         descriptionTxtPar = findViewById(R.id.catAddDesTxtPar);
 
+        amountTxt.setHint("Estimated Budget("+MyUtility.currentUser.getCurrencyType()+")");
+
         if(category!=null) {
             titleTxt.setText(category.getTitle());
             amountTxt.setText(Double.toString(category.getBudget()));

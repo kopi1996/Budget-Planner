@@ -68,9 +68,10 @@
 
                 <ImageButton
                     android:id="@+id/hintBtn"
+                    android:layout_gravity="center"
                     android:background="@drawable/hint_icon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp" />
+                    android:layout_width="27dp"
+                    android:layout_height="27dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
-                        android:hint="Estimated Budget(USD)"
+                        android:hint=""
                         android:textCursorDrawable="@color/txtFocus" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -122,6 +123,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/helpBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,22 +150,22 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ssssssssssssssssssssssssssssssss" />
             </LinearLayout>

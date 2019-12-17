@@ -82,9 +82,11 @@
         android:layout_height="wrap_content"
         android:text="Forgot password?"
         android:layout_gravity="end"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="5dp"
         android:textColor="@color/txtFocus"
         android:textSize="12dp"
         />
@@ -96,7 +98,7 @@
         android:text=""
         android:textAllCaps="false"
         android:textSize="13dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:textColor="#E60505"
@@ -130,21 +132,22 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp">
 
-        <Button
+        <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
+            android:background="@drawable/loginwithgoogle"
             android:onClick="loginWithGoogle"
             />
 
 
-        <Button
+        <ImageButton
             android:id="@+id/fbBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:onClick="loginWithFB"
+            android:background="@drawable/fbloginbtn"
             android:layout_marginLeft="5dp"
             />
 

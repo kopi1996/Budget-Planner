@@ -34,4 +34,28 @@
         <item>Lifetime</item>
         <item>Custom</item>
     </string-array>
+
+    <string-array name="currency_types">
+        <item>ALL</item>
+        <item>AFN</item>
+        <item>ARS</item>
+        <item>AWG</item>
+        <item>CAD</item>
+        <item>COP</item>
+        <item>CNY</item>
+        <item>EGP</item>
+        <item>SVC</item>
+        <item>EUR</item>
+        <item>KPW</item>
+        <item>OMR</item>
+        <item>PKR</item>
+        <item>PLN</item>
+        <item>SGD</item>
+        <item>SOS</item>
+        <item>GBP</item>
+        <item>USD</item>
+        <item>LKR</item>
+        <item>ZWD</item>
+    </string-array>
+
 </resources>

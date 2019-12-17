@@ -89,11 +89,10 @@ public class FirebaseManager {
 
     public static void isUserExist(String key, final OnSuccessListener<Boolean> onSuccessListener, final OnFailureListener onFailureListener) {
 
-        getDBInstance().collection("users").document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        getDBInstance().collection(USERS_REF).document(key).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-
                     if (onSuccessListener != null)
                         onSuccessListener.onSuccess(task.getResult().exists());
                 } else {
@@ -115,8 +114,11 @@ public class FirebaseManager {
                         if(document.get("email")!=null)
                             emailString = document.get("email").toString();
                         String fName = document.get("name").toString();
-
+                        String currencyType="";
+                        if(document.get("currencyType")!=null)
+                            currencyType=document.get("currencyType").toString();
                         User user = new User(key, fName, emailString, LoginType.valueOf(document.get("type").toString()));
+                        user.setCurrencyType(currencyType);
                         if (listener != null)
                             listener.onSuccess(user);
                     }
@@ -160,20 +162,27 @@ public class FirebaseManager {
                         Log.i(TAG, "onComplete login: "+task.isSuccessful());
                         if (task.isSuccessful()) {
                             Log.i(TAG, "onComplete uid: "+getAuth().getCurrentUser().getUid());
-                            DocumentReference docRef = getDBInstance().collection(USERS_REF).document(getAuth().getCurrentUser().getUid()).collection("profile").document("basic-info");
+                            DocumentReference docRef = getDBInstance().collection(USERS_REF).document(getAuth().getCurrentUser().getUid());
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
-                                        Log.i(TAG, "onComplete login result: "+getAuth().getCurrentUser().getUid());
+                                        Log.i(TAG, "onComplete login result: "+document.getId());
 
                                         Log.i(TAG, "onComplete exist: "+document.exists());
                                         if (document.exists()) {
                                             String fName = document.get("name").toString();
-                                            String emailString = document.get("email").toString();
+                                            String emailString = "";
+                                            if (document.get("email") != null)
+                                                emailString = document.get("email").toString();
+                                            String currencyType = "";
+                                            if (document.get("currencyType") != null)
+                                                currencyType = document.get("currencyType").toString();
                                             final User user = new User(getAuth().getUid(), fName, emailString, LoginType.Email);
-                                            FirebaseManager.fetchAllDataFromDB(user, new OnSuccessListener<Boolean>() {
+                                            user.setCurrencyType(currencyType);
+                                            MyUtility.currentUser = user;
+                                            fetchAllDataFromDB(user, new OnSuccessListener<Boolean>() {
                                                 @Override
                                                 public void onSuccess(Boolean success) {
                                                     onFinished.onSuccess(success ? user : null);
@@ -209,22 +218,28 @@ public class FirebaseManager {
                             final User user=new User(currentUser.getUid(),currentUser.getDisplayName(),currentUser.getEmail(),type);
                             isUserExist(user.getId(), new OnSuccessListener<Boolean>() {
                                 @Override
-                                public void onSuccess(Boolean result) {
+                                public void onSuccess(final Boolean result) {
                                     if (!result) {
                                         addUserIntoDB(getAuth().getUid(), user, new OnSuccessListener<Boolean>() {
                                             @Override
                                             public void onSuccess(Boolean isSuccess) {
                                                 if (listner == null)
                                                     return;
-                                                if(isSuccess)
+                                                if (isSuccess)
                                                     listner.onSuccess(user);
                                                 else
                                                     listner.onFailure("Something went wrong");
                                             }
                                         });
                                     } else {
-                                        Log.i(TAG, "onSuccess check exist: " + result);
-                                        listner.onSuccess(user);
+                                        getUser(user.getId(), new OnSuccessListener<User>() {
+                                            @Override
+                                            public void onSuccess(User user) {
+                                                listner.onSuccess(user);
+                                                Log.i(TAG, "onSuccess check exist: " + result);
+
+                                            }
+                                        });
                                     }
                                 }
                             }, new OnFailureListener() {

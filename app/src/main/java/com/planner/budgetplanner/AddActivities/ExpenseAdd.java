@@ -100,6 +100,8 @@ public class ExpenseAdd extends BudgetObjectAdd<Expense> implements View.OnFocus
         amountTxt = findViewById(R.id.expAddAmountTxt);
         descriptionTxt = findViewById(R.id.expAddDesTxt);
 
+        amountTxt.setHint("Amount("+MyUtility.currentUser.getCurrencyType()+")");
+
         pickCateBtnPar = findViewById(R.id.pickCateBtnPar);
         titleTxtPar = findViewById(R.id.expAddTitleTxtPar);
         amountTxtPar = findViewById(R.id.expAddAmountTxtPar);

@@ -31,6 +31,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
     private EditText email;
     private EditText pass;
     private TextView errorLabel;
+    private TextView forgotPassBtn;
     private static final int RC_SIGN_IN = 9001;
     private int num;
 
@@ -51,13 +52,25 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         finish();
     }
 
-
+    private void goCurrecnyActivity()
+    {
+        Intent intent = new Intent(this, CurrencyTypeActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     public void initialize() {
         super.initialize();
         errorLabel = findViewById(R.id.errorLabel);
         email = findViewById(R.id.username);
         pass = findViewById(R.id.password);
+        forgotPassBtn=findViewById(R.id.forgotBtn);
+        forgotPassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginScreen.this,ResetPassActivity.class));
+            }
+        });
         findViewById(R.id.fbBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,8 +93,12 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                         @Override
                         public void onSuccess(Boolean success) {
                             MyUtility.disableLoading(LoginScreen.this);
-                            if(success)
-                                goMainActivity();
+                            if(success) {
+                                if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                                    goCurrecnyActivity();
+                                else
+                                    goMainActivity();
+                            }
                         }
                     });
                 }
@@ -135,7 +152,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                 Log.i(TAG, "onSuccess login: "+success);
                 MyUtility.disableLoading(LoginScreen.this);
                 if (success) {
-                    goMainActivity();
+                    if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                        goCurrecnyActivity();
+                    else
+                        goMainActivity();
                 } else {
                     errorLabel.setText("Account does not exist");
                 }
@@ -150,6 +170,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
+                MyUtility.enableLoading(this);
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 AuthenticationManager.handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google, new OnSuccessListener<Boolean>() {
                     @Override
@@ -157,7 +178,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                         MyUtility.disableLoading(LoginScreen.this);
                         if(!success)
                             return;
-                        goMainActivity();
+                        if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                            goCurrecnyActivity();
+                        else
+                            goMainActivity();
                     }
                 });
 
@@ -184,7 +208,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                             MyUtility.disableLoading(LoginScreen.this);
                             if (!success)
                                 return;
-                            goMainActivity();
+                            if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                                goCurrecnyActivity();
+                            else
+                                goMainActivity();
                         }
                     });
                 }
@@ -206,7 +233,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                             MyUtility.disableLoading(LoginScreen.this);
                             if(success)
                             {
-                                goMainActivity();
+                                if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                                    goCurrecnyActivity();
+                                else
+                                    goMainActivity();
                             }
                         }
                     });
@@ -228,22 +258,28 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
 
     @Override
     public void onSuccess(LoginResult loginResult) {
+        MyUtility.enableLoading(this);
         AuthenticationManager.handleLogin(loginResult.getAccessToken().getToken(), FirebaseManager.LoginType.Facebook, new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean aBoolean) {
                 MyUtility.disableLoading(LoginScreen.this);
-                goMainActivity();
+                if(aBoolean) {
+                    if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                        goCurrecnyActivity();
+                    else
+                      goMainActivity();
+                }
             }
         });
     }
 
     @Override
     public void onCancel() {
-        MyUtility.disableLoading(LoginScreen.this);
+        MyUtility.disableLoading(this);
     }
 
     @Override
     public void onError(FacebookException error) {
-        MyUtility.disableLoading(LoginScreen.this);
+        MyUtility.disableLoading(this);
     }
 }

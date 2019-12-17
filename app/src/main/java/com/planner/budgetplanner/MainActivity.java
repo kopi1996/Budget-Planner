@@ -189,7 +189,7 @@ public class MainActivity extends CustomAppBarActivity
 
         if(navigationView.getCheckedItem()!=null)
             navigationView.getCheckedItem().setChecked(false);
-        String currencyType = "rs";
+        String currencyType = MyUtility.currentUser.getCurrencyType();
 
 
         double totalIncome = MoneyManager.totalIncome(MyUtility.currentUser);

@@ -3,6 +3,7 @@ package com.planner.budgetplanner.Managers;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -15,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
@@ -155,6 +157,12 @@ public class AuthenticationManager {
                     listener.onSuccess(false);
             }
         });
+    }
+
+    public static void forgotPassword(String email,OnCompleteListener<Void> listener)
+    {
+        FirebaseManager.getAuth().sendPasswordResetEmail(email).addOnCompleteListener(listener);
+
     }
 
     public static void handleLogin(String token, final FirebaseManager.LoginType type, final OnSuccessListener<Boolean> listener) {

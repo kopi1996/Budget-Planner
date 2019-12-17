@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    tools:context=".ResetPassActivity">
+
+    <include layout="@layout/round_loading_screen"
+        android:id="@+id/round_loading_bar"
+        android:layout_centerInParent="true"
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:visibility="invisible"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/homeView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/resetEmailPar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:errorEnabled="true"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/resetEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="ENTER EMAIL"
+                android:textCursorDrawable="@color/txtFocus"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/continuePassBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:textSize="17sp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="5dp"
+        android:textColor="@color/txtFocus"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -123,7 +123,7 @@ public class ChartActivity extends CustomAppBarActivity implements AdapterView.O
 
         int minIncMonth = minMonthForYear(MyUtility.currentUser.getIncomes(), minIncYear);
         int maxIncMonth = maxMonthFromYear(MyUtility.currentUser.getIncomes(), maxIncYear);
-        int totalIncMonth = 11 - minIncMonth + maxIncMonth;
+        int totalIncMonth = (maxIncYear==minIncYear)?maxIncMonth-minIncMonth+1 : 11 - minIncMonth + maxIncMonth+1;
         totalIncMonth += (maxIncYear - minIncYear) > 0 ? (maxIncYear - minIncYear - 1) * 12 : 0;
         double avgInc = earn / totalIncMonth;
 
@@ -132,7 +132,7 @@ public class ChartActivity extends CustomAppBarActivity implements AdapterView.O
 
         int minExpMonth = minMonthForYear(MyUtility.currentUser.getExpenses(), minExpYear);
         int maxExpMonth = maxMonthFromYear(MyUtility.currentUser.getExpenses(), maxExpYear);
-        int totalExpMonth = 12 - minExpMonth + maxExpMonth;
+        int totalExpMonth = (maxExpYear==minExpYear)?maxExpMonth-minExpMonth+1 : 11 - minExpMonth + maxExpMonth+1;
         totalExpMonth += (maxExpYear - minExpYear) > 0 ? (maxExpYear - minExpYear - 1) * 12 : 0;
         double avgExp = spent / totalExpMonth;
 

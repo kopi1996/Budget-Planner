@@ -54,7 +54,7 @@ public class IncomeAdapter extends MyItemAdapter<Income> {
 
             titleTxt.setText(income.getTitle());
             profTxtImg.setText(income.getTitle().length() > 0 ? income.getTitle().substring(0, 1).toUpperCase() : "");
-            amountTxt.setText(income.getAmount() + "rs");
+            amountTxt.setText(income.getAmount() + MyUtility.currentUser.getCurrencyType());
             if (income.getTimestamp() != null)
                 dateTxt.setText(MyUtility.conDateToFullFormat(MyUtility.convertFromUtcToStamp(income.getTimestamp().toDate()).toDate()));
         }

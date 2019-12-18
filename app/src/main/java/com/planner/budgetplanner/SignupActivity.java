@@ -96,6 +96,11 @@ public class SignupActivity extends LoadingActivity {
                                 }
                             });
                         }
+                        else
+                        {
+                            MyUtility.disableLoading(SignupActivity.this);
+                            errorLabel.setText("Account already exist or internet connection fail.");
+                        }
                     }
                 });
     }

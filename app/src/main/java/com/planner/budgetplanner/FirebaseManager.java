@@ -208,10 +208,13 @@ public class FirebaseManager {
 
         AuthCredential credential =type==LoginType.Google? GoogleAuthProvider.getCredential(token,null): FacebookAuthProvider.getCredential(token);
 
+
+
         getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                   //     Log.i(TAG, "loginWithCredential: "+task.getResult());
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = getAuth().getCurrentUser();
                             Log.i(TAG, "onComplete: current user: "+ currentUser.getDisplayName());

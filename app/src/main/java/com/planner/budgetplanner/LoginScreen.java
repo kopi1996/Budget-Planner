@@ -54,6 +54,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
 
     private void goCurrecnyActivity()
     {
+        Log.i(TAG, "goCurrecnyActivity: go to");
         Intent intent = new Intent(this, CurrencyTypeActivity.class);
         startActivity(intent);
         finish();
@@ -167,6 +168,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         AuthenticationManager.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "onSuccess: google login: ");
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -176,6 +178,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                     @Override
                     public void onSuccess(Boolean success) {
                         MyUtility.disableLoading(LoginScreen.this);
+
                         if(!success)
                             return;
                         if(MyUtility.currentUser.getCurrencyType().isEmpty())
@@ -197,15 +200,18 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         AuthenticationManager.loginGoogle(new OnSuccessListener<GoogleSignInAccount>() {
             @Override
             public void onSuccess(GoogleSignInAccount account) {
+
                 if (account == null) {
                     MyUtility.disableLoading(LoginScreen.this);
                     Intent signInIntent = AuthenticationManager.getmGoogleSignInClient().getSignInIntent();//Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                     startActivityForResult(signInIntent, RC_SIGN_IN);
                 } else {
+
                     AuthenticationManager.handleLogin(account.getIdToken(), FirebaseManager.LoginType.Google, new OnSuccessListener<Boolean>() {
                         @Override
                         public void onSuccess(Boolean success) {
                             MyUtility.disableLoading(LoginScreen.this);
+                            Log.i(TAG, "onSuccess login: "+success);
                             if (!success)
                                 return;
                             if(MyUtility.currentUser.getCurrencyType().isEmpty())

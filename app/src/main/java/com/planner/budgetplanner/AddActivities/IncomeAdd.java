@@ -70,7 +70,7 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
         datePickerBtn = findViewById(R.id.incomeAddDatePickBtn);
         titleTxtPar=findViewById(R.id.incomeAddTitleTxtPar);
         amountTxtPar=findViewById(R.id.incomeAddAmountTxtPar);
-        amountTxt.setHint("Estimated Budget("+MyUtility.currentUser.getCurrencyType()+")");
+        amountTxt.setHint("Amount("+MyUtility.currentUser.getCurrencyType()+")");
         pickedDate=new Date();
         if(isUpate) {
             Log.i(TAG, "initialize: " + income.getTitle());

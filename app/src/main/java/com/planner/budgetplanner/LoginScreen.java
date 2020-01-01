@@ -142,8 +142,8 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
             errorLabel.setText("email address can't be emty or not valid format");
             return;
         }
-        if (TextUtils.isEmpty(pass.getText())) {
-            errorLabel.setText("password can't be emty");
+        if (!MyUtility.passwordValidation(pass.getText().toString())) {
+            errorLabel.setText("8 characters or longer. Combine upper and lowercase letters.");
             return;
         }
         MyUtility.enableLoading(this);

@@ -179,8 +179,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                     public void onSuccess(Boolean success) {
                         MyUtility.disableLoading(LoginScreen.this);
 
-                        if(!success)
+                        if(!success) {
+                            errorLabel.setText("Something went wrong try again later!");
                             return;
+                        }
                         if(MyUtility.currentUser.getCurrencyType().isEmpty())
                             goCurrecnyActivity();
                         else
@@ -197,6 +199,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
 
     public void loginWithGoogle(View view) {
         MyUtility.enableLoading(this);
+        errorLabel.setText("");
         AuthenticationManager.loginGoogle(new OnSuccessListener<GoogleSignInAccount>() {
             @Override
             public void onSuccess(GoogleSignInAccount account) {
@@ -212,8 +215,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                         public void onSuccess(Boolean success) {
                             MyUtility.disableLoading(LoginScreen.this);
                             Log.i(TAG, "onSuccess login: "+success);
-                            if (!success)
+                            if (!success) {
+                                errorLabel.setText("Something went wrong try again later!");
                                 return;
+                            }
                             if(MyUtility.currentUser.getCurrencyType().isEmpty())
                                 goCurrecnyActivity();
                             else
@@ -228,6 +233,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
 
     private void loginWithFb() {
         MyUtility.enableLoading(this);
+        errorLabel.setText("");
         AuthenticationManager.loginWithFb(new OnSuccessListener<AccessToken>() {
             @Override
             public void onSuccess(AccessToken accessToken) {

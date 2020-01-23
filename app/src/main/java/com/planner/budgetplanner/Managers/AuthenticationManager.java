@@ -87,10 +87,10 @@ public class AuthenticationManager {
             });
         }
     }
-
+//"310439222563-tsohc49cq23l9jevgr86hf9aimah2lcr.apps.googleusercontent.com"
     public static void initializeGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("310439222563-tsohc49cq23l9jevgr86hf9aimah2lcr.apps.googleusercontent.com")
+                .requestIdToken("310439222563-6r2tvu08lgib6f2r324ubsqpaha70634.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 

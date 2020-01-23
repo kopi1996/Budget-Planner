@@ -191,6 +191,8 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                 });
 
             } catch (ApiException e) {
+                MyUtility.disableLoading(LoginScreen.this);
+                errorLabel.setText("Something went wrong try again later!");
                 Log.i(TAG, "onActivityResult error: " + e.getMessage());
                 e.printStackTrace();
             }

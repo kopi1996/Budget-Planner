@@ -203,19 +203,23 @@ public class CategoryAdd extends BudgetObjectAdd<Category> implements View.OnFoc
 
     private void displayHintCateTitle() {
         final ArrayList<BudgetObject> elements = new ArrayList<>();
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
+        elements.add(new BudgetObject("", "Business", ""));
+        elements.add(new BudgetObject("", "Health", ""));
+        elements.add(new BudgetObject("", "Health Expenses", ""));
+        elements.add(new BudgetObject("", "Holidays", ""));
+        elements.add(new BudgetObject("", "Children", ""));
+        elements.add(new BudgetObject("", "Daily Living", ""));
+        elements.add(new BudgetObject("", "Dues/Subscriptions", ""));
+        elements.add(new BudgetObject("", "Education", ""));
+        elements.add(new BudgetObject("", "Entertainment", ""));
+        elements.add(new BudgetObject("", "Family Care", ""));
+        elements.add(new BudgetObject("", "Financil Obligations", ""));
+        elements.add(new BudgetObject("", "Gifts and Donations", ""));
+        elements.add(new BudgetObject("", "Home/Rent", ""));
+        elements.add(new BudgetObject("", "Housing", ""));
+        elements.add(new BudgetObject("", "Insurance", ""));
+        elements.add(new BudgetObject("", "Legal", ""));
+        elements.add(new BudgetObject("", "Personals", ""));
 
 
         Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {

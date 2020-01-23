@@ -237,12 +237,14 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         AuthenticationManager.loginWithFb(new OnSuccessListener<AccessToken>() {
             @Override
             public void onSuccess(AccessToken accessToken) {
+                Log.i(TAG, "onSuccess handle: "+accessToken);
                 if(accessToken!=null)
                 {
                     AuthenticationManager.handleLogin(accessToken.getToken(), FirebaseManager.LoginType.Facebook, new OnSuccessListener<Boolean>() {
                         @Override
                         public void onSuccess(Boolean success) {
                             MyUtility.disableLoading(LoginScreen.this);
+
                             if(success)
                             {
                                 if(MyUtility.currentUser.getCurrencyType().isEmpty())

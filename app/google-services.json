@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "310439222563-tsohc49cq23l9jevgr86hf9aimah2lcr.apps.googleusercontent.com",
+          "client_id": "310439222563-5gt12plgupk1dom3phmfjq4mglade57k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.planner.budgetplanner",
@@ -23,16 +23,12 @@
           }
         },
         {
-          "client_id": "310439222563-8fbookrl3elm5kojgm1mb73h7728fp2l.apps.googleusercontent.com",
+          "client_id": "310439222563-m3gjcqdl9hb222cus5i8qj9662tq2srd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.planner.budgetplanner",
             "certificate_hash": "b28d0093882dc0862120504eafd2efa55a625cab"
           }
-        },
-        {
-          "client_id": "310439222563-6r2tvu08lgib6f2r324ubsqpaha70634.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [

@@ -90,7 +90,7 @@ public class AuthenticationManager {
 
     public static void initializeGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.default_web_client_id))
+                .requestIdToken("310439222563-tsohc49cq23l9jevgr86hf9aimah2lcr.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 

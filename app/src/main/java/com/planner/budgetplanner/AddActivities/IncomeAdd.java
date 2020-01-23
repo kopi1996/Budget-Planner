@@ -212,21 +212,15 @@ public class IncomeAdd extends BudgetObjectAdd<Income> implements OnSuccessListe
 
     private void displayHintDialog(final OnSuccessListener<BudgetObject> listener, DialogInterface.OnCancelListener cancelListener) {
         final ArrayList<BudgetObject> elements = new ArrayList<>();
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
-        elements.add(new BudgetObject("", "1", ""));
+        elements.add(new BudgetObject("", "Salary/Wages", ""));
+        elements.add(new BudgetObject("", "Business", ""));
+        elements.add(new BudgetObject("", "Interest/Dividends", ""));
+        elements.add(new BudgetObject("", "Miscellaneous", ""));
+        elements.add(new BudgetObject("", "Other Income", ""));
+        elements.add(new BudgetObject("", "Pension", ""));
+        elements.add(new BudgetObject("", "Refunds/Reimbursements", ""));
+        elements.add(new BudgetObject("", "Transfer From Savings", ""));
+        elements.add(new BudgetObject("", "Wages", ""));
 
 
         Dialog dialog = MyUtility.displayHintDialog(this, elements, new MyItemAdapter.IItemListner() {

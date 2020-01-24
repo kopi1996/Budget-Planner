@@ -205,8 +205,15 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         }
     }
 
+    private void clearLoginEmail()
+    {
+        email.setText("");
+        pass.setText("");
+    }
+
     public void loginWithGoogle(View view) {
         MyUtility.enableLoading(this);
+        clearLoginEmail();
         errorLabel.setText("");
         AuthenticationManager.loginGoogle(new OnSuccessListener<GoogleSignInAccount>() {
             @Override
@@ -241,6 +248,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
 
     private void loginWithFb() {
         MyUtility.enableLoading(this);
+        clearLoginEmail();
         errorLabel.setText("");
         AuthenticationManager.loginWithFb(new OnSuccessListener<AccessToken>() {
             @Override

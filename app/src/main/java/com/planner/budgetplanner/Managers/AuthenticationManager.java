@@ -15,12 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.planner.budgetplanner.FirebaseManager;
+import com.planner.budgetplanner.Interfaces.OnFailureListner;
 import com.planner.budgetplanner.R;
 import com.planner.budgetplanner.Model.User;
 import com.planner.budgetplanner.Utility.MyUtility;
@@ -140,7 +142,8 @@ public class AuthenticationManager {
         }
     }
 
-    public static void loginWithEmail(String email, String pass, final OnSuccessListener<Boolean> listener) {
+    public static void loginWithEmail(String email, String pass, final OnSuccessListener<Boolean> listener, final OnFailureListner failureListener) {
+
         FirebaseManager.loginWithId(activity, email, pass, new FirebaseManager.IUserLogin() {
             @Override
             public void onSuccess(User user) {
@@ -155,6 +158,8 @@ public class AuthenticationManager {
             public void onFailure(String error) {
                 if (listener != null)
                     listener.onSuccess(false);
+                if(failureListener!=null)
+                    failureListener.onFailure(error);
             }
         });
     }

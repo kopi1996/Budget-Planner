@@ -12,6 +12,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
@@ -190,12 +192,30 @@ public class FirebaseManager {
                                             });
                                         }
                                     } else {
+
+                                        Log.i(TAG, "onComplete: error: "+task.getException().getMessage());
                                         onFinished.onFailure(task.getException().getMessage());
                                     }
                                 }
                             });
                         } else {
-                            onFinished.onFailure("Account login failed");
+                            String error="Account login. failed check internet connection";
+                            if(task.getException()!=null ) {
+                                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException)
+                                    error = "Invalid Password.";
+                                else if (task.getException() instanceof FirebaseAuthInvalidUserException)
+                                {
+                                    String errorCode =
+                                            ((FirebaseAuthInvalidUserException) task.getException()).getErrorCode();
+
+                                    if (errorCode.equals("ERROR_USER_NOT_FOUND")) {
+                                        error="No matching account found";
+                                    } else if (errorCode.equals("ERROR_USER_DISABLED")) {
+                                        error="User account has been disabled";
+                                    }
+                                }
+                            }
+                            onFinished.onFailure(error);
                         }
 
                     }

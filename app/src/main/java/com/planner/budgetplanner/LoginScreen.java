@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.planner.budgetplanner.Interfaces.OnFailureListner;
 import com.planner.budgetplanner.Managers.AuthenticationManager;
 import com.planner.budgetplanner.Utility.MyUtility;
 
@@ -139,7 +140,7 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
     public void loginBtnClick(View view) {
         errorLabel.setText("");
         if (!MyUtility.isValidEmail(email.getText())) {
-            errorLabel.setText("email address can't be emty or not valid format");
+            errorLabel.setText("email address can't be empty or not valid format");
             return;
         }
         if (!MyUtility.passwordValidation(pass.getText().toString())) {
@@ -150,16 +151,21 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
         AuthenticationManager.loginWithEmail(email.getText().toString(), pass.getText().toString(), new OnSuccessListener<Boolean>() {
             @Override
             public void onSuccess(Boolean success) {
-                Log.i(TAG, "onSuccess login: "+success);
+                Log.i(TAG, "onSuccess login: " + success);
                 MyUtility.disableLoading(LoginScreen.this);
                 if (success) {
-                    if(MyUtility.currentUser.getCurrencyType().isEmpty())
+                    if (MyUtility.currentUser.getCurrencyType().isEmpty())
                         goCurrecnyActivity();
                     else
                         goMainActivity();
                 } else {
-                    errorLabel.setText("Account does not exist");
+
                 }
+            }
+        }, new OnFailureListner() {
+            @Override
+            public void onFailure(String error) {
+                errorLabel.setText(error);
             }
         });
     }
@@ -253,6 +259,10 @@ public class LoginScreen extends LoadingActivity implements GoogleApiClient.OnCo
                                     goCurrecnyActivity();
                                 else
                                     goMainActivity();
+                            }
+                            else
+                            {
+                                errorLabel.setText("Login fail please check internet connection.");
                             }
                         }
                     });
